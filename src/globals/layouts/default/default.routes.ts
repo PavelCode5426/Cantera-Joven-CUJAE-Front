@@ -7,7 +7,7 @@ const childrens = getLayoutRoutes('Default',requireModules)
 const routes:RouteRecordRaw[] = [
     {
         path:'',
-        component:() => import('./Defaut.vue'),
+        component:() => import('./Default.vue'),
         children: childrens
     }
 ]

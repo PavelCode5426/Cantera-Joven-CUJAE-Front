@@ -19,10 +19,12 @@
       "vite/client",
       "vue/ref-macros",
       "vite-plugin-pages/client",
-      "vite-plugin-vue-layouts/client"
+      "vite-plugin-vue-layouts/client",
+      "element-plus/global"
     ],
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["src/*"],
+      "@/*": ["src/*"],
     }
   },
   "exclude": ["dist", "node_modules", "cypress"]

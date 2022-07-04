@@ -12,12 +12,14 @@ import VueI18n from '@intlify/vite-plugin-vue-i18n'
 import Inspect from 'vite-plugin-inspect'
 import Prism from 'markdown-it-prism'
 import LinkAttributes from 'markdown-it-link-attributes'
+import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 
 const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
 export default defineConfig({
   resolve: {
     alias: {
+      '~/': `${path.resolve(__dirname, 'src')}/`,
       '@/': `${path.resolve(__dirname, 'src')}/`,
     },
   },
@@ -52,6 +54,7 @@ export default defineConfig({
         'src/globals/config/store',
       ],
       vueTemplate: true,
+      resolvers: [ElementPlusResolver()],
     }),
 
     // https://github.com/antfu/unplugin-vue-components
@@ -65,6 +68,7 @@ export default defineConfig({
       // allow auto import and register components used in markdown
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
       dts: 'src/types/components.d.ts',
+      resolvers: [ElementPlusResolver()],
     }),
 
     // https://github.com/antfu/vite-plugin-vue-markdown

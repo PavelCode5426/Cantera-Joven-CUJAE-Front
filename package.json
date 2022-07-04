@@ -3,7 +3,7 @@
   "packageManager": "pnpm@7.1.6",
   "scripts": {
     "build": "vite-ssg build",
-    "dev": "vite --port 3333 --open",
+    "dev": "vite --open",
     "lint": "eslint .",
     "preview": "vite preview",
     "preview-https": "serve dist",
@@ -13,8 +13,13 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.0-alpha.42",
+    "@vuelidate/validators": "^2.0.0-alpha.30",
     "@vueuse/core": "^8.7.5",
     "@vueuse/head": "^0.7.6",
+    "axios": "^0.26.1",
+    "dayjs": "^1.11.3",
+    "element-plus": "^2.2.6",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.14",
     "prism-theme-vars": "^0.2.3",

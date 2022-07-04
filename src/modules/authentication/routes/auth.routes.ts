@@ -2,10 +2,13 @@ import {RouteRecordRaw} from 'vue-router'
 
 const routes:RouteRecordRaw[] = [
     {
-        path: 'login',
+        path: "",
+        name:'login-page',
         component: () => import('../pages/LoginPage.vue'),
-        // layout: ['Default','Admin']
-        layout: ['Admin']
+        meta: {
+            title: "Inicio de Sesion"
+        },
+        layout: ["Default"]
     }
 ]
 

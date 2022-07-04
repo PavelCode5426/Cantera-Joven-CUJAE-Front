@@ -1,0 +1,61 @@
+/**
+ *
+ * Apply Here your Custom CSS
+ *
+*/
+
+.login-container {
+    min-height:100vh;
+}
+
+.text-white{
+    color: white !important;
+}
+
+.text-uppercase{
+    text-transform: uppercase !important;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes fadeOutAnimation {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes rotate {
+    0% {
+        rotate: 0deg;
+    }
+    100% {
+        rotate: 360deg;
+    }
+}
+.loading-page{
+    min-height: 100vh;
+    background-color: #0fbd71;
+}
+
+.fadeIn-loading-animation {
+    animation: fadeInAnimation 0.3s;
+}
+.fadeOut-loading-animation {
+    animation: fadeOutAnimation 1s;
+}
+
+.rotation-animation {
+    animation: rotate infinite 1s;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

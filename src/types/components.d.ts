@@ -6,11 +6,27 @@ import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Admin: typeof import('./../globals/layouts/admin/Admin.vue')['default']
-    Defaut: typeof import('./../globals/layouts/default/Defaut.vue')['default']
+    ConfigurationPage: typeof import('./../modules/configuracion/pages/ConfigurationPage.vue')['default']
+    DefaulAdminPage: typeof import('./../globals/pages/DefaulAdminPage.vue')['default']
+    Default: typeof import('./../globals/layouts/default/Default.vue')['default']
+    ElBadge: typeof import('element-plus/es')['ElBadge']
+    ElEmpty: typeof import('element-plus/es')['ElEmpty']
+    ElInput: typeof import('element-plus/es')['ElInput']
+    Loading: typeof import('./../globals/components/Loading/Loading.vue')['default']
+    LoadingPage: typeof import('./../globals/pages/LoadingPage.vue')['default']
     LoginForm: typeof import('./../modules/authentication/components/forms/LoginForm.vue')['default']
     LoginPage: typeof import('./../modules/authentication/pages/LoginPage.vue')['default']
+    LogoBrand: typeof import('./../globals/components/NavBars/LogoBrand.vue')['default']
+    LogoutItem: typeof import('./../globals/components/NavBars/LogoutItem.vue')['default']
+    MailNotificationItem: typeof import('./../modules/notification/components/Mail/MailNotificationItem.vue')['default']
+    NavBar: typeof import('./../globals/components/NavBars/NavBar.vue')['default']
+    NavBarItem: typeof import('./../globals/components/NavBars/NavBarItem.vue')['default']
+    NavBarNotificationItem: typeof import('./../modules/notification/components/NavBar/NavBarNotificationItem.vue')['default']
+    NavBarNotificationsContainer: typeof import('./../modules/notification/components/NavBar/NavBarNotificationsContainer.vue')['default']
+    NotificationPage: typeof import('./../modules/notification/pages/NotificationPage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ServerErrorPage: typeof import('./../modules/error/pages/ServerErrorPage.vue')['default']
   }
 }
 

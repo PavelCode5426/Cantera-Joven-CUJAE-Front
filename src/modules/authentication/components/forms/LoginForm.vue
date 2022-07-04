@@ -1,30 +1,73 @@
 <template>
-  <div class="col-lg-4 col-md-8 col-12 mx-auto">
-    <div class="card z-index-0 fadeIn3 fadeInBottom">
-      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-        <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-          <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Sign in</h4>
-        </div>
+  <div class="login-content">
+    <div id="form_login">
+      <div class="form-group">
+        <el-input v-model="username" placeholder="Nombre de Usuario" />
+        <span v-for="error in v.username.$errors"><p class="text-danger text-left">{{error.$message}}</p></span>
       </div>
-      <div class="card-body">
-        <form role="form" class="text-start">
-          <div class="input-group input-group-outline my-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control">
-          </div>
-          <div class="input-group input-group-outline mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-control">
-          </div>
-          <div class="form-check form-switch d-flex align-items-center mb-3">
-            <input class="form-check-input" type="checkbox" id="rememberMe">
-            <label class="form-check-label mb-0 ms-2" for="rememberMe">Remember me</label>
-          </div>
-          <div class="text-center">
-            <button type="button" class="btn bg-gradient-primary w-100 my-4 mb-2">Sign in</button>
-          </div>
-        </form>
+      <div class="form-group">
+        <el-input v-model="password" type="password" planceholder="Contraseña" show-password />
+        <span v-for="error in v.password.$errors"><p class="text-danger text-left">{{error.$message}}</p></span>
+      </div>
+
+      <div class="form-group">
+        <button @click="submitLoginForm" class="btn btn-primary btn-block btn-login" >
+          <Loading v-if="isLoadingForm"/>
+          <i class="entypo-login" v-else/>
+          Login In
+        </button>
       </div>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import useVuelidate from "@vuelidate/core"
+import { required } from "@vuelidate/validators"
+import AuthServices from "@/services/auth.services";
+import AuthStore from "@/modules/authentication/store/auth.store";
+import {ServerError} from "@/globals/config/axios";
+import {ElMessage} from "element-plus";
+
+const router = useRouter()
+const $t = useI18n().t
+
+const authStore = AuthStore()
+const username = ref('')
+const password = ref('')
+const isLoadingForm = ref(false)
+const error_auth = ref(false)
+
+const validations = computed(() => ({
+  username: { required },
+  password: { required }
+}))
+const v = useVuelidate(validations, {username,password}).value
+
+const submitLoginForm = async () => {
+  const isFormCorrect = await v.$validate()
+  if(isFormCorrect) {
+    isLoadingForm.value = true
+    const response = await AuthServices.login(username.value, password.value)
+
+    if (response instanceof ServerError) {
+      ElMessage.error($t(response.error.message))
+      password.value = ''
+    }
+    else if (response.httpCode == 400) {
+      password.value = ''
+      authStore.$reset()
+      ElMessage.error({showClose: true, message: 'Credenciales Incorrectos'})
+    } else {
+      const data: any = {token: response.data.token, ...response.data.user}
+      authStore.setAttr(data)
+      router.push({path: 'admin'})
+    }
+    v.$reset()
+  }
+  isLoadingForm.value = false
+}
+
+
+
+</script>

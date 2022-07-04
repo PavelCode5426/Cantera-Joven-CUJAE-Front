@@ -1,5 +1,7 @@
 import { createPinia } from 'pinia'
 import { type UserModule } from '@/types/types'
+import {putStoreinLocalStorage} from "@/helpers/utils"
+import AuthStore from "@/modules/authentication/store/auth.store";
 
 // Setup Pinia
 // https://pinia.esm.dev/
@@ -11,7 +13,8 @@ export const install: UserModule = ({ isClient, initialState, app }) => {
   // for other serialization strategies.
   if (isClient)
     pinia.state.value = (initialState.pinia) || {}
-
   else
     initialState.pinia = pinia.state.value
+
+  putStoreinLocalStorage(AuthStore())
 }

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-// https://github.com/vueuse/head
-// you can use this to manipulate the document head in any components,
-// they will be rendered correctly in the html results with vite-ssg
+import SiteStore from "./globals/stores/site.store";
+import {storeToRefs} from "pinia";
+const siteStore = SiteStore()
+const {title,isLoading} = storeToRefs(siteStore)
 useHead({
-  title: "Cantera Joven Cujae",
-  meta: [
+  title: title.value,
+  meta:[
     {
       name: "description",
       content:"description of the site",
@@ -18,8 +19,14 @@ useHead({
     },
   ],
 });
+
+watch(title,(newValue,lastValue) => {
+  document.title = newValue
+})
+
 </script>
 
 <template>
-  <RouterView />
+  <LoadingPage v-if="isLoading"/>
+  <RouterView v-else />
 </template>

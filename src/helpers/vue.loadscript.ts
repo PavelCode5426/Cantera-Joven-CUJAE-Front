@@ -22,8 +22,8 @@ export function load_script (src:string) { // eslint-disable-line no-param-reass
         });
 
         if (shouldAppend) document.head.appendChild(el);
-    });
-};
+    })
+}
 export function unload_script(src:string) { // eslint-disable-line no-param-reassign
     return new Promise(function (resolve, reject) {
         const el = document.querySelector('script[src="' + src + '"]');
@@ -36,5 +36,5 @@ export function unload_script(src:string) { // eslint-disable-line no-param-reas
         document.head.removeChild(el);
 
         resolve(null);
-    });
-};
+    })
+}
