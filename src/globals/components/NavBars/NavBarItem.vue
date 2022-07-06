@@ -1,6 +1,6 @@
 <template>
   <li>
-    <router-link v-if="router" :to="router" active-class="opened active">
+    <router-link v-if="router" :to="router" active-class="active">
       <i v-if="icon" :class="icon"/>
       <span>{{name}}</span>
     </router-link>
@@ -34,6 +34,5 @@ const props = withDefaults(defineProps<Props>(),{
   icon:undefined,
   childrens:[],
 })
-
 
 </script>

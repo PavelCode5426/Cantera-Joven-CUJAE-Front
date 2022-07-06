@@ -10,7 +10,7 @@
 </template>
 <script setup lang="ts">
 import AuthenticationService from "@/services/auth.services"
-import AuthStore from "@/modules/authentication/store/auth.store"
+import AuthStore,{initialState as authStoreInitialState} from "@/modules/authentication/store/auth.store"
 
 const isLocalLoading = ref(false)
 const authStore = AuthStore()
@@ -19,7 +19,8 @@ const router = useRouter()
 async function logout() {
   isLocalLoading.value = true
   const response = await AuthenticationService.logout()
-  authStore.isAuthenticated = false
+  authStore.setAttr(authStoreInitialState) //TODO SUSTITUIR POR ABAJO
+  //authStore.$reset() //TODO ARREGLAR ESTO
   router.push({name:'login-page'})
 }
 </script>

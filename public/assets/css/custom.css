@@ -7,6 +7,10 @@
 .login-container {
     min-height:100vh;
 }
+.main-content {
+    min-height:100vh !important;
+    overflow-x: hidden;
+}
 
 .text-white{
     color: white !important;

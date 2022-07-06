@@ -18,7 +18,6 @@ export class ConfigurationService {
             })
             response.data = configs
         }
-        console.log(response)
         return response
     }
 }

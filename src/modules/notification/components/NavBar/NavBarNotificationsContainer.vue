@@ -12,11 +12,11 @@
       <li>
         <ul class="dropdown-menu-list scroller">
           <nav-bar-notification-item v-for="notification in notifications"
-                            :id="notification.id"
-                            :unread="notification.unread"
-                            :verb="notification.verb"
-                            :from="notification.sender.first_name"
-                            :time="notification.timestamp" />
+                                     :id="notification.id"
+                                     :unread="notification.unread"
+                                     :verb="notification.verb"
+                                     :from="notification.sender.first_name"
+                                     :time="notification.timestamp" />
         </ul>
       </li>
 
@@ -32,7 +32,8 @@ import NotificationStore from "~/modules/notification/store/notification.store"
 import AuthStore from "~/modules/authentication/store/auth.store"
 import {storeToRefs} from "pinia"
 import notificationServiceInstance from "~/services/notification.services"
-import {ServerError} from "~/globals/config/axios";
+import {ServerError, ServerResponse} from "~/globals/config/axios";
+import {checkServerError} from "~/helpers/utils";
 
 const notificationsStore = NotificationStore()
 const authStore = AuthStore()
@@ -44,10 +45,9 @@ const router = useRouter()
 
 const updateNotification = async () => {
   isLoading.value = true
-  let response = await notificationServiceInstance.notReadNotifications()
-  if (response instanceof ServerError)
-    router.push({name:'server-error-page',query:{message:response.error.message}})
-  else if (response.httpCode == 401)
+  let response:ServerResponse | ServerError = await notificationServiceInstance.notReadNotifications()
+  checkServerError(response)
+  if (response.httpCode == 401)
   {
     authStore.isAuthenticated = false //TODO ARREGLAR ESTO
     authStore.$reset()

@@ -1097,7 +1097,6 @@ var public_vars = public_vars || {};
 					}
 				});
 				
-				console.log( opts );
 				$this.validate(opts);
 			});
 		}
@@ -1730,7 +1729,7 @@ function setup_horizontal_menu()
 		};
 	
 	$nav_bar_menu.find('> li').addClass(root_level_class);
-	
+
 	$items_with_submenu.each(function(i, el)
 	{
 		var $this = $(el),

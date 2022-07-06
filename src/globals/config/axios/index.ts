@@ -1,4 +1,4 @@
-import axios, {AxiosInstance} from "axios"
+import axios, {Axios} from "axios"
 
 const SERVER_URL = import.meta.env.VITE_URL_SERVER
 export class ServerResponse {
@@ -23,23 +23,24 @@ const headers = axios.defaults.headers
 // headers.common["Access-Control-Request-Method"] = "GET, POST, PATCH, PUT, DELETE, OPTIONS"
 // headers.common["Access-Control-Allow-Headers"] = "*"
 
-export function CallWithToken(): AxiosInstance {
+const axiosWithToken = {...axios.create({
+    baseURL: SERVER_URL,
+    headers
+  })}
+const axiosWithOutToken = axios.create({
+  baseURL: SERVER_URL,
+  headers
+})
+
+export function CallWithToken(): Axios {
   const token = JSON.parse(localStorage.getItem("auth")).token
   const headers_token = Object.create(headers)
   headers_token.common["Authorization"]=`Bearer ${token}`
-
-  const axiosInstance = axios.create({
-    baseURL: SERVER_URL,
-    headers:headers_token,
-  })
-  return axiosInstance
+  axiosWithToken.defaults.headers = headers_token
+  return axiosWithToken
 }
-export function CallWithoutToken(): AxiosInstance {
-  const axiosInstance = axios.create({
-    baseURL: SERVER_URL,
-    headers
-  })
-  return axiosInstance
+export function CallWithoutToken(): Axios {
+  return axiosWithOutToken
 }
 
 export function SerializeResponse(httpCode: number, data: any): ServerResponse {

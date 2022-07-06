@@ -9,6 +9,15 @@ const routes:RouteRecordRaw[] = [
             title: "Inicio de Sesion"
         },
         layout: ["Default"]
+    },
+    {
+        path:'api-key',
+        name:'api-key-page',
+        component: () => import('../pages/ApiKeyPage.vue'),
+        meta:{
+            title: "Gestionar Acceso"
+        },
+        layout:["Admin"]
     }
 ]
 
