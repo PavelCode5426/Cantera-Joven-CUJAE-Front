@@ -10,5 +10,5 @@ export const install: UserModule = async ({ }) => {
 	await load_script("/assets/js/joinable.js")
 	await load_script("/assets/js/resizeable.js")
 	await load_script("/assets/js/neon-api.js")
-	await load_script("/assets/js/neon-custom.js")
+	// await load_script("/assets/js/neon-custom.js") MOVE TO ADMIN TEMPLATE
 }

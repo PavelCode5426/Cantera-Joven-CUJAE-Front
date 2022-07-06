@@ -3,11 +3,11 @@
     <div id="form_login">
       <div class="form-group">
         <el-input v-model="username" placeholder="Nombre de Usuario" />
-        <span v-for="error in v.username.$errors"><p class="text-danger text-left">{{error.$message}}</p></span>
+        <error-help-block :items="v.username.$errors"/>
       </div>
       <div class="form-group">
         <el-input v-model="password" type="password" planceholder="Contraseña" show-password />
-        <span v-for="error in v.password.$errors"><p class="text-danger text-left">{{error.$message}}</p></span>
+        <error-help-block :items="v.password.$errors"/>
       </div>
 
       <div class="form-group">
@@ -25,9 +25,8 @@
 import useVuelidate from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
 import AuthServices from "@/services/auth.services";
-import AuthStore from "@/modules/authentication/store/auth.store";
+import AuthStore,{initialState as authStoreInitialState} from "@/modules/authentication/store/auth.store";
 import {ServerError} from "@/globals/config/axios";
-import {ElMessage} from "element-plus";
 
 const router = useRouter()
 const $t = useI18n().t
@@ -56,8 +55,10 @@ const submitLoginForm = async () => {
     }
     else if (response.httpCode == 400) {
       password.value = ''
-      authStore.$reset()
-      ElMessage.error({showClose: true, message: 'Credenciales Incorrectos'})
+      console.log(authStoreInitialState)
+      authStore.setAttr(authStoreInitialState) //TODO SUSTITUIR POR ABAJO
+      //authStore.$reset() //TODO ARREGLAR ESTO
+      ElMessage.error({showClose: true, message: "Credenciales Incorrectos"})
     } else {
       const data: any = {token: response.data.token, ...response.data.user}
       authStore.setAttr(data)

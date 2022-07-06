@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import AuthStore from "@/modules/authentication/store/auth.store"
 import {storeToRefs} from "pinia";
-import LogoutItem from "@/globals/components/NavBars/LogoutItem.vue"
+import LogoutItem from "~/modules/authentication/components/navbar/LogoutItem.vue"
 import navBarLinks from "@/globals/config/router/links"
 
 const authStore = AuthStore()

@@ -9,4 +9,8 @@
   </body>
 </template>
 <script setup lang="ts">
+import {load_script,unload_script} from "~/helpers/vue.loadscript";
+load_script("/assets/js/neon-custom.js")
+
+onUnmounted(()=>unload_script("/assets/js/neon-custom.js"))
 </script>

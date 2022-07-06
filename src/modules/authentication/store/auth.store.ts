@@ -9,7 +9,7 @@ export type authModel = {
     email:string | undefined
     token:string | undefined
 }
-const initialState:authModel = {
+export const initialState:authModel = {
     isAuthenticated:false,
     id:undefined,
     username:undefined,

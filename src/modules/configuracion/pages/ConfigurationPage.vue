@@ -4,16 +4,11 @@
 
 <script setup lang="ts">
 
-import ConfigurationService from "~/services/configuration.services";
-import {ServerError} from "~/globals/config/axios";
-import {ElMessage} from "element-plus";
+import ConfigurationService from "~/services/configuration.services"
+import {checkServerErrorAndRedirect} from "~/helpers/utils"
 
 const router = useRouter()
 const configs = await ConfigurationService.listConfigs()
-if (configs instanceof ServerError)
-  router.push({name:'server-error-page',query:{message:configs.error.message}})
-
-console.log(configs)
-
+checkServerErrorAndRedirect(configs)
 
 </script>
