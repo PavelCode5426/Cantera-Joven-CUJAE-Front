@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import NotificationServiceInstance from "@/services/notification.services"
 import {ServerError} from "@/globals/config/axios"
-import {checkServerError} from "~/helpers/utils";
+import {checkServerErrorAndRedirect} from "~/helpers/utils";
 
 const router = useRouter()
 let notifications = ref([])
@@ -22,7 +22,7 @@ let notifications = ref([])
 async function loadNotificationsFromServer() {
 // // const notifications = await NotificationServiceInstance.allNotifications() TODO PONER ESTO
   const notificationsResponse = await NotificationServiceInstance.notReadNotifications()
-  checkServerError(notificationsResponse)
+  checkServerErrorAndRedirect(notificationsResponse)
 
   if (notificationsResponse.httpCode == 401)
     router.push({name:'login-page'})

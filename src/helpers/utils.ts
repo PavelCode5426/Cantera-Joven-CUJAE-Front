@@ -1,4 +1,5 @@
 import {Store} from "pinia";
+import {ElMessage} from 'element-plus'
 
 export function putStoreinLocalStorage(store:Store)
 {
@@ -12,15 +13,24 @@ export function putStoreinLocalStorage(store:Store)
 
 import {ServerError, ServerResponse} from "@/globals/config/axios"
 import {useRouter} from "vue-router";
-export function checkServerError(response:ServerResponse | ServerError){
+const isServerError = (response:ServerResponse | ServerError) => response instanceof ServerError
+const isAuthenticate = (response:ServerResponse | ServerError) => response instanceof ServerResponse && response.httpCode == 401
+
+export function checkServerErrorAndRedirect(response:ServerResponse | ServerError){
     const router = useRouter()
-    if (response instanceof ServerError)
+    if (isServerError(response))
         router.push({name:'server-error-page',query:{message:response.error.message}})
+}
+export function checkServerErrorAndMessage(response:ServerResponse | ServerError){
+    const is = isServerError(response)
+    if (is)
+        ElMessage.error({message:response.error.message})
+    return is
 }
 
 export function checkIsAuthenticate(response:ServerResponse | ServerError){
     const router = useRouter()
-    if (response instanceof ServerResponse && response.httpCode == 401)
+    if (isAuthenticate(response))
         router.push({name:'login-page'})
 }
 
@@ -28,6 +38,7 @@ export function checkIsAuthenticate(response:ServerResponse | ServerError){
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import locale from "dayjs/locale/es"
+import {ElMessage} from "element-plus";
 dayjs.locale(locale)
 dayjs.extend(relativeTime)
 

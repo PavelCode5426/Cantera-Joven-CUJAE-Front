@@ -33,7 +33,7 @@ import AuthStore from "~/modules/authentication/store/auth.store"
 import {storeToRefs} from "pinia"
 import notificationServiceInstance from "~/services/notification.services"
 import {ServerError, ServerResponse} from "~/globals/config/axios";
-import {checkServerError} from "~/helpers/utils";
+import {checkServerErrorAndRedirect} from "~/helpers/utils";
 
 const notificationsStore = NotificationStore()
 const authStore = AuthStore()
@@ -46,7 +46,7 @@ const router = useRouter()
 const updateNotification = async () => {
   isLoading.value = true
   let response:ServerResponse | ServerError = await notificationServiceInstance.notReadNotifications()
-  checkServerError(response)
+  checkServerErrorAndRedirect(response)
   if (response.httpCode == 401)
   {
     authStore.isAuthenticated = false //TODO ARREGLAR ESTO
