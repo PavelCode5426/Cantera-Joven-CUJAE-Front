@@ -8,10 +8,9 @@ export type Link = {
 }
 
 const navBarLinks:Link[] = [
+    //AJUSTES
     {
         name:"Ajustes",
-        // router:{name:'config-page'},
-        icon:"entypo-gauge",
         childrens:[
             {
                 name:'Configuracion',
@@ -22,6 +21,24 @@ const navBarLinks:Link[] = [
                 router:{name: 'api-key-page'}
             }
         ]
+    },
+
+    //CANTERA
+    {
+        name: "Cantera",
+        childrens:[]
+    },
+
+    //FAMILIARIZACION
+    {
+        name:"Familiarizacion",
+        childrens:[]
+    },
+
+    //FORMACION COMPLEMENTARIA
+    {
+        name:"Formacion Complementaria",
+        childrens:[]
     }
 ]
 

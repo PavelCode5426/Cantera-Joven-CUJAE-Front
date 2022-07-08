@@ -30,7 +30,7 @@ import isLocalLoading, {
   activateLoading,
   desactivateLoading,
   toogleLoadingDecorator
-} from "@/globals/composables/useLoading";
+} from "@/globals/composables/useLoading"
 
 interface DialogFormProp {
   dialogVisible:boolean | undefined
