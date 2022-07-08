@@ -30,6 +30,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ServerErrorPage: typeof import('./../modules/error/pages/ServerErrorPage.vue')['default']
+    ShapePage: typeof import('./../modules/formacion_complementaria/pages/ShapePage.vue')['default']
   }
 }
 

@@ -38,7 +38,12 @@ const navBarLinks:Link[] = [
     //FORMACION COMPLEMENTARIA
     {
         name:"Formacion Complementaria",
-        childrens:[]
+        childrens:[
+            {
+                name:'Conformar',
+                router:{name:'fc-conformar'}
+            }
+        ]
     }
 ]
 
