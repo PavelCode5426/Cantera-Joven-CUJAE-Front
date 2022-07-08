@@ -22,17 +22,7 @@ const navBarLinks:Link[] = [
                 router:{name: 'api-key-page'}
             }
         ]
-    },
-    // {
-    //     name:"Cantera",
-    //     icon:"entypo-gauge",
-    //     childrens:[
-    //         {
-    //             name: "Conformar",
-    //             icon:"entypo-gauge"
-    //         }
-    //     ]
-    // }
+    }
 ]
 
 export default navBarLinks

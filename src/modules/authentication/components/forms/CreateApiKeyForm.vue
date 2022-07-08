@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="Crear nuevo APIKEY" :closed="clearForm()">
+  <el-dialog v-model="dialogVisible" title="Crear nuevo APIKEY" :closed="clearForm()" :show-close="false">
     <div class="row">
       <h5>Nombre del Sistema<spam class="text-danger">*</spam></h5>
       <el-input v-model="form.name" @blur="v.name.$touch()"/>
@@ -9,7 +9,7 @@
     </div>
     <template #footer>
       <div class="modal-footer">
-        <button class="btn btn-info" @click="submitForm()">
+        <button class="btn btn-info" @click="submitForm()" :class="{disabled:!form.name.length}">
           <loading v-if="isLocalLoading"/> Aceptar
         </button>
         <button class="btn btn-default" @click="closeDialog()">Cerrar</button>
@@ -20,10 +20,17 @@
 <script setup lang="ts">
 import defaulDialogFormProps from "@/globals/composables/useDialogForm"
 import {required} from "@vuelidate/validators"
-import useVuelidate, {ErrorObject} from "@vuelidate/core"
+import useVuelidate from "@vuelidate/core"
 import authServices from "@/services/auth.services"
-import {checkServerErrorAndRedirect, checkIsAuthenticate, checkServerErrorAndMessage} from "@/helpers/utils";
-import dayjs from "dayjs";
+import {checkIsAuthenticateAndRedirect, checkServerErrorAndMessage, isAuthenticate} from "@/helpers/utils";
+import dayjs from "dayjs"
+
+//USE COMPOSABLES
+import isLocalLoading, {
+  activateLoading,
+  desactivateLoading,
+  toogleLoadingDecorator
+} from "@/globals/composables/useLoading";
 
 interface DialogFormProp {
   dialogVisible:boolean | undefined
@@ -32,7 +39,6 @@ withDefaults(defineProps<DialogFormProp>(),{
   ...defaulDialogFormProps
 })
 
-const isLocalLoading = ref(false)
 const form = ref({
   name:'',
   expired_at:null
@@ -42,31 +48,30 @@ const validationsRules = {
 }
 const v = useVuelidate(validationsRules,form).value
 
+const emit = defineEmits(['on-success-create'])
 const closeDialog:Function | undefined = inject('closeCreateDialog')
 
-async function submitForm(){
+let submitForm = async () => {
   const isFormCorrect = await v.$validate()
   if (isFormCorrect) {
-    isLocalLoading.value = true
     const name = form.value.name
     let expired_at = form.value.expired_at
     if (expired_at)
       expired_at = dayjs(expired_at).format() //PREGUNTAR A LAURA
     const response = await authServices.createApiKey(name,expired_at)
-    // if(!checkServerErrorAndMessage(response))
+    if(!checkServerErrorAndMessage(response) && isAuthenticate(response)){
       closeDialog()
+      ElMessage.success({message:"Credenciales creados correctamente"})
+      emit('on-success-create')
+    }
   }
-  setTimeout(() => isLocalLoading.value = false,1000)
 }
+submitForm = toogleLoadingDecorator(submitForm)
+
 function clearForm(){
-  // form.value.name = ''
+  form.value.name = ''
   form.value.expired_at = null
 }
-
-
-
-
-
 
 
 </script>

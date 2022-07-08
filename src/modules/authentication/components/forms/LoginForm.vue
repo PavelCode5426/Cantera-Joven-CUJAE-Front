@@ -55,7 +55,6 @@ const submitLoginForm = async () => {
     }
     else if (response.httpCode == 400) {
       password.value = ''
-      console.log(authStoreInitialState)
       authStore.setAttr(authStoreInitialState) //TODO SUSTITUIR POR ABAJO
       //authStore.$reset() //TODO ARREGLAR ESTO
       ElMessage.error({showClose: true, message: "Credenciales Incorrectos"})
