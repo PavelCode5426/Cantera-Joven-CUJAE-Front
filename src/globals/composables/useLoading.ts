@@ -16,13 +16,11 @@ export function toogleLoading(loadingRef:Ref|undefined = undefined,delay:number 
     else activateLoading(loading,delay)
 }
 
-export function toogleLoadingDecorator(func:any){
-    return async function (loadingRef:Ref|undefined = undefined,delay:number = 400){
-        console.log("Decoin")
+export function toogleLoadingDecorator(func:any,loadingRef:Ref|undefined = undefined,delay:number = 400){
+    return async function (){
         activateLoading(loadingRef,0)
         await func()
         desactivateLoading(loadingRef,delay)
-        console.log("Decout")
     }
 }
 

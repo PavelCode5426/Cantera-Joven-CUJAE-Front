@@ -61,7 +61,6 @@ let submitForm = async () => {
     const response = await authServices.createApiKey(name,expired_at)
     if(!checkServerErrorAndMessage(response) && isAuthenticate(response)){
       closeDialog()
-      ElMessage.success({message:"Credenciales creados correctamente"})
       emit('on-success-create')
     }
   }

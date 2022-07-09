@@ -22,7 +22,7 @@
   </el-table>
 
   <!--  MODAL PARA CREAR -->
-  <create-api-key-form :dialogVisible="showCreateForm"/>
+  <create-api-key-form :dialogVisible="showCreateForm" @on-success-create="onSuccessCreateApiKey()"/>
 
 </template>
 <script setup lang="ts">
@@ -70,10 +70,15 @@ let deleteItem = async (id:number) => {
   desactivateLoading()
 }
 
+function onSuccessCreateApiKey(){
+  ElMessage.success({message:"Credenciales creados correctamente"})
+}
+
+
+
 provide('closeCreateDialog',()=>{
   showCreateForm.value = false
 })
-
 // updateTable()
 updateTableTest()
 </script>

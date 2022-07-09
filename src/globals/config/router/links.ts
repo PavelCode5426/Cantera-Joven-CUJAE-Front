@@ -26,13 +26,23 @@ const navBarLinks:Link[] = [
     //CANTERA
     {
         name: "Cantera",
-        childrens:[]
+        childrens:[
+            {
+                name:'Conformar',
+                router:{name:'c-conformar'}
+            }
+        ]
     },
 
     //FAMILIARIZACION
     {
         name:"Familiarizacion",
-        childrens:[]
+        childrens:[
+            {
+                name:'Conformar',
+                router:{name:'f-conformar'}
+            }
+        ]
     },
 
     //FORMACION COMPLEMENTARIA

@@ -13,8 +13,15 @@ declare module '@vue/runtime-core' {
     CreateApiKeyForm: typeof import('./../modules/authentication/components/forms/CreateApiKeyForm.vue')['default']
     DefaulAdminPage: typeof import('./../globals/pages/DefaulAdminPage.vue')['default']
     Default: typeof import('./../globals/layouts/default/Default.vue')['default']
+    ElBadge: typeof import('element-plus/es')['ElBadge']
+    ElCol: typeof import('element-plus/es')['ElCol']
+    ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
+    ElRow: typeof import('element-plus/es')['ElRow']
+    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ErrorHelpBlock: typeof import('./../globals/components/Error/ErrorHelpBlock.vue')['default']
+    GraduateDirectoryList: typeof import('./../modules/formacion_complementaria/components/list/GraduateDirectoryList.vue')['default']
     Loading: typeof import('./../globals/components/Loading/Loading.vue')['default']
     LoadingPage: typeof import('./../globals/pages/LoadingPage.vue')['default']
     LoginForm: typeof import('./../modules/authentication/components/forms/LoginForm.vue')['default']
@@ -27,10 +34,12 @@ declare module '@vue/runtime-core' {
     NavBarNotificationItem: typeof import('./../modules/notification/components/NavBar/NavBarNotificationItem.vue')['default']
     NavBarNotificationsContainer: typeof import('./../modules/notification/components/NavBar/NavBarNotificationsContainer.vue')['default']
     NotificationPage: typeof import('./../modules/notification/pages/NotificationPage.vue')['default']
+    PossiblyGraduateDirectoryList: typeof import('./../modules/familiarizacion/components/list/PossiblyGraduateDirectoryList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ServerErrorPage: typeof import('./../modules/error/pages/ServerErrorPage.vue')['default']
     ShapePage: typeof import('./../modules/formacion_complementaria/pages/ShapePage.vue')['default']
+    StudentsDirectoryList: typeof import('./../modules/cantera/components/list/StudentsDirectoryList.vue')['default']
   }
 }
 

@@ -30,9 +30,9 @@ export function checkServerErrorAndMessage(response:ServerResponse | ServerError
     return is
 }
 export function checkIsAuthenticateAndRedirect(response:ServerResponse | ServerError){
-    let is = !isAuthenticate(response)
+    let is = isAuthenticate(response)
     const router = useRouter()
-    if (is)
+    if (!is)
         router.push({name: 'login-page'})
     return is
 }
