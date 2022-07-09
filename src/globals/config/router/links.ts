@@ -8,10 +8,9 @@ export type Link = {
 }
 
 const navBarLinks:Link[] = [
+    //AJUSTES
     {
         name:"Ajustes",
-        // router:{name:'config-page'},
-        icon:"entypo-gauge",
         childrens:[
             {
                 name:'Configuracion',
@@ -23,16 +22,39 @@ const navBarLinks:Link[] = [
             }
         ]
     },
-    // {
-    //     name:"Cantera",
-    //     icon:"entypo-gauge",
-    //     childrens:[
-    //         {
-    //             name: "Conformar",
-    //             icon:"entypo-gauge"
-    //         }
-    //     ]
-    // }
+
+    //CANTERA
+    {
+        name: "Cantera",
+        childrens:[
+            {
+                name:'Conformar',
+                router:{name:'c-conformar'}
+            }
+        ]
+    },
+
+    //FAMILIARIZACION
+    {
+        name:"Familiarizacion",
+        childrens:[
+            {
+                name:'Conformar',
+                router:{name:'f-conformar'}
+            }
+        ]
+    },
+
+    //FORMACION COMPLEMENTARIA
+    {
+        name:"Formacion Complementaria",
+        childrens:[
+            {
+                name:'Conformar',
+                router:{name:'fc-conformar'}
+            }
+        ]
+    }
 ]
 
 export default navBarLinks
