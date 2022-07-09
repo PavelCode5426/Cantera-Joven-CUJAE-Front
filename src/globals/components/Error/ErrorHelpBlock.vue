@@ -1,6 +1,6 @@
 <template>
   <span v-for="item in items">
-    <p class="text-left" :class="customClass">{{item.$message}}</p>
+    <span class="text-left" :class="customClass">{{item.$message}}</span>
   </span>
 </template>
 <script setup lang="ts">
@@ -15,5 +15,7 @@ withDefaults(defineProps<Props>(),{
   customClass:'text-danger',
   items: undefined
 })
-
 </script>
+
+<style scoped>
+</style>

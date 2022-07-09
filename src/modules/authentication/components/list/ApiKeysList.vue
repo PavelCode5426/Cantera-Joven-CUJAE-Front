@@ -3,7 +3,7 @@
   <el-row>
     <el-col :offset="22">
       <button type="button" class="btn btn-primary uk-text-bold" @click="showCreateForm = !showCreateForm">
-        <i class="entypo-list-add"/> Añadir
+        <i class="entypo-list-add"/> Nuevo
       </button>
     </el-col>
   </el-row>
@@ -15,6 +15,9 @@
       <template #default="scope">
         <confirm-pop-button
             confirmButtonType="danger"
+            buttonTitle="Eliminar"
+            buttonType="btn-danger"
+            buttonIcon=""
             @on-confirm="deleteItem(scope.row.id)"
             title="¿Esta seguro que desea eliminar el elemento?"/>
       </template>
@@ -31,7 +34,7 @@ import {
   checkIsAuthenticateAndChangeStorage,
   checkServerErrorAndMessage,
   checkServerErrorAndRedirect,
-  checkIsAuthenticateAndRedirect
+  checkIsAuthenticateAndRedirect, getRealativeTime
 } from "@/helpers/utils"
 import ApiKeyModel from "~/services/models/apiKey.model"
 import loadingTable, {
@@ -40,23 +43,23 @@ import loadingTable, {
   toogleLoadingDecorator
 } from "~/globals/composables/useLoading";
 
-import apilist from '@/test/apikey.json' //TODO BORRAR ESTO
-
 const apiKeys = ref([] as ApiKeyModel[])
 const showCreateForm = ref(false)
 
 let updateTable = async () => {
   let response = await authServiceInstace.listApiKeys()
   if (!checkServerErrorAndRedirect(response) && checkIsAuthenticateAndRedirect(response))
-    if (response.httpCode == 200)
-      apiKeys.value = response.data
+    if (response.httpCode == 200){
+      const data = response.data
+      data.forEach(item => {
+        if (item.expired_at)
+          item.expired_at = getRealativeTime(item.expired_at)
+        else item.expired_at = 'nunca'
+      })
+      apiKeys.value = data
+    }
 }
 updateTable = toogleLoadingDecorator(updateTable)
-
-let updateTableTest = async () => {
-  apiKeys.value = apilist
-}
-updateTableTest = toogleLoadingDecorator(updateTableTest)
 
 let deleteItem = async (id:number) => {
   activateLoading()
@@ -70,8 +73,9 @@ let deleteItem = async (id:number) => {
   desactivateLoading()
 }
 
-function onSuccessCreateApiKey(){
+async function onSuccessCreateApiKey(){
   ElMessage.success({message:"Credenciales creados correctamente"})
+  await updateTable()
 }
 
 
@@ -79,6 +83,5 @@ function onSuccessCreateApiKey(){
 provide('closeCreateDialog',()=>{
   showCreateForm.value = false
 })
-// updateTable()
-updateTableTest()
+updateTable()
 </script>

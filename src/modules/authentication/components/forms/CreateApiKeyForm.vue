@@ -1,12 +1,14 @@
 <template>
   <el-dialog v-model="dialogVisible" title="Crear nuevo APIKEY" :closed="clearForm()" :show-close="false">
-    <div class="row">
-      <h5>Nombre del Sistema<spam class="text-danger">*</spam></h5>
-      <el-input v-model="form.name" @blur="v.name.$touch()"/>
-      <error-help-block :items="v.name.$errors"/>
-      <h5>Fecha de Expiracion</h5>
-      <el-date-picker v-model="form.expired_at" />
-    </div>
+    <el-form>
+      <el-form-item label="Nombre del Sistema">
+        <el-input v-model="form.name" @blur="v.name.$touch()"/>
+        <error-help-block :items="v.name.$errors"/>
+      </el-form-item>
+      <el-form-item label="Fecha de Expiracion">
+        <el-date-picker v-model="form.expired_at" />
+      </el-form-item>
+    </el-form>
     <template #footer>
       <div class="modal-footer">
         <button class="btn btn-info" @click="submitForm()" :class="{disabled:!form.name.length}">
