@@ -9,16 +9,12 @@ declare module '@vue/runtime-core' {
     ApiKeyPage: typeof import('./../modules/authentication/pages/ApiKeyPage.vue')['default']
     ApiKeysList: typeof import('./../modules/authentication/components/list/ApiKeysList.vue')['default']
     ConfigurationPage: typeof import('./../modules/configuracion/pages/ConfigurationPage.vue')['default']
-    ConfirmPopButton: typeof import('./../globals/components/Buttons/ConfirmPopButton.vue')['default']
     CreateApiKeyForm: typeof import('./../modules/authentication/components/forms/CreateApiKeyForm.vue')['default']
-    CreateAval: typeof import('./../modules/cantera/components/form/CreateAval.vue')['default']
     DefaulAdminPage: typeof import('./../globals/pages/DefaulAdminPage.vue')['default']
     Default: typeof import('./../globals/layouts/default/Default.vue')['default']
-    ElBadge: typeof import('element-plus/es')['ElBadge']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
-    ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElTable: typeof import('element-plus/es')['ElTable']
@@ -39,7 +35,6 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ServerErrorPage: typeof import('./../modules/error/pages/ServerErrorPage.vue')['default']
-    ShapePage: typeof import('./../modules/formacion_complementaria/pages/ShapePage.vue')['default']
   }
 }
 
