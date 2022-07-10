@@ -10,5 +10,6 @@ export default class AvalModel {
     cargosEstudiante: string
     cargosMilitante: string
     resumenDesempeno: string
-    usuario: number
-}
+    id: number
+} 
+

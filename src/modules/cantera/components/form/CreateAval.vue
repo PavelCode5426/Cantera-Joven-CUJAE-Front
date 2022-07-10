@@ -75,7 +75,7 @@
 <script lang="ts" setup>
 
 import { reactive } from 'vue'
-import avalService from "@/services/aval.services"
+import AvalService from "@/services/aval.services"
 import defaulDialogFormProps from "@/globals/composables/useDialogForm"
 import useVuelidate from "@vuelidate/core"
 
@@ -88,6 +88,7 @@ import isLocalLoading, {
 import {required} from "@vuelidate/validators";
 import {checkIsAuthenticateAndChangeStorage, checkServerErrorAndMessage, isAuthenticate} from "~/helpers/utils";
 import AvalModel from "~/services/models/aval.model";
+import {AvalService} from "~/services/aval.services";
 
 interface DialogFormProp {
   dialogVisible:boolean | undefined
@@ -123,7 +124,7 @@ let submitForm = async () => {
   if (isFormCorrect) {
     const aval = form.value
 
-    const response = await avalService.createAval(aval, )
+    const response = await AvalService.createAval(id, aval)
     if(!checkServerErrorAndMessage(response) && checkIsAuthenticateAndChangeStorage(response)){
       closeDialog()
       ElMessage.success({message:"Aval creado correctamente"})
@@ -144,8 +145,6 @@ function clearForm(){
   form.value.cargosMilitante = ''
   form.value.resumenDesempeno = ''
 }
-
-
 
 </script>
 
