@@ -1,8 +1,10 @@
-import {CallWithToken, SerializePromese, ServerResponse} from "~/globals/config/axios";
-import {GraduatedDirectoryModel} from "~/services/models/directorio/graduatedirectory.model";
-import {StudentsDirectoryModel} from "~/services/models/directorio/students.directory.model";
+import {CallWithToken, SerializePromese, ServerResponse} from "~/globals/config/axios"
+import GraduatedDirectoryModel from "~/services/models/directorio/graduated.directory.model"
+import StudentsDirectoryModel from "~/services/models/directorio/students.directory.model"
+import PossiblyGraduatedDirectoryModel from "~/services/models/directorio/possiblygraduated.directory.model"
 
 export class DirectoryServices {
+    //TODO CREAR UNA CLASE ABSTRACTA Y JUNTAR LAS FUNCIONALIDADES
     //GRADUADOS
     public async graduatesWithoutImport(){
         const call = CallWithToken().get('/directorio/graduado')
@@ -42,7 +44,7 @@ export class DirectoryServices {
         const call = CallWithToken().get('/directorio/posible-graduado')
         const response = await SerializePromese(call)
         if (response instanceof ServerResponse && response.httpCode == 200)
-            response.data = response.data as StudentsDirectoryModel[]
+            response.data = response.data as PossiblyGraduatedDirectoryModel[]
 
         return response
     }

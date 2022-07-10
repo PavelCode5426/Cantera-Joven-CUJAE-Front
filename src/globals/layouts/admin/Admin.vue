@@ -3,7 +3,14 @@
   <div class="page-container horizontal-menu">
     <nav-bar/>
     <div class="main-content">
+
+
       <router-view />
+      <router-view name="list"/>
+
+
+
+
     </div>
   </div>
   </body>

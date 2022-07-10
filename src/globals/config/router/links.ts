@@ -19,6 +19,10 @@ const navBarLinks:Link[] = [
             {
                 name:'Solicitar Acceso',
                 router:{name: 'api-key-page'}
+            },
+            {
+                name:'Registros',
+                router:{name: 'log-page'}
             }
         ]
     },
@@ -49,6 +53,23 @@ const navBarLinks:Link[] = [
     {
         name:"Formacion Complementaria",
         childrens:[
+            {
+                name: 'Reportes',
+                childrens:[
+                    {
+                        name:'Tutores del Area',
+                        router:{name:'fc-tutores'}
+                    },
+                    {
+                        name:'Graduados del Area',
+                        router:{name:'fc-graduados'}
+                    },
+                    {
+                        name:'Graduados sin Aval',
+                        router:{name: 'fc-graduados-sin-aval'}
+                    }
+                ]
+            },
             {
                 name:'Conformar',
                 router:{name:'fc-conformar'}

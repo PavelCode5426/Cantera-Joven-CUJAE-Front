@@ -1,5 +1,7 @@
-import UserModel from "~/services/models/user.model";
+import HasAreaDirectoryInterface from "~/services/models/directorio/hasArea.directory.interface";
+import UserDirectoryModel from "~/services/models/directorio/user.directory.model";
 
-export class GraduatedDirectoryModel extends UserModel {
-    area: string
+export default class GraduatedDirectoryModel extends UserDirectoryModel implements HasAreaDirectoryInterface{
+    esExterno:boolean
+    esNivelSuperior:boolean
 }

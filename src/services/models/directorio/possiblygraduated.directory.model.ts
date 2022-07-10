@@ -1,5 +1,5 @@
-import UserModel from "~/services/models/user.model";
+import UserDirectoryModel from "~/services/models/directorio/user.directory.model";
 
-export class PossiblyGraduatedDirectoryModel extends UserModel {
+export default class PossiblyGraduatedDirectoryModel extends UserDirectoryModel {
     lugarProcedencia: string
 }

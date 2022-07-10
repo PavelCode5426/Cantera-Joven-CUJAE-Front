@@ -11,6 +11,7 @@
     <ul class="dropdown-menu">
       <li>
         <ul class="dropdown-menu-list scroller">
+          <nav-bar-notification-empty v-if="notifications.length == 0"/>
           <nav-bar-notification-item v-for="notification in notifications"
                                      :id="notification.id"
                                      :unread="notification.unread"
@@ -34,6 +35,7 @@ import {storeToRefs} from "pinia"
 import notificationServiceInstance from "~/services/notification.services"
 import {ServerError, ServerResponse} from "~/globals/config/axios";
 import {checkServerErrorAndRedirect} from "~/helpers/utils";
+import NavBarNotificationEmpty from "~/modules/notification/components/NavBar/NavBarNotificationEmpty.vue";
 
 const notificationsStore = NotificationStore()
 const authStore = AuthStore()
