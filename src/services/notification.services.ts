@@ -2,7 +2,6 @@ import {CallWithToken, ServerError, SerializePromese, ServerResponse} from '@/gl
 import NotificationModel from "~/services/models/notification.model"
 import {getRealativeTime} from "~/helpers/utils";
 
-
 export class NotificationService {
     public async notReadNotifications(): Promise<ServerResponse | ServerError> {
         const call = CallWithToken().get('notificacion/sin-leer')
