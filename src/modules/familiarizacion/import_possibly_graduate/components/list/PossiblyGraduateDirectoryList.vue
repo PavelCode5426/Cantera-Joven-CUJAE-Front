@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import {toogleLoadingDecorator} from "~/globals/composables/useLoading"
 import {ElTable} from "element-plus"
-import DirectoryServices from "@/services/directory.services"
+import DirectoryServices from "~/services/directory.services"
 import {PossiblyGraduatedDirectoryModel} from "~/services/models/directorio/possiblygraduated.directory.model";
 import {
   checkIsAuthenticateAndChangeStorage,
