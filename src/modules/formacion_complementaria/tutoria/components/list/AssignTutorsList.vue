@@ -31,7 +31,8 @@
     </el-table-column>
     <el-table-column>
       <template #default="scope">
-
+        <simple-button buttonTitle="Asignar Tutores"
+                       buttonIcon="entypo-plus"/>
       </template>
     </el-table-column>
   </el-table>

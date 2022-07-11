@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import forceLoading,{toogleLoading} from "~/globals/composables/useLoading";
+import {activateLoading,desactivateLoading} from "~/globals/composables/useLoading";
 
 interface Props {
   loading:boolean
@@ -22,7 +22,10 @@ const props = withDefaults(defineProps<Props>(),{
   buttonType:'btn-info',
   loading:false
 })
+const forceLoading = ref(false)
 
-defineExpose({toogleLoading})
+const activateLocalLoading = () => activateLoading(forceLoading)
+const desactivateLocalLoading = () => desactivateLoading(forceLoading)
+defineExpose({activateLocalLoading,desactivateLocalLoading})
 
 </script>

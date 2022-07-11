@@ -44,6 +44,7 @@
         <confirm-pop-button
             @on-confirm="importGraduate(scope.row)"
             buttonTitle="Importar"
+            buttonIcon="entypo-plus"
             title="¿Esta seguro que desea importar el graduado?"/>
       </template>
     </el-table-column>
