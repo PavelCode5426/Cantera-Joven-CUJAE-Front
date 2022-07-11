@@ -15,6 +15,8 @@ declare module '@vue/runtime-core' {
     AraTutorList: typeof import('./../modules/formacion_complementaria/tutoria/pages/AraTutorList.vue')['default']
     AraTutorListPage: typeof import('./../modules/formacion_complementaria/tutoria/pages/AraTutorListPage.vue')['default']
     AssignArea: typeof import('./../modules/familiarizacion/assign_area/components/transfer/AssignArea.vue')['default']
+    AssignTutorPage: typeof import('./../modules/formacion_complementaria/tutoria/pages/AssignTutorPage.vue')['default']
+    AssignTutorsList: typeof import('./../modules/formacion_complementaria/tutoria/components/list/AssignTutorsList.vue')['default']
     ConfigurationForm: typeof import('./../modules/configuracion/components/forms/ConfigurationForm.vue')['default']
     ConfigurationPage: typeof import('./../modules/configuracion/pages/ConfigurationPage.vue')['default']
     ConfigurationVariable: typeof import('./../modules/configuracion/components/forms/ConfigurationVariable.vue')['default']

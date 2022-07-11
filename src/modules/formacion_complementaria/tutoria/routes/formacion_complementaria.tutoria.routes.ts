@@ -13,6 +13,15 @@ const routes:RouteRecordRaw[] = [
         layout:["Admin"]
     },
     {
+        path:'tutores/asignar',
+        name:'fc-asignar-tutores',
+        component:() => import("../pages/AssignTutorPage.vue"),
+        meta:{
+            title:"Asignar Tutores"
+        },
+        layout:["Admin"]
+    },
+    {
         path:'graduados',
         name:'fc-graduados',
         component:() => import("../pages/AraGraduateListPage.vue"),

@@ -71,6 +71,10 @@ const navBarLinks:Link[] = [
                 ]
             },
             {
+              name:'Asignar Tutores',
+              router: {name:'fc-asignar-tutores'}
+            },
+            {
                 name:'Conformar',
                 router:{name:'fc-conformar'}
             }
