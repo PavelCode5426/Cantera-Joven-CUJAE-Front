@@ -5,10 +5,10 @@
                  @confirm="onConfirmEvent()"
                  @cancel="emit('on-cancel')">
     <template #reference>
-      <button type="button" class="btn uk-text-bold" :class="buttonType">
-        <loading v-if="loadingConfirm"/>
-        <i v-else :class="buttonIcon"/> {{buttonTitle}}
-      </button>
+      <simple-button :loading="loadingConfirm"
+                     :buttonType="buttonType"
+                     :buttonTitle="buttonTitle"
+                     :buttonIcon="buttonIcon"/>
     </template>
   </el-popconfirm>
 </template>

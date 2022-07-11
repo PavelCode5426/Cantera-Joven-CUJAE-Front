@@ -64,6 +64,7 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     ServerErrorPage: typeof import('./../modules/error/pages/ServerErrorPage.vue')['default']
     ShapePage: typeof import('./../modules/cantera/import_student/pages/ShapePage.vue')['default']
+    SimpleButton: typeof import('./../globals/components/Buttons/SimpleButton.vue')['default']
     SimplePageHeader: typeof import('./../globals/components/Texts/SimplePageHeader.vue')['default']
     StudentsDirectoryList: typeof import('./../modules/cantera/import_student/components/list/StudentsDirectoryList.vue')['default']
     TutorSimpleTable: typeof import('./../modules/formacion_complementaria/tutoria/components/shared/TutorSimpleTable.vue')['default']

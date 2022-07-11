@@ -29,7 +29,15 @@
         <el-tag v-else type="danger">Sin Aval</el-tag>
       </template>
     </el-table-column>
+    <el-table-column>
+      <template #default="scope">
+
+      </template>
+    </el-table-column>
   </el-table>
+
+
+
 </template>
 
 <script setup lang="ts">
@@ -43,6 +51,10 @@ import GraduatedModel from "~/services/models/graduated.model"
 
 isLoadingTable.value = true
 const graduatesWithoutTutors = ref([] as GraduatedModel[])
+const selectedGraduate = ref<GraduatedModel | undefined>()
+const showAssignForm = ref(false)
+
+
 
 let updateTable = async () => {
   const response = await FormacionServices.tutoriaService.listAreaGraduatesWithoutTutor()
@@ -50,5 +62,25 @@ let updateTable = async () => {
     graduatesWithoutTutors.value = response.data as GraduatedModel[]
 }
 updateTable = toogleLoadingDecorator(updateTable,isLoadingTable)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 updateTable()
 </script>
