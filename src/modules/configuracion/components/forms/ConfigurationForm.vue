@@ -3,7 +3,7 @@
     <configuration-variable v-for="(config,index) in configs"
                             :key="index"
                             :title="config.title"
-                            :ref="registerArrayRefs"
+                            :ref="registerArrayRefs(configurationValueRefs)"
                             :config="config.config"/>
   </el-row>
   <confirm-dialog-button buttonTitle="Guardar Cambios"
@@ -18,10 +18,11 @@
 import ConfigurationService from "~/services/configuration.services"
 import {checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect} from "~/helpers/utils"
 import {ConfigHelper} from "~/modules/configuracion/helpers/config.helpers";
-import {ServerError} from "~/globals/config/axios";
+import {ServerError} from "~/globals/config/axios"
+import {registerArrayRefs,newArrayRef} from "~/globals/composables/useRegisterArrayRef";
 
 let configs = ref([])
-const configurationValueRefs = ref([])
+const configurationValueRefs = newArrayRef()
 
 async function loadConfigurations() {
   const  confs = await ConfigurationService.listConfigs()
@@ -29,9 +30,6 @@ async function loadConfigurations() {
   configs.value = ConfigHelper.fromConfigModel(confs.data)
 }
 
-function registerArrayRefs(el:any){
-  configurationValueRefs.value.push(el)
-}
 async function canSaveConfigurationVars(){
   let is = true
   const configRef = configurationValueRefs.value

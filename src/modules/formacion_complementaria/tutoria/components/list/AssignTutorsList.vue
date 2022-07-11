@@ -32,6 +32,8 @@
     <el-table-column>
       <template #default="scope">
         <simple-button buttonTitle="Asignar Tutores"
+                       :ref="registerArrayRefs(assignButtonsRef)"
+                       @click="onClickAssignButton(scope)"
                        buttonIcon="entypo-plus"/>
       </template>
     </el-table-column>
@@ -49,13 +51,13 @@ import {
 } from "~/helpers/utils"
 import FormacionServices from "~/services/formacion.services"
 import GraduatedModel from "~/services/models/graduated.model"
+import {newArrayRef, registerArrayRefs} from "~/globals/composables/useRegisterArrayRef"
 
 isLoadingTable.value = true
 const graduatesWithoutTutors = ref([] as GraduatedModel[])
 const selectedGraduate = ref<GraduatedModel | undefined>()
 const showAssignForm = ref(false)
-
-
+const assignButtonsRef = newArrayRef()
 
 let updateTable = async () => {
   const response = await FormacionServices.tutoriaService.listAreaGraduatesWithoutTutor()
@@ -64,9 +66,12 @@ let updateTable = async () => {
 }
 updateTable = toogleLoadingDecorator(updateTable,isLoadingTable)
 
+async function onClickAssignButton(tableRow:any){
+  const btnIndex = tableRow.$index
+  const assingButtonRef = assignButtonsRef.value[btnIndex]
 
-
-
+  assingButtonRef.activateLocalLoading()
+}
 
 
 
