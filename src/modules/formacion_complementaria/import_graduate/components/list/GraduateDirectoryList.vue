@@ -54,7 +54,7 @@
 import {toogleLoadingDecorator} from "~/globals/composables/useLoading"
 import {ElTable} from "element-plus"
 import {GraduatedDirectoryModel} from "~/services/models/directorio/graduatedirectory.model"
-import DirectoryServices from "@/services/directory.services"
+import DirectoryServices from "~/services/directory.services"
 import {
   checkIsAuthenticateAndChangeStorage,
   checkIsAuthenticateAndRedirect,

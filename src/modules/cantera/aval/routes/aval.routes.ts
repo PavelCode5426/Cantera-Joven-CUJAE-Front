@@ -1,15 +1,15 @@
 import {RouteRecordRaw} from "vue-router";
 import {putPrefixInRoutes} from "~/helpers/router.load";
 
-const prefix = 'cantera/'
+const prefix = 'aval/'
 const routes:RouteRecordRaw[] = [
     {
-        path:'conformar',
-        name:'c-conformar',
+        path:'crear-aval',
+        name:'crear-aval',
         component: () => import("../pages/ShapePage.vue"),
         layout:["Admin"],
         meta:{
-            title:"Conformar Cantera Joven"
+            title:"Conformar Familiarizacion"
         }
     }
 ]
