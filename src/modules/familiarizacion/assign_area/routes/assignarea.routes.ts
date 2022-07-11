@@ -6,7 +6,7 @@ const routes:RouteRecordRaw[] = [
     {
         path:'area/asignar',
         name:'f-asignar-areas',
-        component:() => import("../components/list/AssignAreaList.vue"),
+        component:() => import("../pages/AssignAreaPage.vue"),
         meta:{
             title:"Asignar Area"
         },

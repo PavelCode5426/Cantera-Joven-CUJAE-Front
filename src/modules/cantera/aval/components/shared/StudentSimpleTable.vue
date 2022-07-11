@@ -1,5 +1,6 @@
 <template>
   <el-table :data="students">
+    <h3>Estudiantes</h3>
     <el-table-column label="Nombre y Apellido">
       <template #default="scope">
         {{scope.row.first_name + ' ' + scope.row.last_name}}
@@ -12,6 +13,14 @@
       <template #default="scope">
         <el-tag v-if="scope.row.aval" type="success">Aval Listo</el-tag>
         <el-tag v-else type="danger">Sin Aval</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column>
+      <template #default="scope">
+        <simple-button buttonTitle="Crear Aval"
+                       :ref="registerArrayRefs(assignButtonsRef)"
+                       @click="onClickAssignButton(scope)"
+                       buttonIcon="entypo-plus"/>
       </template>
     </el-table-column>
   </el-table>

@@ -1,75 +1,77 @@
 <template>
-  <el-form :model="form" label-width="120px">
-    <el-form-item label="Índice Académico">
-      <el-input v-model="form.indiceAcademico" class="w-50 m-2"/>
-      <el-input
-          v-model="form.indiceAcademico"
-          class="w-50 m-2"
-          size="small"
-      />
-    </el-form-item>
-    <el-form-item label="¿Es militante?">
-      <el-switch
-          v-model="form.esMilitante"
-          class="mt-2"
-          style="margin-left: 24px"
-          inline-prompt
-          :active-icon="Check"
-          :inactive-icon="Close"
-      />
-    </el-form-item>
-    <el-form-item label="Factores Universitarios">
-      <el-switch
-          v-model="form.factoresUniversitarios"
-          class="mt-2"
-          style="margin-left: 24px"
-          inline-prompt
-          :active-icon="Check"
-          :inactive-icon="Close"
-      />
-    </el-form-item>
-    <el-form-item label="Factores Trayecoria">
-      <el-switch
-          v-model="form.factoresTrayectoria"
-          class="mt-2"
-          style="margin-left: 24px"
-          inline-prompt
-          :active-icon="Check"
-          :inactive-icon="Close"
-      />
-    </el-form-item>
-    <el-form-item label="¿Participó Tareas de Impacto?">
-      <el-switch
-          v-model="form.participoTareasImpacto"
-          class="mt-2"
-          style="margin-left: 24px"
-          inline-prompt
-          :active-icon="Check"
-          :inactive-icon="Close"
-      />
-    </el-form-item>
-    <el-form-item label="Departamento Alumno Ayudante">
-      <el-input v-model="form.departamento_AA" />
-    <el-form-item label="Cargos como Estudiante:">
-      <el-input v-model="form.cargosEstudiante" type="textarea" />
-    </el-form-item>
-    <el-form-item label="Cargos como Militante">
-      <el-input v-model="form.cargosMilitante" type="textarea" />
-    </el-form-item>
-    <el-form-item label="Resumen Desempeño">
-      <el-input v-model="form.resumenDesempeno" type="textarea" />
-    </el-form-item>
-    <el-form-item>
-      <template #footer>
-        <div class="modal-footer">
-          <button class="btn btn-info" @click="submitForm()" :class="{disabled:!form.name.length}">
-            <loading v-if="isLocalLoading"/> Crear
-          </button>
-          <button class="btn btn-default" @click="closeDialog()">Cerrar</button>
-        </div>
-      </template>
-    </el-form-item>
-  </el-form>
+  <el-dialog v-model="dialogVisible" title="Crear nuevo Aval" :closed="clearForm()" :show-close="false">
+    <el-form :model="form" label-width="120px">
+      <el-form-item label="Índice Académico">
+        <el-input v-model="form.indiceAcademico" class="w-50 m-2"/>
+        <el-input
+            v-model="form.indiceAcademico"
+            class="w-50 m-2"
+            size="small"
+        />
+      </el-form-item>
+      <el-form-item label="¿Es militante?">
+        <el-switch
+            v-model="form.esMilitante"
+            class="mt-2"
+            style="margin-left: 24px"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+        />
+      </el-form-item>
+      <el-form-item label="Factores Universitarios">
+        <el-switch
+            v-model="form.factoresUniversitarios"
+            class="mt-2"
+            style="margin-left: 24px"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+        />
+      </el-form-item>
+      <el-form-item label="Factores Trayecoria">
+        <el-switch
+            v-model="form.factoresTrayectoria"
+            class="mt-2"
+            style="margin-left: 24px"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+        />
+      </el-form-item>
+      <el-form-item label="¿Participó Tareas de Impacto?">
+        <el-switch
+            v-model="form.participoTareasImpacto"
+            class="mt-2"
+            style="margin-left: 24px"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+        />
+      </el-form-item>
+      <el-form-item label="Departamento Alumno Ayudante">
+        <el-input v-model="form.departamento_AA" />
+      <el-form-item label="Cargos como Estudiante:">
+        <el-input v-model="form.cargosEstudiante" type="textarea" />
+      </el-form-item>
+      <el-form-item label="Cargos como Militante">
+        <el-input v-model="form.cargosMilitante" type="textarea" />
+      </el-form-item>
+      <el-form-item label="Resumen Desempeño">
+        <el-input v-model="form.resumenDesempeno" type="textarea" />
+      </el-form-item>
+      <el-form-item>
+        <template #footer>
+          <div class="modal-footer">
+            <button class="btn btn-info" @click="submitForm()" :class="{disabled:!form.name.length}">
+              <loading v-if="isLocalLoading"/> Crear
+            </button>
+            <button class="btn btn-default" @click="closeDialog()">Cerrar</button>
+          </div>
+        </template>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -151,3 +153,4 @@ function clearForm(){
 <style scoped>
 
 </style>
+

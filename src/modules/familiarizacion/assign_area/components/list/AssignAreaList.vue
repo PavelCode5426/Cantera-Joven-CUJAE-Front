@@ -16,9 +16,6 @@
       </template>
     </el-table-column>
   </el-table>
-
-
-
 </template>
 
 <script setup lang="ts">
