@@ -5,12 +5,11 @@ const arrayRef = ref([])
 
 export function clearArrayRefs(array:Ref<Array<any>>|undefined){
     if (array !== undefined)
-        array.value = []
+        array = []
     else
         arrayRef.value = []
 }
 export function registerArrayRefs(array:Ref<Array<any>>|undefined){
-    console.log(array)
     return (el:any) => {
         if (array !== undefined)
             array.push(el)

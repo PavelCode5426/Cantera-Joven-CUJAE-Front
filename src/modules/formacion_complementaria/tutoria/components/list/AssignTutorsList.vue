@@ -33,20 +33,24 @@
       <template #default="scope">
         <simple-button buttonTitle="Asignar Tutores"
                        :ref="registerArrayRefs(assignButtonsRef)"
+                       :class="{'disabled':!scope.row.aval}"
                        @click="onClickAssignButton(scope)"
                        buttonIcon="entypo-plus"/>
       </template>
     </el-table-column>
   </el-table>
 
-
-
+  <assign-tutor-form @closed="onCloseAssingTutorForm()"
+                     @on-success="onSuccessAssingTutorForm"
+                     :graduate="selectedGraduate"
+                     :show="show"/>
 </template>
 
 <script setup lang="ts">
 import isLoadingTable,{toogleLoadingDecorator} from "~/globals/composables/useLoading"
 import {
-  checkIsAuthenticateAndRedirect,
+  checkIsAuthenticateAndChangeStorage,
+  checkIsAuthenticateAndRedirect, checkServerErrorAndMessage,
   checkServerErrorAndRedirect
 } from "~/helpers/utils"
 import FormacionServices from "~/services/formacion.services"
@@ -56,8 +60,9 @@ import {newArrayRef, registerArrayRefs} from "~/globals/composables/useRegisterA
 isLoadingTable.value = true
 const graduatesWithoutTutors = ref([] as GraduatedModel[])
 const selectedGraduate = ref<GraduatedModel | undefined>()
-const showAssignForm = ref(false)
 const assignButtonsRef = newArrayRef()
+const show  = ref(false)
+
 
 let updateTable = async () => {
   const response = await FormacionServices.tutoriaService.listAreaGraduatesWithoutTutor()
@@ -69,21 +74,20 @@ updateTable = toogleLoadingDecorator(updateTable,isLoadingTable)
 async function onClickAssignButton(tableRow:any){
   const btnIndex = tableRow.$index
   const assingButtonRef = assignButtonsRef.value[btnIndex]
-
+  selectedGraduate.value = tableRow.row
   assingButtonRef.activateLocalLoading()
+  show.value = true
+  assingButtonRef.desactivateLocalLoading()
 }
-
-
-
-
-
-
-
-
-
-
-
-
+function onCloseAssingTutorForm(){
+  selectedGraduate.value = undefined
+  show.value = false
+}
+async function onSuccessAssingTutorForm() {
+  await updateTable()
+  show.value = false
+  ElMessage.success("Tutores asignados correctamente")
+}
 
 
 
