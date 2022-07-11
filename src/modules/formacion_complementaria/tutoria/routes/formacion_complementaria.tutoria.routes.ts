@@ -22,6 +22,33 @@ const routes:RouteRecordRaw[] = [
         layout:["Admin"]
     },
     {
+        path:'tutores/solicitudes',
+        name:'fc-solicitudes-tutores-recibidas',
+        component:() => import("../pages/ExternalTutorRequestRecivedPage.vue"),
+        meta:{
+            title:"Solicitud de Tutor Recibidas"
+        },
+        layout:["Admin"]
+    },
+    {
+        path:'tutores/solicitudes/enviadas',
+        name:'fc-solicitudes-tutores-enviadas',
+        component:() => import("../pages/ExternalTutorRequestSendedPage.vue"),
+        meta:{
+            title:"Solicitud de Tutor Enviadas"
+        },
+        layout:["Admin"]
+    },
+    {
+        path:'tutores/solicitudes/pendientes',
+        name:'fc-solicitudes-tutores-pendientes',
+        component:() => import("../pages/ExternalTutorRequestPendingPage.vue"),
+        meta:{
+            title:"Solicitud de Tutor Pendientes"
+        },
+        layout:["Admin"]
+    },
+    {
         path:'graduados',
         name:'fc-graduados',
         component:() => import("../pages/AraGraduateListPage.vue"),

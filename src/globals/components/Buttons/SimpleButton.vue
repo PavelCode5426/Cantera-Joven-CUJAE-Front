@@ -20,7 +20,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(),{
   buttonType:'btn-info',
-  loading:false
+  loading:false,
 })
 const forceLoading = ref(false)
 

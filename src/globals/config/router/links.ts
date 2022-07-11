@@ -92,6 +92,23 @@ const navBarLinks:Link[] = [
               router: {name:'fc-asignar-tutores'}
             },
             {
+                name:'Solicitudes de Tutores',
+                childrens:[
+                    {
+                        name: "Solicitudes Enviadas",
+                        router:{name:'fc-solicitudes-tutores-enviadas'}
+                    },
+                    {
+                        name: "Solicitudes Recibidas",
+                        router:{name:'fc-solicitudes-tutores-recibidas'}
+                    },
+                    {
+                        name: "Solicitudes Pendientes",
+                        router:{name:'fc-solicitudes-tutores-pendientes'}
+                    }
+                ]
+            },
+            {
                 name:'Conformar',
                 router:{name:'fc-conformar'}
             }

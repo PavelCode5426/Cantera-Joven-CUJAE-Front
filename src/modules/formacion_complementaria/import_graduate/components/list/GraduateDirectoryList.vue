@@ -74,11 +74,9 @@ let updateTable = async () => {
     graduates.value = response.data as GraduatedDirectoryModel[]
 }
 updateTable = toogleLoadingDecorator(updateTable,isLoadingTable)
-
 function handleTableSelection(val:GraduatedDirectoryModel[]){
   selectedGraduates.value = val
 }
-
 
 
 async function importGraduate(item: GraduatedDirectoryModel){
@@ -98,8 +96,6 @@ let importSelectedGraduates = async () => {
   }
 }
 importSelectedGraduates = toogleLoadingDecorator(importSelectedGraduates,isImportSelectedLoading)
-
-
 
 
 
