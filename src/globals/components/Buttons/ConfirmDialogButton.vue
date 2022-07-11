@@ -1,8 +1,9 @@
 <template>
-  <button type="button" class="btn uk-text-bold" :class="buttonType" @click="onClickButton()">
-    <loading v-if="loadingConfirm"/>
-    <i v-else :class="buttonIcon"/> {{buttonTitle}}
-  </button>
+  <simple-button :loading="loadingConfirm"
+                 :buttonType="buttonType"
+                 :buttonTitle="buttonTitle"
+                 :buttonIcon="buttonIcon"
+                 @click="onClickButton()"/>
 </template>
 
 
@@ -15,12 +16,14 @@ interface Props{
   dialogTitle:string,
   dialogMessage:string,
   buttonTitle:string,
-  buttonIcon:string,
+  buttonIcon: {
+    type:string
+    required:false
+  },
   buttonType:string
 }
 const props = withDefaults(defineProps<Props>(),{
   buttonType:'btn-info',
-  buttonIcon:'',
   dialogTitle:'Alerta'
 })
 const emit = defineEmits(['on-confirm','on-cancel'])
