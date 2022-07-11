@@ -32,6 +32,19 @@ const navBarLinks:Link[] = [
         name: "Cantera",
         childrens:[
             {
+                name: 'Reportes',
+                childrens:[
+                    {
+                        name:'Estudiantes del Area',
+                        router:{name:'c-estudiantes'}
+                    },
+                    {
+                        name:'Estudiantes sin Aval',
+                        router:{name: 'c-estudiantes-sin-aval'}
+                    }
+                ]
+            },
+            {
                 name:'Conformar',
                 router:{name:'c-conformar'}
             }
