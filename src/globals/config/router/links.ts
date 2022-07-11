@@ -58,7 +58,11 @@ const navBarLinks:Link[] = [
             {
                 name:'Conformar',
                 router:{name:'f-conformar'}
-            }
+            },
+            {
+                name:'Asignar Areas',
+                router: {name:'f-asignar-areas'}
+            },
         ]
     },
 
