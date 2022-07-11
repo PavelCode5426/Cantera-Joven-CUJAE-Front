@@ -75,8 +75,8 @@
 <script lang="ts" setup>
 
 import { reactive } from 'vue'
-import AvalService from "@/services/aval.services"
-import defaulDialogFormProps from "@/globals/composables/useDialogForm"
+import AvalService from "~/services/aval.services"
+import defaulDialogFormProps from "~/globals/composables/useDialogForm"
 import useVuelidate from "@vuelidate/core"
 
 //USE COMPOSABLES
@@ -84,11 +84,10 @@ import isLocalLoading, {
   activateLoading,
   desactivateLoading,
   toogleLoadingDecorator
-} from "@/globals/composables/useLoading"
+} from "~/globals/composables/useLoading"
 import {required} from "@vuelidate/validators";
 import {checkIsAuthenticateAndChangeStorage, checkServerErrorAndMessage, isAuthenticate} from "~/helpers/utils";
 import AvalModel from "~/services/models/aval.model";
-import {AvalService} from "~/services/aval.services";
 
 interface DialogFormProp {
   dialogVisible:boolean | undefined

@@ -38,9 +38,10 @@ export class DirectoryServices {
         const response = await SerializePromese(call)
         return response
     }
+
     //POSIBLES GRADUADOS
     public async possiblyGraduatesWithoutImport(){
-        const call = CallWithToken().get(´/directorio/posible-graduado´)
+        const call = CallWithToken().get('/directorio/posible-graduado')
         const response = await SerializePromese(call)
         if (response instanceof ServerResponse && response.httpCode == 200)
             response.data = response.data as PossiblyGraduatedDirectoryModel[]
