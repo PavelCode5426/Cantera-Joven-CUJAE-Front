@@ -1,4 +1,5 @@
 <template>
+  <simple-page-header title="Listado de Graduados sin Aval"/>
   <graduated-simple-table :graduates="graduates"/>
 </template>
 
@@ -15,7 +16,7 @@ isLoadingTable.value = true
 const graduates = ref([] as GraduatedModel[])
 
 let updateTable = async () => {
-  const response = await FormacionServices.tutoriaService.listAreaGraduates()
+  const response = await FormacionServices.tutoriaService.listAreaGraduatesWithoutAval()
   if (!checkServerErrorAndRedirect(response) && checkIsAuthenticateAndRedirect(response))
     graduates.value = response.data as GraduatedModel[]
 }

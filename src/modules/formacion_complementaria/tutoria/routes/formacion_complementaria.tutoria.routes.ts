@@ -6,54 +6,27 @@ const routes:RouteRecordRaw[] = [
     {
         path:'tutores',
         name:'fc-tutores',
-        components:{
-            default: () => import("@/globals/pages/GenericListPage.vue"),
-            list: () => import("../components/list/AraTutorList.vue")
-        },
+        component:() => import("../pages/AraTutorListPage.vue"),
         meta:{
             title:"Listado de Tutores"
-        },
-        props:{
-            default: {
-                listTitle:"Listado de Tutores del Area",
-                listDescription:""
-            }
         },
         layout:["Admin"]
     },
     {
         path:'graduados',
         name:'fc-graduados',
-        components:{
-            default: () => import("@/globals/pages/GenericListPage.vue"),
-            list: () => import("../components/list/AraGraduateList.vue")
-        },
+        component:() => import("../pages/AraGraduateListPage.vue"),
         meta:{
             title:"Listado de Graduados"
-        },
-        props:{
-            default: {
-                listTitle:"Listado de Graduados del Area",
-                listDescription:""
-            }
         },
         layout:["Admin"]
     },
     {
         path:'sin-aval',
         name:'fc-graduados-sin-aval',
-        components:{
-            default: () => import("@/globals/pages/GenericListPage.vue"),
-            list: () => import("../components/list/AraGraduateWithoutAvalList.vue")
-        },
+        component: () => import("../pages/AraGraduateWithoutAvalListPage.vue"),
         meta:{
             title:"Listado de Graduados sin Aval"
-        },
-        props:{
-            default: {
-                listTitle:"Listado de Graduados sin Aval del Area",
-                listDescription:""
-            }
         },
         layout:["Admin"]
     }
