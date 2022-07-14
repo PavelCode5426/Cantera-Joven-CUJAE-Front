@@ -19,7 +19,7 @@ declare module '@vue/runtime-core' {
     AreaStudentsPage: typeof import('./../modules/cantera/aval/pages/AreaStudentsPage.vue')['default']
     AreaStudentWithoutAval: typeof import('./../modules/cantera/aval/components/list/AreaStudentWithoutAval.vue')['default']
     AreaStudentWithoutAvalPage: typeof import('./../modules/cantera/aval/pages/AreaStudentWithoutAvalPage.vue')['default']
-    AssignArea: typeof import('./../modules/familiarizacion/assign_area/components/transfer/AssignArea.vue')['default']
+    AssignArea: typeof import('./../modules/familiarizacion/assign_area/components/forms/AssignArea.vue')['default']
     AssignAreaList: typeof import('./../modules/familiarizacion/assign_area/components/list/AssignAreaList.vue')['default']
     AssignAreaPage: typeof import('./../modules/familiarizacion/assign_area/pages/AssignAreaPage.vue')['default']
     AssignTutorForm: typeof import('./../modules/formacion_complementaria/tutoria/components/forms/AssignTutorForm.vue')['default']

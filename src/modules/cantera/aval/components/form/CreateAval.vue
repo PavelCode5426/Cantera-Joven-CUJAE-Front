@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="Crear nuevo Aval" :closed="clearForm()" :show-close="false">
+  <el-dialog v-model="show" title="Crear nuevo Aval" @open="openDialog()" :show-close="false">
     <el-form :model="form" label-width="120px">
       <el-form-item label="Índice Académico">
         <el-input v-model="form.indiceAcademico" class="w-50 m-2"/>
@@ -66,7 +66,7 @@
             <button class="btn btn-info" @click="submitForm()" :class="{disabled:!form.name.length}">
               <loading v-if="isLocalLoading"/> Crear
             </button>
-            <button class="btn btn-default" @click="closeDialog()">Cerrar</button>
+            <button class="btn btn-default" @click="emit('closed')">Cerrar</button>
           </div>
         </template>
       </el-form-item>
@@ -90,10 +90,16 @@ import isLocalLoading, {
 import {required} from "@vuelidate/validators";
 import {checkIsAuthenticateAndChangeStorage, checkServerErrorAndMessage, isAuthenticate} from "~/helpers/utils";
 import AvalModel from "~/services/models/aval.model";
+import GraduatedModel from "~/services/models/graduated.model";
 
 interface DialogFormProp {
-  dialogVisible:boolean | undefined
+  possiblegraduate: GraduatedModel | undefined,
+  show:boolean
 }
+const props = withDefaults(defineProps<FormProps>(),{
+  possiblegraduate:undefined,
+  show:false
+})
 
 withDefaults(defineProps<DialogFormProp>(),{
   ...defaulDialogFormProps
@@ -125,7 +131,7 @@ let submitForm = async () => {
   if (isFormCorrect) {
     const aval = form.value
 
-    const response = await AvalService.createAval(id, aval)
+    const response = await AvalService.createAval(props.possiblegraduate.id, aval)
     if(!checkServerErrorAndMessage(response) && checkIsAuthenticateAndChangeStorage(response)){
       closeDialog()
       ElMessage.success({message:"Aval creado correctamente"})
@@ -146,6 +152,9 @@ function clearForm(){
   form.value.cargosMilitante = ''
   form.value.resumenDesempeno = ''
 }
+
+const emit = defineEmits(['on-success'])
+
 
 </script>
 

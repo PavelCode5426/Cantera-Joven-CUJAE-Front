@@ -16,6 +16,11 @@
       </template>
     </el-table-column>
   </el-table>
+  <assign-area-form @closed="onCloseAssingAreaForm()"
+                     @on-success="onSuccessAssingAreaForm"
+                     :possiblegraduate="selectedPG"
+                     :show="show"
+/>
 </template>
 
 <script setup lang="ts">
@@ -24,14 +29,14 @@ import {
   checkIsAuthenticateAndRedirect,
   checkServerErrorAndRedirect
 } from "~/helpers/utils"
-import PossiblegraduateModel from "~/services/models/possiblegraduate.model";
+import PossiblegraduateModel from "~/services/models/possiblegraduate.model"
 import {newArrayRef, registerArrayRefs} from "~/globals/composables/useRegisterArrayRef"
-import familiarizacionServices from "~/services/familiarizacion.services";
+import familiarizacionServices from "~/services/familiarizacion.services"
 
 isLoadingTable.value = true
 const pgWithoutArea = ref([] as PossiblegraduateModel[])
-const selectedGraduate = ref<PossiblegraduateModel | undefined>()
-const showAssignForm = ref(false)
+const selectedPG = ref<PossiblegraduateModel | undefined>()
+const show = ref(false)
 const assignButtonsRef = newArrayRef()
 
 let updateTable = async () => {
@@ -44,9 +49,21 @@ updateTable = toogleLoadingDecorator(updateTable,isLoadingTable)
 async function onClickAssignButton(tableRow:any){
   const btnIndex = tableRow.$index
   const assingButtonRef = assignButtonsRef.value[btnIndex]
-
+  selectedPG.value = tableRow.row
   assingButtonRef.activateLocalLoading()
+  show.value = true
+  assingButtonRef.desactivateLocalLoading()
 }
+function onCloseAssingAreaForm(){
+  selectedPG.value = undefined
+  show.value = false
+}
+async function onSuccessAssingAreaForm() {
+  await updateTable()
+  show.value = false
+  ElMessage.success("Area asignada correctamente")
+}
+
 
 updateTable()
 </script>

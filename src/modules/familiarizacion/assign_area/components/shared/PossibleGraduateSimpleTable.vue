@@ -24,7 +24,7 @@ import PossiblegraduateModel from "~/services/models/possiblegraduate.model";
 interface Props{
   possiblegraduates: PossiblegraduateModel[]
 }
-const props = withDefaults(defineProps<Props>(),{
-  possiblegraduates:[] as PossiblegraduateModel[]
+const props = withDefaults(defineProps<Props>(), {
+  possiblegraduates:[] as PossiblegraduateModel[],
 })
 </script>
