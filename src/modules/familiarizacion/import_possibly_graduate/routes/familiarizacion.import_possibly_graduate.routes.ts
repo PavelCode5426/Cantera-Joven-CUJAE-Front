@@ -6,7 +6,7 @@ const routes:RouteRecordRaw[] = [
     {
         path:'conformar',
         name:'f-conformar',
-        component: () => import("../pages/ShapePage.vue"),
+        component: () => import("../pages/ConformFamiliarizationPage.vue"),
         layout:["Admin"],
         meta:{
             title:"Conformar Familiarizacion"

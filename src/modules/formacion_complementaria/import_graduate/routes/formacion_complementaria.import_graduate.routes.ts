@@ -6,7 +6,7 @@ const routes:RouteRecordRaw[] = [
     {
         path:'conformar',
         name:'fc-conformar',
-        component: () => import("../pages/ShapePage.vue"),
+        component: () => import("../pages/ConformComplementaryTrainingPage.vue"),
         layout:["Admin"],
         meta:{
             title:"Conformar Formacion Complementaria"

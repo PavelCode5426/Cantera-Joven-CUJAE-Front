@@ -24,6 +24,7 @@ export const createApp = ViteSSG(
     // install all modules under `globals/plugins/`
     Object.values(import.meta.globEager('./globals/plugins/**/*.ts')).forEach(async i => {
         const install = i.install?.(ctx)
+        console.log(install);
         if (install instanceof Promise)
             await install.then().catch((error)=> console.log(error))
     })

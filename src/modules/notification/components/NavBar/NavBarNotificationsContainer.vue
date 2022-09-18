@@ -4,7 +4,7 @@
       <i class="entypo-mail"></i>
       <span class="badge badge-danger">
             <Loading v-if="isLoading"/>
-            <templante v-else-if="notReadAmount">{{notReadAmount}}</templante>
+            <template v-else-if="notReadAmount">{{notReadAmount}}</template>
           </span>
     </a>
     <!-- dropdown menu (messages) -->

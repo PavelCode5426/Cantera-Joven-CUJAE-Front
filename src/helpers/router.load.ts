@@ -17,7 +17,6 @@ export function getLayoutRoutes(layout:string,requireModule:any) {
         return is;
     })
 }
-
 export function putPrefixInRoutes(prefix:string,routes:RouteRecordRaw[]){
     routes.forEach(i => i.path = prefix+i.path)
 }

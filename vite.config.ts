@@ -123,7 +123,7 @@ export default defineConfig({
     VueI18n({
       runtimeOnly: true,
       compositionOnly: true,
-      include: [path.resolve(__dirname, 'src/globals/plugins/i18n/locales/**')],
+      include: [path.resolve(__dirname, '**/locales/**')],
     }),
 
     // https://github.com/antfu/vite-plugin-inspect
