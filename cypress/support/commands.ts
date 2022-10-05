@@ -25,13 +25,40 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+// Object.values(import.meta.globEager('./cypress/**/*.commands.ts')).forEach((item: any) => {
+//   Cypress.Commands.addAll({ ...item })
+// })
+
+// import { login } from '../authentication/authentication.commands'
+// import { getBySel, getBySelLike } from '../commands/common.commands'
+
+// Cypress.Commands.add('login', login)
+// Cypress.Commands.add('getBySel', getBySel)
+// Cypress.Commands.add('getBySelLike', getBySelLike)
+
+import authentication from '../tests/authentication/authentication.commands'
+import configuration from '../tests/configuration/configuration.commands'
+import common from './common/common.commands'
+import logs from './../tests/logs/logs.commands'
+
+const commandsToRegister = [authentication, common, configuration, logs]
+
+function installCommands(installers) {
+  installers.forEach((commandIntaller) => {
+    const types = Object.keys(commandIntaller)
+
+    types.forEach((type) => {
+      let prevSubject: string | boolean = false
+
+      if (type === 'child')
+        prevSubject = true
+      else if (type === 'dual')
+        prevSubject = 'optional'
+
+      Cypress.Commands.addAll({ prevSubject }, { ...commandIntaller[type] })
+    })
+  })
+}
+
+installCommands(commandsToRegister)

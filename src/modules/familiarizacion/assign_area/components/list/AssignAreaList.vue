@@ -1,37 +1,12 @@
-<template>
-  <el-table :data="pgWithoutArea">
-    <el-table-column label="Nombre y Apellido">
-      <template #default="scope">
-        {{scope.row.first_name + ' ' + scope.row.last_name}}
-      </template>
-    </el-table-column>
-    <el-table-column label="Correo Electronico" prop="email"/>
-    <el-table-column label="Direccion" prop="direccion"/>
-    <el-table-column>
-      <template #default="scope">
-        <simple-button buttonTitle="Asignar Area"
-                       :ref="registerArrayRefs(assignButtonsRef)"
-                       @click="onClickAssignButton(scope)"
-                       buttonIcon="entypo-plus"/>
-      </template>
-    </el-table-column>
-  </el-table>
-  <assign-area-form @closed="onCloseAssingAreaForm()"
-                     @on-success="onSuccessAssingAreaForm"
-                     :possiblegraduate="selectedPG"
-                     :show="show"
-/>
-</template>
-
 <script setup lang="ts">
-import isLoadingTable,{toogleLoadingDecorator} from "~/globals/composables/useLoading"
+import isLoadingTable, { toogleLoadingDecorator } from '~/globals/composables/useLoading'
 import {
   checkIsAuthenticateAndRedirect,
-  checkServerErrorAndRedirect
-} from "~/helpers/utils"
-import PossiblegraduateModel from "~/services/models/possiblegraduate.model"
-import {newArrayRef, registerArrayRefs} from "~/globals/composables/useRegisterArrayRef"
-import familiarizacionServices from "~/services/familiarizacion.services"
+  checkServerErrorAndRedirect,
+} from '~/helpers/utils'
+import type PossiblegraduateModel from '~/services/models/possiblegraduate.model'
+import { newArrayRef, registerArrayRefs } from '~/globals/composables/useRegisterArrayRef'
+import familiarizacionServices from '~/services/familiarizacion.services'
 
 isLoadingTable.value = true
 const pgWithoutArea = ref([] as PossiblegraduateModel[])
@@ -44,9 +19,9 @@ let updateTable = async () => {
   if (!checkServerErrorAndRedirect(response) && checkIsAuthenticateAndRedirect(response))
     pgWithoutArea.value = response.data as PossiblegraduateModel[]
 }
-updateTable = toogleLoadingDecorator(updateTable,isLoadingTable)
+updateTable = toogleLoadingDecorator(updateTable, isLoadingTable)
 
-async function onClickAssignButton(tableRow:any){
+async function onClickAssignButton(tableRow: any) {
   const btnIndex = tableRow.$index
   const assingButtonRef = assignButtonsRef.value[btnIndex]
   selectedPG.value = tableRow.row
@@ -54,16 +29,44 @@ async function onClickAssignButton(tableRow:any){
   show.value = true
   assingButtonRef.desactivateLocalLoading()
 }
-function onCloseAssingAreaForm(){
+function onCloseAssingAreaForm() {
   selectedPG.value = undefined
   show.value = false
 }
 async function onSuccessAssingAreaForm() {
   await updateTable()
   show.value = false
-  ElMessage.success("Area asignada correctamente")
+  ElMessage.success('Area asignada correctamente')
 }
-
 
 updateTable()
 </script>
+
+<template>
+  <el-table :data="pgWithoutArea">
+    <el-table-column label="Nombre y Apellido">
+      <template #default="scope">
+        {{ `${scope.row.first_name} ${scope.row.last_name}` }}
+      </template>
+    </el-table-column>
+    <el-table-column label="Correo Electronico" prop="email" />
+    <el-table-column label="Direccion" prop="direccion" />
+    <el-table-column>
+      <template #default="scope">
+        <simple-button
+          :ref="registerArrayRefs(assignButtonsRef)"
+          button-title="Asignar Area"
+          data-test="btn-assing-area"
+          button-icon="entypo-plus"
+          @click="onClickAssignButton(scope)"
+        />
+      </template>
+    </el-table-column>
+  </el-table>
+  <assign-area-form
+    :possiblegraduate="selectedPG"
+    :show="show"
+    @closed="onCloseAssingAreaForm()"
+    @on-success="onSuccessAssingAreaForm"
+  />
+</template>

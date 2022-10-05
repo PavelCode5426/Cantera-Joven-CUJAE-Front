@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "module": "ESNext",
     "target": "ESNext",
-    "lib": ["DOM", "ESNext"],
+    "lib": ["DOM", "ESNext","es5"],
     "strict": true,
     "esModuleInterop": true,
     "jsx": "preserve",
@@ -20,12 +20,14 @@
       "vue/ref-macros",
       "vite-plugin-pages/client",
       "vite-plugin-vue-layouts/client",
-      "element-plus/global"
+      "element-plus/global",
+      "cypress"
     ],
     "paths": {
       "~/*": ["src/*"],
-      "@/*": ["src/*"],
+      "@/*": ["src/*"]
     }
   },
+  "include": ["**/*.ts"],
   "exclude": ["dist", "node_modules", "cypress"]
 }

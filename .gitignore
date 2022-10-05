@@ -9,3 +9,5 @@ node_modules
 .history
 .vscode
 *.log
+cypress/screenshots
+cypress/videos

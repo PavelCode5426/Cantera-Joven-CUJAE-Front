@@ -1,52 +1,14 @@
-<template>
-  <p>Listado de Estudiantes sin Importar al Sistema</p>
-  <el-row>
-    <el-col :offset="20">
-      <button type="button"
-              class="btn btn-primary uk-text-bold"
-              @click="importSelectedStudents()"
-              :class="{'disabled':!selectedStudents.length}">
-        <loading v-if="isImportSelectedLoading"/>
-        <i class="entypo-list-add" v-else/> Importar Seleccionados
-      </button>
-    </el-col>
-  </el-row>
-
-  <el-table :data="students"
-            @selection-change="handleTableSelection">
-    <el-table-column type="selection" width="55" />
-    <el-table-column label="Nombre y Apellido">
-      <template #default="scope">
-        {{scope.row.first_name + ' ' + scope.row.last_name}}
-      </template>
-    </el-table-column>
-    <el-table-column label="Correo Electronico" prop="email"/>
-    <el-table-column label="Area" prop="area"/>
-    <el-table-column label="Año Academico" prop="anno"/>
-
-    <el-table-column align="right">
-      <template #default="scope">
-        <confirm-pop-button
-            @on-confirm="importStudent(scope.row)"
-            buttonTitle="Importar"
-            buttonIcon="entypo-plus"
-            title="¿Esta seguro que desea importar el estudiante?"/>
-      </template>
-    </el-table-column>
-  </el-table>
-</template>
-
 <script setup lang="ts">
-import {toogleLoadingDecorator} from "~/globals/composables/useLoading"
-import {ElTable} from "element-plus"
-import DirectoryServices from "~/services/directory.services"
+import { ElTable } from 'element-plus'
+import { toogleLoadingDecorator } from '~/globals/composables/useLoading'
+import DirectoryServices from '~/services/directory.services'
 import {
   checkIsAuthenticateAndChangeStorage,
   checkIsAuthenticateAndRedirect,
   checkServerErrorAndMessage,
-  checkServerErrorAndRedirect
-} from "~/helpers/utils"
-import StudentsDirectoryModel from "~/services/models/directorio/students.directory.model";
+  checkServerErrorAndRedirect,
+} from '~/helpers/utils'
+import type StudentsDirectoryModel from '~/services/models/directorio/students.directory.model'
 
 const students = ref([] as StudentsDirectoryModel[])
 const selectedStudents = ref([] as StudentsDirectoryModel[])
@@ -58,35 +20,73 @@ let updateTable = async () => {
   if (!checkServerErrorAndRedirect(response) && checkIsAuthenticateAndRedirect(response))
     students.value = response.data as StudentsDirectoryModel[]
 }
-updateTable = toogleLoadingDecorator(updateTable,isLoadingTable)
+updateTable = toogleLoadingDecorator(updateTable, isLoadingTable)
 
-function handleTableSelection(val:StudentsDirectoryModel[]){
+function handleTableSelection(val: StudentsDirectoryModel[]) {
   selectedStudents.value = val
 }
 
-
-
-async function importStudent(item: StudentsDirectoryModel){
+async function importStudent(item: StudentsDirectoryModel) {
   const response = await DirectoryServices.importStudents([item.id])
-  if (!checkServerErrorAndMessage(response) && checkIsAuthenticateAndChangeStorage(response)){
+  if (!checkServerErrorAndMessage(response) && checkIsAuthenticateAndChangeStorage(response)) {
     await updateTable()
-    ElMessage.success("Estudiante Importado Correctamente")
+    ElMessage.success('Estudiante Importado Correctamente')
   }
 }
 let importSelectedStudents = async () => {
-  const items:number[] =[]
-  selectedStudents.value.forEach(i=>items.push(i.id))
+  const items: number[] = []
+  selectedStudents.value.forEach(i => items.push(i.id))
   const response = await DirectoryServices.importStudents(items)
   if (!checkServerErrorAndMessage(response) && checkIsAuthenticateAndChangeStorage(response)) {
     await updateTable()
-    ElMessage.success("Estudiantes Importados Correctamente")
+    ElMessage.success('Estudiantes Importados Correctamente')
   }
 }
-importSelectedStudents = toogleLoadingDecorator(importSelectedStudents,isImportSelectedLoading)
-
-
-
-
+importSelectedStudents = toogleLoadingDecorator(importSelectedStudents, isImportSelectedLoading)
 
 updateTable()
 </script>
+
+<template>
+  <p>Listado de Estudiantes sin Importar al Sistema</p>
+  <el-row>
+    <el-col :offset="20">
+      <button
+        type="button"
+        class="btn btn-primary uk-text-bold"
+        data-test="btn-import-data"
+        :class="{ disabled: !selectedStudents.length }"
+        @click="importSelectedStudents()"
+      >
+        <loading v-if="isImportSelectedLoading" />
+        <i v-else class="entypo-list-add" /> Importar Seleccionados
+      </button>
+    </el-col>
+  </el-row>
+
+  <el-table
+    :data="students"
+    @selection-change="handleTableSelection"
+  >
+    <el-table-column type="selection" width="55" />
+    <el-table-column label="Nombre y Apellido">
+      <template #default="scope">
+        {{ `${scope.row.first_name} ${scope.row.last_name}` }}
+      </template>
+    </el-table-column>
+    <el-table-column label="Correo Electronico" prop="email" />
+    <el-table-column label="Area" prop="area" />
+    <el-table-column label="Año Academico" prop="anno" />
+
+    <el-table-column align="right">
+      <template #default="scope">
+        <confirm-pop-button
+          button-title="Importar"
+          button-icon="entypo-plus"
+          title="¿Esta seguro que desea importar el estudiante?"
+          @on-confirm="importStudent(scope.row)"
+        />
+      </template>
+    </el-table-column>
+  </el-table>
+</template>
