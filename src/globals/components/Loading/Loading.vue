@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { withDefaults } from 'vue-demi'
+
 withDefaults(defineProps<Props>(), {
   fontSize: 15,
   textClass: 'text-white',

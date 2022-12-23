@@ -7,7 +7,7 @@ import authServices from '@/services/auth.services'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndMessage, isAuthenticate } from '@/helpers/utils'
 
 // USE COMPOSABLES
-import isLocalLoading, {
+import isLoading, {
   activateLoading,
   desactivateLoading,
   toogleLoadingDecorator,

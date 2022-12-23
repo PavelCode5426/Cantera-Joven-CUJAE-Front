@@ -5,7 +5,7 @@ import LogoutItem from '~/modules/authentication/components/navbar/LogoutItem.vu
 import navBarLinks from '@/globals/config/router/links'
 
 const authStore = AuthStore()
-const { first_name, last_name } = storeToRefs(authStore)
+const { user } = storeToRefs(authStore)
 </script>
 
 <template>
@@ -23,14 +23,13 @@ const { first_name, last_name } = storeToRefs(authStore)
           :childrens="link.childrens"
           :icon="link.icon"
           :is-root="true"
-          :data-test="link.data_test"
         />
       </ul>
       <!-- notifications and other links -->
       <ul class="nav navbar-right pull-right">
         <nav-bar-notifications-container />
         <li>
-          <span href="">{{ first_name }} {{ last_name }}</span>
+          <span href="">{{ user.first_name }} {{ user.last_name }}</span>
         </li>
         <logout-item />
 

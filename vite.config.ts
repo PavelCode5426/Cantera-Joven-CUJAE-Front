@@ -12,7 +12,7 @@ import VueI18n from '@intlify/vite-plugin-vue-i18n'
 import Inspect from 'vite-plugin-inspect'
 import Prism from 'markdown-it-prism'
 import LinkAttributes from 'markdown-it-link-attributes'
-import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
@@ -43,7 +43,6 @@ export default defineConfig({
       imports: [
         'vue',
         'vue-router',
-        'vue-i18n',
         'vue/macros',
         '@vueuse/head',
         '@vueuse/core',
@@ -61,7 +60,7 @@ export default defineConfig({
     Components({
       // allow auto load markdown components under `./src/components/`
       extensions: ['vue', 'md'],
-      dirs:[
+      dirs: [
         'src/modules',
         'src/globals',
       ],
@@ -90,7 +89,7 @@ export default defineConfig({
     }),
 
     // https://github.com/antfu/vite-plugin-pwa
-    //https://vite-plugin-pwa.netlify.app/guide/generate.html
+    // https://vite-plugin-pwa.netlify.app/guide/generate.html
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
@@ -114,16 +113,9 @@ export default defineConfig({
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',
-          }
+          },
         ],
       },
-    }),
-
-    // https://github.com/intlify/bundle-tools/tree/main/packages/vite-plugin-vue-i18n
-    VueI18n({
-      runtimeOnly: true,
-      compositionOnly: true,
-      include: [path.resolve(__dirname, '**/locales/**')],
     }),
 
     // https://github.com/antfu/vite-plugin-inspect
@@ -139,6 +131,7 @@ export default defineConfig({
   },
 
   // https://github.com/vitest-dev/vitest
+
   test: {
     include: ['test/**/*.test.ts'],
     environment: 'jsdom',

@@ -1,23 +1,14 @@
-import {RouteRecordRaw} from "vue-router";
+import type { RouteRecordRaw } from 'vue-router'
 
-const routes:RouteRecordRaw[] = [
-    {
-        path:'configuracion',
-        name:'config-page',
-        component:() => import("../pages/ConfigurationPage.vue"),
-        meta: {
-            title: "Configuracion del Sistema"
-        },
-        layout:["Admin"]
+const routes: RouteRecordRaw[] = [
+  {
+    path: 'configuracion',
+    name: 'config-page',
+    component: () => import('../pages/ConfigurationPage.vue'),
+    meta: {
+      title: 'Configuracion del Sistema',
     },
-    {
-        path:'registros',
-        name:'log-page',
-        component:() => import("../pages/LogsPage.vue"),
-        meta: {
-            title: "Registros en el Sistema"
-        },
-        layout:["Admin"]
-    }
+    layout: ['Admin'],
+  },
 ]
 export default routes

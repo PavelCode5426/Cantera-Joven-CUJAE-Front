@@ -1,32 +1,28 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import NotiService from '../../../../backed_services/notification.services'
 import NotificationStore from '~/modules/notification/store/notification.store'
 import AuthStore from '~/modules/authentication/store/auth.store'
 import notificationServiceInstance from '~/services/notification.services'
 import type { ServerError, ServerResponse } from '~/globals/config/axios'
-import { checkServerErrorAndRedirect } from '~/helpers/utils'
+import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
 import NavBarNotificationEmpty from '~/modules/notification/components/NavBar/NavBarNotificationEmpty.vue'
 
 const notificationsStore = NotificationStore()
-const authStore = AuthStore()
 const { isLoading, notReadAmount, notifications } = storeToRefs(notificationsStore)
 
-const $t = useI18n().t
 const router = useRouter()
 
-const updateNotification = async () => {
-  isLoading.value = true
-  let response: ServerResponse | ServerError = await notificationServiceInstance.notReadNotifications()
-  checkServerErrorAndRedirect(response)
-  if (response.httpCode == 401) {
-    authStore.isAuthenticated = false // TODO ARREGLAR ESTO
-    authStore.$reset()
-    router.push({ name: 'login-page' })
-  }
-  else {
-    response = response.data
+async function updateNotification() {
+  try {
+    isLoading.value = true
+    const response = await NotiService.notReadNotifications()
     notReadAmount.value = response.cantidad_sin_leer
     notifications.value = response.lista
+  }
+  catch (error: ServerError | ExceptionResponse) {
+    checkServerErrorAndRedirect(error)
+    checkIsAuthenticateAndRedirect(error)
   }
   setTimeout(() => isLoading.value = false, 1000)
 }
@@ -51,13 +47,13 @@ updateNotification()
     <ul class="dropdown-menu">
       <li>
         <ul class="dropdown-menu-list scroller">
-          <nav-bar-notification-empty v-if="notifications.length == 0" />
+          <nav-bar-notification-empty v-if="!notReadAmount" />
           <nav-bar-notification-item
             v-for="notification in notifications"
             :id="notification.id"
             :unread="notification.unread"
             :verb="notification.verb"
-            :from="notification.sender.first_name"
+            :from="notification.sender"
             :time="notification.timestamp"
           />
         </ul>

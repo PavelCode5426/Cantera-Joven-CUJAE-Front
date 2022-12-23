@@ -1,27 +1,26 @@
 <script setup lang="ts">
-import defaultNotificationProps from "~/modules/notification/composables/notificationComposable"
+import type UserModel from '~/backed_services/models/user.model'
+import defaultNotificationProps from '~/modules/notification/composables/notificationComposable'
 
 interface NotificationItemProps {
-  id:number
-  from:string
-
-  unread?:boolean
-  imgUrl?:string
-  time?:string
-  verb?:string
+  id: number
+  from: UserModel
+  unread?: boolean
+  verb?: string
 }
-withDefaults(defineProps<NotificationItemProps>(),{...defaultNotificationProps})
-
+const props = withDefaults(defineProps<NotificationItemProps>(), { ...defaultNotificationProps })
+const imageURL = ref(`http://intranet.cujae.edu.cu/Image.aspx?ci=${props.from.carnet}`)
 </script>
+
 <template>
   <li>
     <a>
-    <span class="image pull-right">
-                <img :src="imgUrl" alt="" class="img-circle" />
-    </span>
-      <span class="line" v-if="unread"><strong>{{from}}</strong> - {{time}}</span>
-      <span class="line" v-else>{{from}} - {{time}}</span>
-      <span class="line desc small">{{verb}}</span>
+      <span class="image pull-right">
+        <img :src="imgUrl" alt="FOTO" class="img-circle">
+      </span>
+      <span v-if="unread" class="line"><strong>{{ from.first_name }} {{ from.last_name }}</strong> - {{ time }}</span>
+      <span v-else class="line">{{ from.first_name }} {{ from.last_name }} - {{ time }}</span>
+      <span class="line desc small">{{ verb }}</span>
     </a>
   </li>
 </template>

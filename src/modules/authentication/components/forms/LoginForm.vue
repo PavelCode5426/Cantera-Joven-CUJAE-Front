@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import AuthServices from '@/services/auth.services'
-import AuthStore, { initialState as authStoreInitialState } from '@/modules/authentication/store/auth.store'
-import { ServerError } from '@/globals/config/axios'
+import { checkServerErrorAndMessage, isExceptionResponse } from '../../../../helpers/utils'
+import AuthServices from '@/backed_services/authentication.services'
+import AuthStore, {} from '@/modules/authentication/store/auth.store'
+import { ExceptionResponse, ServerError } from '@/globals/config/axios'
 
 const router = useRouter()
-const $t = useI18n().t
-
 const authStore = AuthStore()
 const username = ref('')
 const password = ref('')
@@ -24,26 +23,30 @@ const submitLoginForm = async () => {
   const isFormCorrect = await v.$validate()
   if (isFormCorrect) {
     isLoadingForm.value = true
-    const response = await AuthServices.login(username.value, password.value)
+    try {
+      const response = await AuthServices.login(username.value, password.value)
 
-    if (response instanceof ServerError) {
-      ElMessage.error($t(response.error.message))
-      password.value = ''
-    }
-    else if (response.httpCode == 400) {
-      password.value = ''
-      console.log(authStoreInitialState)
-      authStore.setAttr(authStoreInitialState) // TODO SUSTITUIR POR ABAJO
-      // authStore.$reset() //TODO ARREGLAR ESTO
-      ElMessage.error({ showClose: true, message: 'Credenciales Incorrectos' })
-    }
-    else {
-      const data: any = { token: response.data.token, ...response.data.user }
-      authStore.setAttr(data)
+      authStore.$patch({ isAuthenticated: true, token: response.token, user: response.user })
       router.push({ path: 'admin' })
+    }
+    catch (error: ExceptionResponse | ServerError) {
+      if (isExceptionResponse(error)) {
+        switch (error.httpCode) {
+          case 400: {
+            ElMessage.error({ showClose: true, message: 'Credenciales Incorrectos' })
+            break
+          }
+          default:{
+            ElMessage.error({ showClose: true, message: error.detail })
+          }
+        }
+      }
+      password.value = ''
+      checkServerErrorAndMessage(error)
     }
     v.$reset()
   }
+
   isLoadingForm.value = false
 }
 </script>

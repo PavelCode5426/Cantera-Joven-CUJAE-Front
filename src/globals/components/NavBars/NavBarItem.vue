@@ -8,20 +8,18 @@ interface Props {
   childrens: Link[]
   isRoot?: boolean
   icon?: string | undefined
-  data_test?: string | undefined
 }
 const props = withDefaults(defineProps<Props>(), {
   isRoot: false,
   router: undefined,
   icon: undefined,
-  data_test: undefined,
   childrens: [],
 })
 </script>
 
 <template>
   <li>
-    <router-link v-if="router" :to="router" active-class="active" :data-test="data_test">
+    <router-link v-if="router" :to="router" active-class="active">
       <i v-if="icon" :class="icon" />
       <span>{{ name }}</span>
     </router-link>
@@ -36,7 +34,6 @@ const props = withDefaults(defineProps<Props>(), {
         :router="link.router"
         :icon="link.icon"
         :childrens="link.childrens"
-        :data-test="link.data_test"
       />
     </ul>
   </li>

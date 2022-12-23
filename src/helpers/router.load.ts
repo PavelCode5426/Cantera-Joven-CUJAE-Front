@@ -21,5 +21,4 @@ export function putPrefixInRoutes(prefix:string,routes:RouteRecordRaw[]){
     routes.forEach(i => i.path = prefix+i.path)
 }
 
-
 export default {getRoutes, getLayoutRoutes}

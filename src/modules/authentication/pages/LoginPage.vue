@@ -7,7 +7,7 @@
       <div class="login-header login-caret">
         <div class="login-content">
           <a href="#" class="logo">
-            <h1 class="bold text-4xl text-white text-uppercase">Cantera Joven</h1>
+            <h1 class="bold text-4xl text-white text-uppercase">CANTERA JOVEN</h1>
           </a>
           <p class="description">
             Sistema de Gestion de la Cantera Joven en la CUJAE

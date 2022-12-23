@@ -5,6 +5,7 @@
     "build": "vite-ssg build",
     "dev": "vite --open",
     "lint": "eslint .",
+    "deploy": "vite --host",
     "preview": "vite preview",
     "preview-https": "serve dist",
     "test": "vitest",
@@ -26,7 +27,6 @@
     "prism-theme-vars": "^0.2.4",
     "vue": "^3.2.39",
     "vue-demi": "^0.13.11",
-    "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.5"
   },
   "devDependencies": {

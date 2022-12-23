@@ -1,44 +1,38 @@
-<template>
-  <simple-button :loading="loadingConfirm"
-                 :buttonType="buttonType"
-                 :buttonTitle="buttonTitle"
-                 :buttonIcon="buttonIcon"
-                 @click="onClickButton()"/>
-</template>
-
-
 <script setup lang="ts">
-import {toogleLoadingDecorator} from "~/globals/composables/useLoading";
-import {ElMessageBox} from "element-plus";
-
-const loadingConfirm = ref(false)
-interface Props{
-  dialogTitle:string,
-  dialogMessage:string,
-  buttonTitle:string,
+import { ElMessageBox } from 'element-plus'
+interface Props {
+  dialogTitle: string
+  dialogMessage: string
+  buttonTitle: string
   buttonIcon: {
-    type:string
-    required:false
-  },
-  buttonType:string
+    type: string
+    required: false
+  }
+  buttonType: string
+  loading: boolean
 }
-const props = withDefaults(defineProps<Props>(),{
-  buttonType:'btn-info',
-  dialogTitle:'Alerta'
+const props = withDefaults(defineProps<Props>(), {
+  buttonType: 'btn-info',
+  dialogTitle: 'Alerta',
+  loading: false,
 })
-const emit = defineEmits(['on-confirm','on-cancel'])
+const emit = defineEmits(['on-confirm', 'on-cancel'])
 
-let onConfirmEvent = () => {
-  emit('on-confirm')
-}
-onConfirmEvent = toogleLoadingDecorator(onConfirmEvent,loadingConfirm)
-
-function onClickButton(){
-  ElMessageBox.confirm(props.dialogMessage,props.dialogTitle,{
+function onClickButton() {
+  ElMessageBox.confirm(props.dialogMessage, props.dialogTitle, {
 
   })
-      .then(response => emit('on-confirm'))
-      .catch(error => emit('on-cancel'))
+    .then(response => emit('on-confirm')())
+    .catch(error => emit('on-cancel'))
 }
-
 </script>
+
+<template>
+  <simple-button
+    :loading="loading"
+    :button-type="buttonType"
+    :button-title="buttonTitle"
+    :button-icon="buttonIcon"
+    @click="onClickButton()"
+  />
+</template>
