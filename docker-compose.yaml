@@ -10,3 +10,4 @@ services:
       BASE_URL: 'http://localhost:3000'
     ports:
       - 8000:3000
+    command: npm run deploy
