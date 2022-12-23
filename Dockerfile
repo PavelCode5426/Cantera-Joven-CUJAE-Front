@@ -1,4 +1,4 @@
-FROM node:14.7.4-alphine
+FROM node:18.12-alpine
 
 WORKDIR code
 
