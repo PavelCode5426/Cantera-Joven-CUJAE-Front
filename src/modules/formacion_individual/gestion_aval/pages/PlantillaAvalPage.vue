@@ -3,13 +3,15 @@ import { ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import loading, { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
 import { ExceptionResponse, ServerError } from '~/globals/config/axios'
-import PlantillaServices from '~/backed_services/aval.services'
+import AvalServices from '~/backed_services/aval.services'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
 import type { PlantillaAvalModel } from '~/backed_services/models/aval.model'
 
 const plantillas = ref<PlantillaAvalModel[]>([])
 const isLoading = loading()
 const showModal = ref(false)
+
+const PlantillaServices = AvalServices.PlantillaServices
 
 async function loadPlantillas() {
   activateLoading(isLoading)

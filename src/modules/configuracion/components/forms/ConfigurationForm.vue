@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus'
 import { ref, watch } from 'vue'
 import type { ConfigurationModel } from '~/backed_services/models/configuration.model'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
@@ -30,20 +30,23 @@ async function loadConfigurations() {
 async function canSaveConfigurationVars() {
   let is = true
   const configRef = configurationValueRefs.value
-  // TODO OPTIMIZAR LA BUSQUEDA DEL FALSO
-  for (const item of configRef) {
-    const canItem = await item.canSaveConfigurationVar()
-    is = is && canItem
+  let count = 0
+  const size = configRef.length
+
+  while (count < size && is) {
+    const item = configRef.at(count++)
+    is = is && await item.canSaveConfigurationVar()
   }
   return is
 }
 async function saveConfigurationVars(): boolean {
-  const responses = []
   let hasError = false
   const configRef = configurationValueRefs.value
   try {
-    for (const item of configRef)
-      await item.saveConfigurationVar()
+    for (const item of configRef) {
+      if (item.hasChangeConfigurationVar())
+        await item.saveConfigurationVar()
+    }
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
@@ -58,9 +61,9 @@ async function submitForm() {
   const is: boolean = await canSaveConfigurationVars()
   if (is) {
     const is = await saveConfigurationVars()
-    ElMessage.success('Configuracion Guardada Correctamente')
+    ElNotification.success('Configuracion Guardada Correctamente')
   }
-  else { ElMessage.error('Formulario Incompleto') }
+  else { ElNotification.error('Formulario Incompleto') }
   desactivateLoading(isSubmitLoading)
 }
 

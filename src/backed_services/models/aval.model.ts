@@ -5,6 +5,5 @@ export class PlantillaAvalModel {
 }
 
 export class AvalModel {
-  id: number
   texto: string
 }

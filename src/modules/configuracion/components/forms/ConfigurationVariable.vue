@@ -31,6 +31,7 @@ async function saveConfigurationVar(): void {
   if (is) {
     const config = { id: props.config.id, valor: formConfig.value.valor } as ConfigurationModel
     await ConfigService.update_variable(config.id, config)
+    v.value.$reset()
   }
 }
 async function canSaveConfigurationVar() {
@@ -38,7 +39,11 @@ async function canSaveConfigurationVar() {
   return !anyDirty || (await v.value.$validate() && anyDirty)
 }
 
-defineExpose({ saveConfigurationVar, canSaveConfigurationVar })
+function hasChangeConfigurationVar() {
+  return v.value.valor.$dirty
+}
+
+defineExpose({ saveConfigurationVar, canSaveConfigurationVar, hasChangeConfigurationVar })
 </script>
 
 <template>

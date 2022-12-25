@@ -76,8 +76,8 @@ function closeDialog() {
     <template #footer>
       <div class="modal-footer">
         <button class="btn btn-info" @click="submitForm">
+          <loading v-if="isLoading" />
           Aceptar
-          <!-- TODO REVISAR QUE PASA QUE EL CARGANDO DA PROBLEMAS EN EL BOTON -->
         </button>
         <button class="btn btn-default" @click="closeDialog">
           Cerrar

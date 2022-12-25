@@ -16,14 +16,16 @@ const { user } = storeToRefs(authStore)
       <logo-brand />
       <!-- main menu -->
       <ul class="navbar-nav">
-        <nav-bar-item
-          v-for="link in navBarLinks"
-          :name="link.name"
-          :router="link.router"
-          :childrens="link.childrens"
-          :icon="link.icon"
-          :is-root="true"
-        />
+        <template v-for="link in navBarLinks">
+          <nav-bar-item
+            v-if="link.is_accesible"
+            :name="link.name"
+            :router="link.router"
+            :childrens="link.childrens"
+            :icon="link.icon"
+            :is-root="true"
+          />
+        </template>
       </ul>
       <!-- notifications and other links -->
       <ul class="nav navbar-right pull-right">

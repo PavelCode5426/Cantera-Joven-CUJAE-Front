@@ -1,5 +1,23 @@
 import { CallWithToken, CallWithoutToken, ExceptionResponse, Response, ServerError, ServerResponse } from '~/globals/config/axios'
 import { isExceptionResponse, isServerError } from '~/helpers/utils'
+export class Paginate {
+  page = 1
+  page_size = 10
+
+  constructor(page: number, page_size = 10) {
+    this.page = page
+    this.page_size = page_size
+  }
+}
+
+export class Filter extends Paginate {
+  search: string
+
+  constructor(page = 1, page_size = 10, search = '') {
+    super(page, page_size)
+    this.search = search
+  }
+}
 
 export default class AbstractService {
   callWithToken() {

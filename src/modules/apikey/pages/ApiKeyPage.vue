@@ -2,6 +2,7 @@
 import { provide, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import usePaginateResponse from '../../../globals/composables/usePaginateResponse'
+import { Filter } from '../../../backed_services/service'
 import type { PaginateResponse } from '~/globals/config/axios'
 import { ExceptionResponse, ServerError } from '~/globals/config/axios'
 import AKeyService from '~/backed_services/apikey.service'
@@ -16,7 +17,7 @@ const isLoading = loadingTable()
 async function loadApiKeys(page = 1) {
   activateLoading(isLoading)
   try {
-    const response = await AKeyService.list_apikey(page)
+    const response = await AKeyService.list_apikey(new Filter(page))
     response.results.forEach(i => i.expired_at = i.expired_at ? getRealativeTime(i.expired_at) : 'Nunca')
     apiKeys.value = response
   }

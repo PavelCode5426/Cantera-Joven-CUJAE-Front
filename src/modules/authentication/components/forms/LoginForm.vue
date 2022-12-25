@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { ElNotification } from 'element-plus'
 import { checkServerErrorAndMessage, isExceptionResponse } from '../../../../helpers/utils'
 import AuthServices from '@/backed_services/authentication.services'
 import AuthStore, {} from '@/modules/authentication/store/auth.store'
@@ -33,11 +34,11 @@ const submitLoginForm = async () => {
       if (isExceptionResponse(error)) {
         switch (error.httpCode) {
           case 400: {
-            ElMessage.error({ showClose: true, message: 'Credenciales Incorrectos' })
+            ElNotification.error({ showClose: true, message: 'Credenciales Incorrectos' })
             break
           }
           default:{
-            ElMessage.error({ showClose: true, message: error.detail })
+            ElNotification.error({ showClose: true, message: error.detail })
           }
         }
       }

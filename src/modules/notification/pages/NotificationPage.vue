@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ElNotification } from 'element-plus'
 import type NotificationModel from '../../../backed_services/models/notification.model'
 import NotiService from '../../../backed_services/notification.services'
 import { ExceptionResponse, ServerError } from '@/globals/config/axios'
@@ -32,8 +33,8 @@ async function markAsReadNotification(id: number) {
     const notification = findNotificationInList(id)
     if (notification) {
       notification.unread = false
-      const response = await NotiService.markAsRead(id + 100000)
-      ElMessage.success({ showClose: true, message: 'Notificacion marcada como leida correctamente' })
+      const response = await NotiService.markAsRead(id)
+      ElNotification.success('Notificacion marcada como leida')
     }
   }
   catch (error: ServerError | ExceptionResponse) {
@@ -46,7 +47,7 @@ async function deleteNotification(id: number) {
     const notification = findNotificationInList(id)
     if (notification) {
       const response = await NotiService.delete(id)
-      ElMessage.success({ showClose: true, message: 'Notificacion eliminada correctamente' })
+      ElNotification.success('Notificacion eliminada correctamente')
       notifications.value = notifications.value.filter(i => i.id != id)
     }
   }
@@ -56,7 +57,7 @@ async function deleteNotification(id: number) {
 
     if (isExceptionResponse(error)) {
       if (error.httpCode == 404)
-        ElMessage.error({ showClose: true, message: 'Notificacion no encontrada' })
+        ElNotification.error('Notificacion no encontrada')
     }
   }
 }

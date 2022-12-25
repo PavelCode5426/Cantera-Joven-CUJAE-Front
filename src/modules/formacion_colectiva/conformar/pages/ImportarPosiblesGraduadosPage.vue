@@ -10,8 +10,8 @@ import { activateLoading, desactivateLoading } from '~/globals/composables/useLo
 
 const authStore = AuthStore()
 const isLoading = ref(false)
-let graduados_init: UserLDAPModel[] = []
-const graduados = ref<UserLDAPModel[]>([])
+let pgraduados_init: UserLDAPModel[] = []
+const pgraduados = ref<UserLDAPModel[]>([])
 const search = ref<string>('')
 const multipleSelection = ref<UserLDAPModel[]>([])
 
@@ -20,12 +20,12 @@ function handleSelectionChange(val: UserLDAPModel[]) {
 }
 async function importSingleElement(element) {
   try {
-    await ImportService.import_graduados([element])
-    graduados_init = graduados_init.filter(i => i.identification !== element.identification)
-    graduados.value = graduados_init
+    await ImportService.import_pgraduados([element])
+    pgraduados_init = pgraduados_init.filter(i => i.identification !== element.identification)
+    pgraduados.value = pgraduados_init
     multipleSelection.value = []
     search.value = ''
-    ElNotification.success('Graduado importado correctamente')
+    ElNotification.success('Posible graduado importado correctamente')
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
@@ -35,12 +35,12 @@ async function importSingleElement(element) {
 async function importManyElement(elements) {
   activateLoading(isLoading)
   try {
-    await ImportService.import_graduados(elements)
-    graduados_init = graduados_init.filter(i => !elements.find(e => e.identification === i.identification))
-    graduados.value = graduados_init
+    await ImportService.import_pgraduados(elements)
+    pgraduados_init = pgraduados_init.filter(i => !elements.find(e => e.identification === i.identification))
+    pgraduados.value = pgraduados_init
     multipleSelection.value = []
     search.value = ''
-    ElNotification.success('Graduados importados correctamente')
+    ElNotification.success('Posibles graduados importados correctamente')
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
@@ -51,10 +51,10 @@ async function importManyElement(elements) {
 const searchElement = () => {
   const s = search.value.toLowerCase()
   if (s === '') {
-    graduados.value = graduados_init
+    pgraduados.value = pgraduados_init
   }
   else {
-    graduados.value = graduados_init.filter(i =>
+    pgraduados.value = pgraduados_init.filter(i =>
       i.name?.toLowerCase().startsWith(s)
         || i.lastname?.toLowerCase().startsWith(s)
         || i.identification?.toLowerCase().startsWith(s)
@@ -63,10 +63,10 @@ const searchElement = () => {
   }
 }
 
-async function loadgraduados() {
+async function loadPGraduados() {
   try {
-    graduados_init = await ImportService.all_graduados()
-    graduados.value = graduados_init
+    pgraduados_init = (await ImportService.all_pgraduados())
+    pgraduados.value = pgraduados_init
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
@@ -74,14 +74,14 @@ async function loadgraduados() {
   }
 }
 
-onMounted(loadgraduados)
+onMounted(loadPGraduados)
 </script>
 
 <template>
-  <h3>Importar Graduados</h3>
+  <h3>Importar Posibles Graduados</h3>
   <el-row justify="space-between">
     <el-col :span="6">
-      <el-input v-model="search" placeholder="Buscar graduados" @keyup="searchElement">
+      <el-input v-model="search" placeholder="Buscar posible graduado" @keyup="searchElement">
         <template #prepend>
           <i class="fa fa-search" />
         </template>
@@ -94,5 +94,5 @@ onMounted(loadgraduados)
     </el-col>
   </el-row>
 
-  <l-d-a-p-list max-height="500" :data="graduados" @import-item="importSingleElement" @selection-change="handleSelectionChange" />
+  <l-d-a-p-list max-height="500" :data="pgraduados" @import-item="importSingleElement" @selection-change="handleSelectionChange" />
 </template>

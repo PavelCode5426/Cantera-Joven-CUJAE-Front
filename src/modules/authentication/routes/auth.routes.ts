@@ -1,6 +1,6 @@
-import type { RouteRecordRaw } from 'vue-router'
+import type { LayoutRouteRecordRaw } from '~/helpers/router.load'
 
-const routes: RouteRecordRaw[] = [
+const routes: LayoutRouteRecordRaw[] = [
   {
     path: '',
     name: 'login-page',

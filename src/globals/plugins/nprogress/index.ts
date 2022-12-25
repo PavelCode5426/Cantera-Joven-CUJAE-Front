@@ -10,22 +10,26 @@ export function done() {
   NProgress.done()
 }
 
-export const install: UserModule = ({ isClient, router }) => {
+export const install: UserModule = ({ isClient, router, initialState }) => {
   if (isClient) {
     router.beforeEach((to, from, next) => {
       // if (to.path !== from.path){
       if (!siteStore().isLoading)
         start()
+
       if (!authStore().isAuthenticated && to.name !== 'login-page')
         return next({ name: 'login-page' })
       else if (authStore().isAuthenticated && to.name === 'login-page')
         return next({ name: 'admin-page' })
+      else if (to.meta.accesible !== undefined && !to.meta.accesible())
+        return next({ name: 'acceso-denegado-page' })
       else
         next()
+
       // }
     })
     router.afterEach((to, from) => {
-      siteStore().title = to.meta.title ? to.meta.title : 'Cantera Joven CUJAE'
+      siteStore().title = to.meta.title ? to.meta.title : 'SIN TITULO'
       setTimeout(done, 400)
     })
   }

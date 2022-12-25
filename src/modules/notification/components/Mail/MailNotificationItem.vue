@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ElNotification } from 'element-plus'
+import { getRealativeTime } from '../../../../helpers/utils'
 import defaultNotificationProps from '@/modules/notification/composables/notificationComposable'
 
 interface NotificationMailProps {
@@ -18,7 +20,6 @@ withDefaults(defineProps<NotificationMailProps>(), {
 
 const deleteLoading = ref(false)
 const markAsReadLoading = ref(false)
-
 const toogleSelectedItem = inject('toogleSelectedItem')
 const markAsReadNotification = inject('markAsReadNotification')
 const deleteNotification = inject('deleteNotification')
@@ -46,7 +47,7 @@ async function deleteItem(id: number) {
       </p>
       <div class="comment-footer">
         <div class="comment-time">
-          {{ time }}
+          {{ getRealativeTime(time) }}
         </div>
         <div class="action-links">
           <a v-if="unread" class="approve cursor-pointer" @click="markAsReadItem(id)">

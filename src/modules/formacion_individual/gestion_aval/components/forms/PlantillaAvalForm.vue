@@ -4,7 +4,7 @@ import { minValue, required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../../helpers/utils'
-import PlantillaServices from '../../../../../backed_services/aval.services'
+import AvalServices from '../../../../../backed_services/aval.services'
 import loading, { activateLoading, desactivateLoading } from '../../../../../globals/composables/useLoading'
 import type { PlantillaAvalModel } from '~/backed_services/models/aval.model'
 
@@ -28,6 +28,8 @@ const validationsRules = {
 }
 const $v = useVuelidate(validationsRules, form)
 const v = $v.value
+
+const PlantillaServices = AvalServices.PlantillaServices
 
 async function submitForm() {
   const valid = await v.$validate()
@@ -65,6 +67,7 @@ watch(props, clearForm)
   <el-input v-model="$v.nombre.$model" placeholder="Nombre de la Plantilla" @blur="$v.nombre.$touch()" />
   <error-help-block :items="$v.nombre.$errors" />
   <el-input v-model="$v.texto.$model" placeholder="Cuerpo de la Plantilla" @blur="$v.texto.$touch()" />
+  <ckeditor v-model="$v.texto.$model" @blur="$v.texto.$touch()" />
   <error-help-block :items="$v.texto.$errors" />
 
   <div class="modal-footer">

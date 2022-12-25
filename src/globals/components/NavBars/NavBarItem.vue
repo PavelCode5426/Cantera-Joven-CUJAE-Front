@@ -28,13 +28,15 @@ const props = withDefaults(defineProps<Props>(), {
       <span>{{ name }}</span>
     </a>
     <ul v-if="childrens.length">
-      <nav-bar-item
-        v-for="link in childrens"
-        :name="link.name"
-        :router="link.router"
-        :icon="link.icon"
-        :childrens="link.childrens"
-      />
+      <template v-for="link in childrens">
+        <nav-bar-item
+          v-if="link.is_accesible"
+          :name="link.name"
+          :router="link.router"
+          :icon="link.icon"
+          :childrens="link.childrens"
+        />
+      </template>
     </ul>
   </li>
 </template>

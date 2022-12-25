@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { ElNotification } from 'element-plus'
 import NotiService from '../../../../backed_services/notification.services'
+import { activateLoading, desactivateLoading } from '../../../../globals/composables/useLoading'
 import NotificationStore from '~/modules/notification/store/notification.store'
 import AuthStore from '~/modules/authentication/store/auth.store'
 import notificationServiceInstance from '~/services/notification.services'
@@ -14,21 +16,25 @@ const { isLoading, notReadAmount, notifications } = storeToRefs(notificationsSto
 const router = useRouter()
 
 async function updateNotification() {
+  activateLoading(isLoading)
   try {
-    isLoading.value = true
     const response = await NotiService.notReadNotifications()
+    const hasNewNotifications = notReadAmount.value < response.cantidad_sin_leer
     notReadAmount.value = response.cantidad_sin_leer
     notifications.value = response.lista
+
+    if (hasNewNotifications)
+      ElNotification.info('Nueva notificacion recibida')
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
   }
-  setTimeout(() => isLoading.value = false, 1000)
+  desactivateLoading(isLoading)
 }
 
-const intervalSeconds = 100
-const intervalFunction = setInterval(updateNotification, 600000 * intervalSeconds)
+const intervalSeconds = 15
+const intervalFunction = setInterval(updateNotification, 1000 * intervalSeconds)
 
 onUnmounted(() => clearInterval(intervalFunction))
 updateNotification()

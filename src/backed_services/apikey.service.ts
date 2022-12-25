@@ -1,3 +1,4 @@
+import type { Filter } from '~/backed_services/service'
 import AbstractService from '~/backed_services/service'
 import type { PaginateResponse } from '~/globals/config/axios'
 import type { ApikeyModel } from '~/backed_services/models/apikey.model'
@@ -7,8 +8,8 @@ export interface IApiKeyService {
 }
 
 export class ApikeyService extends AbstractService implements IApiKeyService {
-  async list_apikey(page = 1): Promise<PaginateResponse<ApikeyModel>> {
-    const call = this.callWithToken().get('/auth/api-key/', { params: { page } })
+  async list_apikey(filter: Filter): Promise<PaginateResponse<ApikeyModel>> {
+    const call = this.callWithToken().get('/auth/api-key/', { params: filter })
     const response = await this.parseResponse(call)
     return response.data
   }

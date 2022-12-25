@@ -1,25 +1,81 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { ElNotification } from 'element-plus'
 import AuthStore from '../../../authentication/store/auth.store'
 import ImportService from '../../../../backed_services/importar.services'
 import { ExceptionResponse } from '../../../../globals/config/axios'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../helpers/utils'
 import type { EstudianteLDAPModel } from '~/backed_services/models/ldap.model'
-import loading from '~/globals/composables/useLoading'
+import { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
 
 const authStore = AuthStore()
-const isLoading = loading(false)
+const isImportLoading = ref(false)
+const isTableLoading = ref(false)
+let estudiantes_init: EstudianteLDAPModel[] = []
 const estudiantes = ref<EstudianteLDAPModel[]>([])
+const search = ref<string>('')
+const multipleSelection = ref<EstudianteLDAPModel[]>([])
 
-async function loadEstudiantes() {
+function handleSelectionChange(val: EstudianteLDAPModel[]) {
+  multipleSelection.value = val
+}
+async function importSingleElement(element) {
   try {
-    const area = authStore.user.area?.id
-    estudiantes.value = await ImportService.all_estudiantes(area)
+    await ImportService.import_estudiantes(authStore.user.area?.id, [element])
+    estudiantes_init = estudiantes_init.filter(i => i.identification !== element.identification)
+    estudiantes.value = estudiantes_init
+    multipleSelection.value = []
+    search.value = ''
+    ElNotification.success('Estudiante importado correctamente')
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
   }
+}
+async function importManyElement(elements) {
+  activateLoading(isLoading)
+  try {
+    await ImportService.import_estudiantes(authStore.user.area?.id, elements)
+    estudiantes_init = estudiantes_init.filter(i => !elements.find(e => e.identification === i.identification))
+    estudiantes.value = estudiantes_init
+    multipleSelection.value = []
+    search.value = ''
+    ElNotification.success('Estudiantes importados correctamente')
+  }
+  catch (error: ServerError | ExceptionResponse) {
+    checkServerErrorAndRedirect(error)
+    checkIsAuthenticateAndRedirect(error)
+  }
+  desactivateLoading(isLoading)
+}
+const searchElement = () => {
+  const s = search.value.toLowerCase()
+  if (s === '') {
+    estudiantes.value = estudiantes_init
+  }
+  else {
+    estudiantes.value = estudiantes_init.filter(i =>
+      i.name?.toLowerCase().startsWith(s)
+        || i.lastname?.toLowerCase().startsWith(s)
+        || i.identification?.toLowerCase().startsWith(s)
+        || i.email?.toLowerCase().startsWith(s),
+    )
+  }
+}
+
+async function loadEstudiantes() {
+  try {
+    activateLoading(isTableLoading)
+    const area = authStore.user.area?.id
+    estudiantes_init = (await ImportService.all_estudiantes(area))
+    estudiantes.value = estudiantes_init
+  }
+  catch (error: ServerError | ExceptionResponse) {
+    checkServerErrorAndRedirect(error)
+    checkIsAuthenticateAndRedirect(error)
+  }
+  desactivateLoading(isTableLoading)
 }
 
 onMounted(loadEstudiantes)
@@ -27,12 +83,20 @@ onMounted(loadEstudiantes)
 
 <template>
   <h3>Importar Estudiantes</h3>
-  <el-row>
-    <el-col :offset="18">
-      <button type="button" class="btn btn-primary uk-text-bold">
+  <el-row justify="space-between">
+    <el-col :span="6">
+      <el-input v-model="search" placeholder="Buscar estudiante" @keyup="searchElement">
+        <template #prepend>
+          <i class="fa fa-search" />
+        </template>
+      </el-input>
+    </el-col>
+    <el-col :span="7">
+      <button type="button" class="btn btn-primary uk-text-bold" :disabled="!multipleSelection.length" @click="importManyElement(multipleSelection)">
         <loading v-if="isLoading" /><i v-else class="entypo-list-add" /> Importar Seleccionados
       </button>
     </el-col>
   </el-row>
-  <estudiantes-l-d-a-p-list :data="estudiantes" />
+
+  <l-d-a-p-list v-loading="isTableLoading" max-height="500" :data="estudiantes" @import-item="importSingleElement" @selection-change="handleSelectionChange" />
 </template>
