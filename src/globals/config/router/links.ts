@@ -52,6 +52,29 @@ const navBarLinks: Link[] = [
   },
 
   {
+    name: 'Formacion Colectiva',
+    is_accesible: is_authenticated(),
+
+    childrens: [
+      {
+        name: 'Gestion de Áreas',
+        router: { name: 'plantilla-aval-page' },
+        is_accesible: is_director_recursos_humanos(),
+      },
+      {
+        name: 'Historial de preubicación laboral',
+        router: { name: 'historial-preubicacion-page' },
+        is_accesible: is_director_recursos_humanos() || is_jefe_area() || is_vicerrector(),
+      },
+      {
+        name: 'Aprobar preubicación laboral',
+        router: { name: 'aprobar-preubicacion-page' },
+        is_accesible: is_vicerrector(),
+      },
+    ],
+  },
+
+  {
     name: 'Conformar',
     is_accesible: is_authenticated(),
     childrens: [
