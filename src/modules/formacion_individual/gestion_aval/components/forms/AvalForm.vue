@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed, defineProps, ref, watch, withDefaults } from 'vue'
+import { computed, defineProps, onMounted, ref, watch, withDefaults } from 'vue'
 import { required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { ElNotification } from 'element-plus'
+import { onUnmounted } from 'vue-demi'
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../../helpers/utils'
 import AvalServices from '../../../../../backed_services/aval.services'
 import loading, { activateLoading, desactivateLoading } from '../../../../../globals/composables/useLoading'
 import type { JovenModel } from '../../../../../backed_services/models/joven.model'
+import { load_script, unload_script } from '../../../../../helpers/vue.loadscript'
 import type { PlantillaAvalModel } from '~/backed_services/models/aval.model'
 
 interface Props {
@@ -18,11 +20,10 @@ const emit = defineEmits(['cancel', 'created', 'updated'])
 
 const isLoading = loading(false)
 const form = ref({
-  texto: '',
+  texto: 'Escriba el aval aqui...',
 })
 const plantillas_aval = ref<PlantillaAvalModel[]>([])
 const plantillaSelected = ref<number>()
-const plantillaSetectorRef = ref()
 const validationsRules = {
   texto: { required },
 }
@@ -34,7 +35,6 @@ const PlantillaServices = AvalServices.PlantillaServices
 const UserAvalServices = AvalServices.UserAvalServices
 
 function clearForm() {
-  // plantillaSetectorRef.value.clear()
   plantillaSelected.value = undefined
   v.$reset()
 }
@@ -71,8 +71,7 @@ async function loadAval(joven: JovenModel) {
     activateLoading(isLoading)
     if (joven.aval) {
       // TODO FALTA BUSCAR PORQUE NO PONE EL RESPONSE AQUI
-      // v.texto.$model = await UserAvalServices.retrieve_aval(joven.id).texto
-      form.value.texto = await UserAvalServices.retrieve_aval(joven.id).texto
+      const avalModel = await UserAvalServices.retrieve_aval(joven.id)
     }
   }
   catch (error: ServerError | ExceptionResponse) {
@@ -92,18 +91,17 @@ async function loadPlantillas() {
 }
 
 watch(plantillaSelected, (newValue, oldValue) => {
-  if (newValue !== undefined)
-    v.texto.$model = plantillas_aval.value.find(i => i.id === newValue).texto
-
-  else v.texto.$model = ''
+  v.texto.$model = plantillas_aval.value.find(i => i.id === newValue).texto
+  // window.CKEditor
 })
 watch(props, async ({ joven }) => {
   clearForm()
-  if (joven != undefined && joven.aval)
+  if (joven.aval)
     await loadAval(joven)
 })
 
 loadPlantillas()
+loadAval(props.joven)
 </script>
 
 <template>
@@ -133,13 +131,16 @@ loadPlantillas()
     <el-col>
       <el-form>
         <el-form-item v-if="!joven?.aval" label-position="top" label="Seleccione una plantilla de aval">
-          <el-select :ref="plantillaSetectorRef" v-model="plantillaSelected">
+          <el-select v-model="plantillaSelected">
             <el-option v-for="plantilla in plantillas_aval" :label="plantilla.nombre" :value="plantilla.id" />
           </el-select>
         </el-form-item>
-        <el-form-item>
-          <el-input v-model="$v.texto.$model" type="textarea" rows="6" @blur="$v.texto.$touch()" />
-          <error-help-block :items="$v.texto.$errors" />
+        <el-form-item required error="$v.texto.$error">
+          <textarea id="ckeditor" v-model="form.texto" name="ckeditor" rows="6" @blur="$v.texto.$touch()" />
+          <Trumbowyg v-model="form.texto" />
+          <template #error>
+            <input-error-message :items="$v.texto.$errors" />
+          </template>
         </el-form-item>
         <el-button @click="submitForm">
           Aplicar

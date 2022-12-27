@@ -29,7 +29,7 @@ async function loadJovenes(filter: JovenFilter) {
 }
 async function handleCurrentPageChange(page: number) {
   filters.value.page = page
-  loadJovenes(filters.value)
+  await loadJovenes(filters.value)
 }
 
 loadJovenes(filters.value)
@@ -38,34 +38,7 @@ loadJovenes(filters.value)
 <template>
   <h3>Gestion de Avales en {{ area.nombre }}</h3>
 
-  <el-form inline>
-    <el-form-item>
-      <el-select v-model="filters.has_aval" placeholder="Filtrar por aval" clearable="true">
-        <el-option :value="false" label="Sin aval" />
-        <el-option :value="true" label="Con aval" />
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="filters.has_plan" placeholder="Filtrar por plan" clearable="true">
-        <el-option :value="false" label="Sin plan" />
-        <el-option :value="true" label="Con plan" />
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="filters.has_tutor" placeholder="Filtrar por tutores" clearable="true">
-        <el-option>Sin tutor</el-option>
-        <el-option>Con tutor</el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-input v-model="filters.search" placeholder="Buscar estudiante" style="max-width: 200px" clearable />
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="loadJovenes(filters)">
-        Filtrar
-      </el-button>
-    </el-form-item>
-  </el-form>
+  <joven-filter-form v-model:filter="filters" @submit="loadJovenes(filters)" />
 
   <aval-list :data="jovenes.results" />
   <paginator :model="jovenes" @current-change="handleCurrentPageChange" @reload="loadJovenes(filters)" />

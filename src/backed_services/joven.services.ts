@@ -13,19 +13,19 @@ export interface IJovenService {
 }
 
 export class JovenService extends AbstractService implements IJovenService {
-  async all_estudiantes(area_id: number, filter: JovenFilter | undefined): PaginateResponse<EstudianteModel[]> {
+  async all_estudiantes(area_id: number, filter: JovenFilter | undefined): Promise<PaginateResponse<EstudianteModel>> {
     const call = this.callWithToken().get(`area/${area_id}/estudiante`, { params: filter })
     const response = await this.parseResponse(call)
     return response.data
   }
 
-  async all_graduados(area_id: number, filter: JovenFilter | undefined): PaginateResponse<GraduadoModel[]> {
+  async all_graduados(area_id: number, filter: JovenFilter | undefined): Promise<PaginateResponse<GraduadoModel>> {
     const call = this.callWithToken().get(`area/${area_id}/graduados`, { params: filter })
     const response = await this.parseResponse(call)
     return response.data
   }
 
-  async all_jovenes(area_id: number, filter: JovenFilter | undefined): PaginateResponse<EstudianteModel[] | GraduadoModel[]> {
+  async all_jovenes(area_id: number, filter: JovenFilter | undefined): Promise<PaginateResponse<EstudianteModel | GraduadoModel>> {
     const call = this.callWithToken().get(`area/${area_id}/jovenes`, { params: filter })
     const response = await this.parseResponse(call)
     return response.data
