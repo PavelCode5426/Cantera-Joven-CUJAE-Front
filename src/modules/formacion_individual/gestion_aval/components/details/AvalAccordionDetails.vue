@@ -3,6 +3,7 @@ import { computed, defineProps, watch } from 'vue'
 import { ExceptionResponse } from '../../../../../globals/config/axios'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../../helpers/utils'
 import { activateLoading, desactivateLoading } from '../../../../../globals/composables/useLoading'
+import JovenDetails from './JovenDetails.vue'
 import type { JovenModel } from '~/backed_services/models/joven.model'
 import AvalPlantillaServices from '~/backed_services/aval.services'
 
@@ -40,31 +41,14 @@ watch(props, () => {
     <el-collapse-item title="Informacion del Joven" name="1">
       <el-row>
         <el-col>
-          <el-descriptions column="2" border>
-            <el-avatar size="large" />
-            <el-descriptions-item label="Nombre">
-              {{ joven?.first_name }}
-            </el-descriptions-item>
-            <el-descriptions-item label="Apellidos">
-              {{ joven?.last_name }}
-            </el-descriptions-item>
-            <el-descriptions-item label="Carnet">
-              {{ joven?.carnet }}
-            </el-descriptions-item>
-            <el-descriptions-item label="Area">
-              {{ joven?.area.nombre }}
-            </el-descriptions-item>
-            <el-descriptions-item label="Direccion">
-              {{ joven?.direccion }}
-            </el-descriptions-item>
-          </el-descriptions>
+          <joven-details :joven="joven" />
         </el-col>
       </el-row>
     </el-collapse-item>
     <el-collapse-item title="Avales del Joven" name="2">
       <el-row>
         <el-col>
-          <p v-html="aval" />
+          <aval-details :joven="joven" />
         </el-col>
       </el-row>
     </el-collapse-item>

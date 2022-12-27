@@ -22,5 +22,7 @@ export class SolicitudTutorModel {
   area: AreaModel
   respuesta: boolean | null
   fechaCreado: string
-  fechaRespueste: string | null
+  fechaRespuesta: string | null
+  motivo_solicitud?: string
+  motivo_respuesta?: string
 }

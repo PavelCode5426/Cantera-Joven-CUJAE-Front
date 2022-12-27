@@ -52,10 +52,19 @@ async function submitForm() {
   }
 }
 async function clearForm() {
-  form.value = {
-    id: props.plantilla?.id,
-    texto: props.plantilla?.texto,
-    nombre: props.plantilla?.nombre,
+  if (props.plantilla) {
+    form.value = {
+      id: props.plantilla?.id,
+      texto: props.plantilla?.texto,
+      nombre: props.plantilla?.nombre,
+    }
+  }
+  else {
+    form.value = {
+      id: undefined,
+      nombre: '',
+      texto: '',
+    }
   }
   v.$reset()
 }
@@ -64,11 +73,21 @@ watch(props, clearForm)
 </script>
 
 <template>
-  <el-input v-model="$v.nombre.$model" placeholder="Nombre de la Plantilla" @blur="$v.nombre.$touch()" />
-  <error-help-block :items="$v.nombre.$errors" />
-  <el-input v-model="$v.texto.$model" placeholder="Cuerpo de la Plantilla" @blur="$v.texto.$touch()" />
-  <ckeditor v-model="$v.texto.$model" @blur="$v.texto.$touch()" />
-  <error-help-block :items="$v.texto.$errors" />
+  <el-form>
+    <el-form-item>
+      <el-input v-model="form.nombre" placeholder="Nombre de la Plantilla" @blur="$v.nombre.$touch()" />
+      <template #error>
+        <input-error-message :items="$v.nombre.$errors" />
+      </template>
+    </el-form-item>
+
+    <el-form-item>
+      <editor v-model="form.texto" @update:content="form.texto = $event" @blur="$v.texto.$touch()" />
+      <template #error>
+        <input-error-message :items="$v.texto.$errors" />
+      </template>
+    </el-form-item>
+  </el-form>
 
   <div class="modal-footer">
     <button class="btn btn-info" @click="submitForm">

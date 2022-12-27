@@ -1,4 +1,6 @@
-import { CallWithToken, CallWithoutToken, ExceptionResponse, Response, ServerError, ServerResponse } from '~/globals/config/axios'
+import { ElNotification } from 'element-plus'
+import type { Response } from '~/globals/config/axios'
+import { CallWithToken, CallWithoutToken, ExceptionResponse, ServerError, ServerResponse } from '~/globals/config/axios'
 import { isExceptionResponse, isServerError } from '~/helpers/utils'
 export class Paginate {
   page = 1
@@ -46,10 +48,10 @@ export default class AbstractService {
     }
     else { // ES UNA EXCEPCION DEL BACKEND
       error = error.response
-      response = new ExceptionResponse(error.status, error.data)
+      response = new ExceptionResponse(error.status, error.data.detail, error.data.code)
       response = this.handleExceptionResponse(response)
     }
-    if (response instanceof Response)
+    if (response instanceof ServerError || response instanceof ExceptionResponse)
       throw response
   }
 

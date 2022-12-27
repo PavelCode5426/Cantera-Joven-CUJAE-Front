@@ -32,6 +32,12 @@ export class ServerError extends Response {
 export class ExceptionResponse extends Response {
   detail: string | undefined
   code: string | undefined
+
+  constructor(httpCode: number, detail: string | undefined, code: string | undefined) {
+    super(httpCode)
+    this.detail = detail
+    this.code = code
+  }
 }
 
 export class PaginateResponse<T> extends Response {

@@ -3,6 +3,7 @@ import { computed, defineProps, watch } from 'vue'
 import { ExceptionResponse } from '../../../../../globals/config/axios'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../../helpers/utils'
 import { activateLoading, desactivateLoading } from '../../../../../globals/composables/useLoading'
+import JovenDetails from './JovenDetails.vue'
 import type { JovenModel } from '~/backed_services/models/joven.model'
 import AvalPlantillaServices from '~/backed_services/aval.services'
 
@@ -35,31 +36,5 @@ watch(props, () => {
 </script>
 
 <template>
-  <el-row>
-    <el-col>
-      <el-descriptions title="Informacion del Joven" column="2" border>
-        <el-avatar size="large" />
-        <el-descriptions-item label="Nombre">
-          {{ joven?.first_name }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Apellidos">
-          {{ joven?.last_name }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Carnet">
-          {{ joven?.carnet }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Area">
-          {{ joven?.area.nombre }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Direccion">
-          {{ joven?.direccion }}
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-col>
-  </el-row>
-  <el-row>
-    <el-col>
-      <p v-html="aval" />
-    </el-col>
-  </el-row>
+  <p v-html="aval" />
 </template>
