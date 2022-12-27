@@ -33,12 +33,16 @@ const submitLoginForm = async () => {
     catch (error: ExceptionResponse | ServerError) {
       if (isExceptionResponse(error)) {
         switch (error.httpCode) {
-          case 400: {
+          case 401: {
+            ElNotification.error({ showClose: true, message: 'Credenciales Incorrectos' })
+            break
+          }
+          case 422: {
             ElNotification.error({ showClose: true, message: 'Credenciales Incorrectos' })
             break
           }
           default:{
-            ElNotification.error({ showClose: true, message: error.detail })
+            ElNotification.error({ showClose: true, message: error.details })
           }
         }
       }
@@ -68,7 +72,7 @@ const submitLoginForm = async () => {
         <button class="btn btn-primary btn-block btn-login" @click="submitLoginForm">
           <Loading v-if="isLoadingForm" />
           <i v-else class="entypo-login" />
-          Login In
+          Entrar
         </button>
       </div>
     </div>

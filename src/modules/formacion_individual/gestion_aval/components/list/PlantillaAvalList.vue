@@ -2,7 +2,7 @@
 import { computed, defineProps, ref } from 'vue'
 import { ElMessage, ElNotification } from 'element-plus'
 import type { PlantillaAvalModel } from '../../../../../backed_services/models/aval.model'
-import PlantillaServices from '../../../../../backed_services/aval.services'
+import AvalPlantillaServices from '../../../../../backed_services/aval.services'
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../../helpers/utils'
 
@@ -11,7 +11,11 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
 const emit = defineEmits(['item-deleted', 'item-updated'])
+
+const PlantillaServices = AvalPlantillaServices.PlantillaServices
+
 const selectedItem = ref<PlantillaAvalModel | undefined>(undefined)
 const showDialog = computed(() => selectedItem.value !== undefined)
 
@@ -42,7 +46,7 @@ async function plantillaUpdated() {
     <el-table-column label="Nombre" prop="nombre" />
     <el-table-column align="right">
       <template #default="scope">
-        <el-button type="primary" size="medium" @click="selectItem(scope.row.id)">
+        <el-button type="warning" size="medium" @click="selectItem(scope.row.id)">
           Editar
         </el-button>
 

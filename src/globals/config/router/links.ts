@@ -48,6 +48,16 @@ const navBarLinks: Link[] = [
         router: { name: 'gestionar-aval-page' },
         is_accesible: is_director_recursos_humanos() || is_jefe_area(),
       },
+      {
+        name: 'Gestion de Tutores',
+        router: { name: 'asignar-tutores-page' },
+        is_accesible: is_jefe_area(),
+      },
+      {
+        name: 'Gestion de Solicitudes de Tutoria',
+        router: { name: 'solicitud-tutor-page' },
+        is_accesible: is_jefe_area(),
+      },
     ],
   },
 
