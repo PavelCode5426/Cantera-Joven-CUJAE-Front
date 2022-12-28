@@ -3,21 +3,20 @@ import { computed, defineProps, onMounted, ref, watch, withDefaults } from 'vue'
 import { required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { ElNotification } from 'element-plus'
-import { onUnmounted } from 'vue-demi'
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../../helpers/utils'
 import AvalServices from '../../../../../backed_services/aval.services'
 import loading, { activateLoading, desactivateLoading } from '../../../../../globals/composables/useLoading'
 import type { JovenModel } from '../../../../../backed_services/models/joven.model'
-import { load_script, unload_script } from '../../../../../helpers/vue.loadscript'
+import JovenDetails from '../details/JovenDetails.vue'
 import type { PlantillaAvalModel } from '~/backed_services/models/aval.model'
+
+const props = withDefaults(defineProps<Props>(), { joven: undefined })
+const emit = defineEmits(['cancel', 'created', 'updated'])
 
 interface Props {
   joven: JovenModel | undefined
 }
-const props = withDefaults(defineProps<Props>(), { joven: undefined })
-const emit = defineEmits(['cancel', 'created', 'updated'])
-
 const isLoading = loading(false)
 const form = ref({
   texto: 'Escriba el aval aqui...',
@@ -70,9 +69,10 @@ async function loadAval(joven: JovenModel) {
   try {
     activateLoading(isLoading)
     if (joven.aval) {
-      // TODO FALTA BUSCAR PORQUE NO PONE EL RESPONSE AQUI
       const avalModel = await UserAvalServices.retrieve_aval(joven.id)
+      form.value.texto = avalModel.texto
     }
+    else { form.value.texto = 'Escriba el aval aqui ...' }
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
@@ -91,8 +91,9 @@ async function loadPlantillas() {
 }
 
 watch(plantillaSelected, (newValue, oldValue) => {
-  v.texto.$model = plantillas_aval.value.find(i => i.id === newValue).texto
-  // window.CKEditor
+  const plantillas = plantillas_aval.value
+  if (plantillas !== undefined)
+    form.value.texto = plantillas.find(i => i.id === newValue).texto
 })
 watch(props, async ({ joven }) => {
   clearForm()
@@ -107,24 +108,7 @@ loadAval(props.joven)
 <template>
   <el-row>
     <el-col>
-      <el-descriptions title="Informacion del Joven" column="2" border>
-        <el-avatar size="large" />
-        <el-descriptions-item label="Nombre">
-          {{ joven?.first_name }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Apellidos">
-          {{ joven?.last_name }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Carnet">
-          {{ joven?.carnet }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Area">
-          {{ joven?.area.nombre }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Direccion">
-          {{ joven?.direccion }}
-        </el-descriptions-item>
-      </el-descriptions>
+      <joven-details column="2" border :joven="joven" />
     </el-col>
   </el-row>
   <el-row>
@@ -136,8 +120,7 @@ loadAval(props.joven)
           </el-select>
         </el-form-item>
         <el-form-item required error="$v.texto.$error">
-          <textarea id="ckeditor" v-model="form.texto" name="ckeditor" rows="6" @blur="$v.texto.$touch()" />
-          <Trumbowyg v-model="form.texto" />
+          <editor v-model="form.texto" @update:content="form.texto = $event" @blur="$v.texto.$touch()" />
           <template #error>
             <input-error-message :items="$v.texto.$errors" />
           </template>

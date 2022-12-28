@@ -204,6 +204,9 @@ loadJovenTutores(props.joven.id)
           <el-button @click="addSolicitud">
             Solicitar tutor externo
           </el-button>
+          <el-button v-if="form.solicitudes.length" type="danger" @click="form.solicitudes.pop()">
+            Eliminar solicitud
+          </el-button>
         </el-form-item>
       </el-form>
     </el-col>

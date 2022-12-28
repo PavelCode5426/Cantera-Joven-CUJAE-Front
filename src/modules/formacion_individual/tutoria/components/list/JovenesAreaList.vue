@@ -23,15 +23,7 @@ function canManageTutor(joven: JovenModel) {
 </script>
 
 <template>
-  <el-table :data="data">
-    <el-table-column label="Nombre y Apellido">
-      <template #default="scope">
-        {{ scope.row.first_name }} {{ scope.row.last_name }}
-      </template>
-    </el-table-column>
-    <el-table-column label="Correo" prop="email" />
-    <el-table-column label="Carnet" prop="carnet" />
-    <el-table-column label="Usuario" prop="username" />
+  <users-list :data="data">
     <el-table-column>
       <template #default="scope">
         <el-tooltip v-if="!canManageTutor(scope.row)" effect="dark" content="No puede asignar tutor a jovenes sin aval">
@@ -45,7 +37,7 @@ function canManageTutor(joven: JovenModel) {
         </el-button>
       </template>
     </el-table-column>
-  </el-table>
+  </users-list>
 
   <el-dialog v-model="modal" title="Gestionar tutores del joven" width="80%">
     <asignar-tutor-form :joven="selectedUser" @cancel="modal = false" @success="modal = false" />

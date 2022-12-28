@@ -9,7 +9,7 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <el-form inline>
+  <filter-form v-model:filter="filter">
     <el-form-item>
       <el-select v-model="filter.has_aval" placeholder="Filtrar por aval" clearable="true">
         <el-option :value="false" label="Sin aval" />
@@ -28,13 +28,5 @@ const props = defineProps<Props>()
         <el-option :value="true" label="Con tutor" />
       </el-select>
     </el-form-item>
-    <el-form-item>
-      <el-input v-model="filter.search" placeholder="Buscar joven" style="max-width: 200px" clearable />
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="$emit('submit')">
-        Filtrar
-      </el-button>
-    </el-form-item>
-  </el-form>
+  </filter-form>
 </template>
