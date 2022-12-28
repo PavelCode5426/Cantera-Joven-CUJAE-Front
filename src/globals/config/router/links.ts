@@ -67,19 +67,19 @@ const navBarLinks: Link[] = [
 
     childrens: [
       {
-        name: 'Gestion de Áreas',
-        router: { name: 'plantilla-aval-page' },
+        name: 'Gestíon de áreas',
+        router: { name: 'asignar-area-page' },
         is_accesible: is_director_recursos_humanos(),
-      },
-      {
-        name: 'Historial de preubicación laboral',
-        router: { name: 'historial-preubicacion-page' },
-        is_accesible: is_director_recursos_humanos() || is_jefe_area() || is_vicerrector(),
       },
       {
         name: 'Aprobar preubicación laboral',
         router: { name: 'aprobar-preubicacion-page' },
         is_accesible: is_vicerrector(),
+      },
+      {
+          name: 'Historial preubicación laboral',
+        router: { name: 'historial-preubicacion-page' },
+        is_accesible: is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
       },
     ],
   },

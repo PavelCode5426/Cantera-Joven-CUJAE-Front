@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "HistorialPreubicacionPage"
+  name: "HistorialForm"
 }
 </script>
 

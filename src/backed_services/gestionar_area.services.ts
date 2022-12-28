@@ -5,6 +5,7 @@ import {EstudianteModel, GraduadoModel} from "~/backed_services/models/joven.mod
 import {IJovenService, JovenFilter} from "~/backed_services/joven.services";
 import {PosibleGraduadoModel} from "~/backed_services/models/posible_graduado.model";
 import {PlantillaAvalModel} from "~/backed_services/models/aval.model";
+import {SolicitudTutorExterno} from "~/backed_services/tutoria.services";
 
 export class PreubicacionFilter extends Filter {
     is_preubicado: boolean | undefined
@@ -21,10 +22,10 @@ export class GestionarAreaServices extends AbstractService implements IGestionar
         return response.data
     }
 
-    async all_preubicacionespg(user_id: number, filter: PreubicacionFilter | undefined): PaginateResponse<PosibleGraduadoModel[]> {
-        const call = this.callWithToken().get(`posible-graduado/${user_id}/preubicacion-laboral`, { params: filter })
+    async all_preubicacionespg(user_id: number): PaginateResponse<PosibleGraduadoModel[]> {
+        const call = this.callWithToken().get(`posible-graduado/${user_id}/preubicacion-laboral`)
         const response = await this.parseResponse(call)
-        return response.data
+        return response.data  //historial de ubicaciones del usuario
     }
 
     async create_ubicacion_laboral(preubicacion: UbicacionLaboralModel){
@@ -39,7 +40,7 @@ export class GestionarAreaServices extends AbstractService implements IGestionar
         return response.data
     }
 
-    async apreubicados_area(area_id: number, filter: PreubicacionFilter | undefined): PaginateResponse<PosibleGraduadoModel[]> {
+    async preubicados_area(area_id: number, filter: PreubicacionFilter | undefined): PaginateResponse<PosibleGraduadoModel[]> {
         const call = this.callWithToken().get(`area/${area_id}/posibles-graduados`, { params: filter })
         const response = await this.parseResponse(call)
         return response.data
