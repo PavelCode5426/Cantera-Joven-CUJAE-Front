@@ -11,7 +11,7 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <el-form inline>
+  <filter-form :searchable="false">
     <el-form-item>
       <el-select v-model="filter.is_pendiente" placeholder="Filtrar por estado" clearable="true">
         <el-option :value="false" label="Solicitudes atendidas" />
@@ -24,10 +24,5 @@ const props = defineProps<Props>()
         <el-option :value="true" label="Solicitudes enviadas" />
       </el-select>
     </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="$emit('submit')">
-        Filtrar
-      </el-button>
-    </el-form-item>
-  </el-form>
+  </filter-form>
 </template>

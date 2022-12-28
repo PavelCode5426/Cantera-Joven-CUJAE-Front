@@ -8,6 +8,7 @@ import locale from 'dayjs/locale/es'
 import { ExceptionResponse, ServerError } from '@/globals/config/axios'
 import type { Response } from '@/globals/config/axios'
 import authStore, { initialState } from '@/modules/authentication/store/auth.store'
+import AuthStore from '@/modules/authentication/store/auth.store'
 
 const router = useRouter()
 
@@ -46,6 +47,14 @@ export function checkIsAuthenticateAndRedirect(response: Response) {
 
   return is
 }
+export function checkIsAuthorizedAndRedirect(response: Response) {
+  const is = !isAuthenticate(response) && response.httpCode === 403
+  // const router = useRouter()
+  if (is)
+    router.push({ name: 'acceso-denegado-page' })
+
+  return is
+}
 export function checkIsAuthenticateAndChangeStorage(response: Response) {
   const is = isAuthenticate(response)
   if (!is)
@@ -61,3 +70,10 @@ export function getRealativeTime(timestramp: string | undefined): string {
   return dayjs(timestramp).fromNow()
 }
 
+export function get_current_id() {
+  return AuthStore().user?.id
+}
+
+export function get_current_area_id() {
+  return AuthStore().user?.area?.id
+}

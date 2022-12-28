@@ -5,6 +5,7 @@ import AuthStore from '../../../authentication/store/auth.store'
 import ImportService from '../../../../backed_services/importar.services'
 import { ExceptionResponse } from '../../../../globals/config/axios'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../helpers/utils'
+import { Filter } from '../../../../backed_services/service'
 import type { EstudianteLDAPModel } from '~/backed_services/models/ldap.model'
 import { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
 
@@ -13,7 +14,7 @@ const isImportLoading = ref(false)
 const isTableLoading = ref(false)
 let estudiantes_init: EstudianteLDAPModel[] = []
 const estudiantes = ref<EstudianteLDAPModel[]>([])
-const search = ref<string>('')
+const filter = ref<Filter>(new Filter())
 const multipleSelection = ref<EstudianteLDAPModel[]>([])
 
 function handleSelectionChange(val: EstudianteLDAPModel[]) {
@@ -25,7 +26,7 @@ async function importSingleElement(element) {
     estudiantes_init = estudiantes_init.filter(i => i.identification !== element.identification)
     estudiantes.value = estudiantes_init
     multipleSelection.value = []
-    search.value = ''
+    filter.value.search = ''
     ElNotification.success('Estudiante importado correctamente')
   }
   catch (error: ServerError | ExceptionResponse) {
@@ -40,7 +41,7 @@ async function importManyElement(elements) {
     estudiantes_init = estudiantes_init.filter(i => !elements.find(e => e.identification === i.identification))
     estudiantes.value = estudiantes_init
     multipleSelection.value = []
-    search.value = ''
+    filter.value.search = ''
     ElNotification.success('Estudiantes importados correctamente')
   }
   catch (error: ServerError | ExceptionResponse) {
@@ -50,7 +51,7 @@ async function importManyElement(elements) {
   desactivateLoading(isLoading)
 }
 const searchElement = () => {
-  const s = search.value.toLowerCase()
+  const s = filter.value.search.toLowerCase()
   if (s === '') {
     estudiantes.value = estudiantes_init
   }
@@ -85,11 +86,7 @@ onMounted(loadEstudiantes)
   <h3>Importar Estudiantes</h3>
   <el-row justify="space-between">
     <el-col :span="6">
-      <el-input v-model="search" placeholder="Buscar estudiante" @keyup="searchElement">
-        <template #prepend>
-          <i class="fa fa-search" />
-        </template>
-      </el-input>
+      <filter-form v-model:filter="filter" @submit="searchElement" />
     </el-col>
     <el-col :span="7">
       <button type="button" class="btn btn-primary uk-text-bold" :disabled="!multipleSelection.length" @click="importManyElement(multipleSelection)">

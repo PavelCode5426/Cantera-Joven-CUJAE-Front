@@ -1,5 +1,12 @@
-import { CallWithToken, CallWithoutToken, ExceptionResponse, Response, ServerError, ServerResponse } from '~/globals/config/axios'
-import { isExceptionResponse, isServerError } from '~/helpers/utils'
+import { ElNotification } from 'element-plus'
+import type { Response } from '~/globals/config/axios'
+import { CallWithToken, CallWithoutToken, ExceptionResponse, ServerError, ServerResponse } from '~/globals/config/axios'
+import {
+  checkIsAuthenticateAndRedirect, checkIsAuthorizedAndRedirect,
+  checkServerErrorAndRedirect,
+  isExceptionResponse,
+  isServerError,
+} from '~/helpers/utils'
 export class Paginate {
   page = 1
   page_size = 10
@@ -46,18 +53,23 @@ export default class AbstractService {
     }
     else { // ES UNA EXCEPCION DEL BACKEND
       error = error.response
-      response = new ExceptionResponse(error.status, error.data)
+      response = new ExceptionResponse(error.status, error.data.detail, error.data.code)
       response = this.handleExceptionResponse(response)
     }
-    if (response instanceof Response)
+    if (response instanceof ServerError || response instanceof ExceptionResponse)
       throw response
   }
 
   protected handleServerError(error: ServerError): ServerError | boolean {
+    if (checkServerErrorAndRedirect(error))
+      return true
     return error
   }
 
   protected handleExceptionResponse(response: ExceptionResponse): ExceptionResponse | boolean {
+    if (checkIsAuthenticateAndRedirect(response) || checkIsAuthorizedAndRedirect(response))
+      return true
+
     return response
   }
 }

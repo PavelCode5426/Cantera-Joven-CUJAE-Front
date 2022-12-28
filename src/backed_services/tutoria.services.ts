@@ -26,6 +26,11 @@ export class AsignarSolicitarTutor {
   solicitudes: SolicitudTutorExterno[]
 }
 
+export class RespuestaSolicitud {
+  tutores: number[]
+  motivo_respuesta: string
+}
+
 export class TutoriaServices extends AbstractService implements ITutoriaServices {
   async all_tutors_in_area(area_id: number, filter: Filter): PaginateResponse<UserModel> {
     const call = this.callWithToken().get(`area/${area_id}/tutores`, { params: filter })
@@ -53,6 +58,18 @@ export class TutoriaServices extends AbstractService implements ITutoriaServices
 
   async all_solicitudes(area_id: number, filter: SolicitudTutoriaFilter): PaginateResponse<SolicitudTutorModel> {
     const call = this.callWithToken().get(`area/${area_id}/solicitud-tutor`, { params: filter })
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async retrieve_solicitud(solicitud_id: number): SolicitudTutorModel {
+    const call = this.callWithToken().get(`solicitud-tutor/${solicitud_id}`)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async responder_solicitud(solicitud_id: number, respuesta: RespuestaSolicitud) {
+    const call = this.callWithToken().post(`solicitud-tutor/${solicitud_id}`, respuesta)
     const response = await this.parseResponse(call)
     return response.data
   }

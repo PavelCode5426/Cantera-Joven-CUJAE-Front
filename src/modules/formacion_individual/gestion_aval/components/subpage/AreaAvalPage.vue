@@ -14,7 +14,7 @@ const jovenes = ref<PaginateResponse<JovenModel[]>>([])
 const isLoading = ref(true)
 const area = AuthStore().user?.area
 
-const filters = ref<JovenFilter>(new JovenFilter(1))
+const filters = ref<JovenFilter>(new JovenFilter())
 
 async function loadJovenes(filter: JovenFilter) {
   try {

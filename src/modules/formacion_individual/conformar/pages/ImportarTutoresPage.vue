@@ -5,6 +5,7 @@ import AuthStore from '../../../authentication/store/auth.store'
 import ImportService from '../../../../backed_services/importar.services'
 import { ExceptionResponse } from '../../../../globals/config/axios'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../helpers/utils'
+import { Filter } from '../../../../backed_services/service'
 import type { UserLDAPModel } from '~/backed_services/models/ldap.model'
 import { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
 
@@ -12,7 +13,7 @@ const authStore = AuthStore()
 const isLoading = ref(false)
 let tutores_init: UserLDAPModel[] = []
 const tutores = ref<UserLDAPModel[]>([])
-const search = ref<string>('')
+const filter = ref<Filter>(new Filter())
 const multipleSelection = ref<UserLDAPModel[]>([])
 
 function handleSelectionChange(val: UserLDAPModel[]) {
@@ -24,7 +25,7 @@ async function importSingleElement(element) {
     tutores_init = tutores_init.filter(i => i.identification !== element.identification)
     tutores.value = tutores_init
     multipleSelection.value = []
-    search.value = ''
+    filter.value.search = ''
     ElNotification.success('Tutor importado correctamente')
   }
   catch (error: ServerError | ExceptionResponse) {
@@ -39,7 +40,7 @@ async function importManyElement(elements) {
     tutores_init = tutores_init.filter(i => !elements.find(e => e.identification === i.identification))
     tutores.value = tutores_init
     multipleSelection.value = []
-    search.value = ''
+    filter.value.search = ''
     ElNotification.success('Tutores importados correctamente')
   }
   catch (error: ServerError | ExceptionResponse) {
@@ -49,7 +50,7 @@ async function importManyElement(elements) {
   desactivateLoading(isLoading)
 }
 const searchElement = () => {
-  const s = search.value.toLowerCase()
+  const s = filter.value.search.toLowerCase()
   if (s === '') {
     tutores.value = tutores_init
   }
@@ -82,11 +83,7 @@ onMounted(loadTutores)
   <h3>Importar Tutores</h3>
   <el-row justify="space-between">
     <el-col :span="6">
-      <el-input v-model="search" placeholder="Buscar tutor" @keyup="searchElement">
-        <template #prepend>
-          <i class="fa fa-search" />
-        </template>
-      </el-input>
+      <filter-form v-model:filter="filter" @submit="searchElement" />
     </el-col>
     <el-col :span="7">
       <button type="button" class="btn btn-primary uk-text-bold" :disabled="!multipleSelection.length" @click="importManyElement(multipleSelection)">
