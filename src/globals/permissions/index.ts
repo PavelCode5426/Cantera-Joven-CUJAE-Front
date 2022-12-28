@@ -34,6 +34,10 @@ export function is_tutor(): boolean {
   return AuthStore().user?.groups.find(item => item.name == 'TUTOR') || is_superuser()
 }
 
+export function is_joven(): boolean {
+  return is_estudiante() || is_graduado()
+}
+
 export function is_graduado(): boolean {
   if (!is_authenticated())
     return false

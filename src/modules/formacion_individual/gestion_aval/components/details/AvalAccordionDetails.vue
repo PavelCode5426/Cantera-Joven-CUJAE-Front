@@ -41,7 +41,7 @@ watch(props, () => {
     <el-collapse-item title="Informacion del Joven" name="1">
       <el-row>
         <el-col>
-          <joven-details :joven="joven" />
+          <joven-details column="2" border :joven="joven" />
         </el-col>
       </el-row>
     </el-collapse-item>

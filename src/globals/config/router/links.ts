@@ -1,9 +1,23 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { is_authenticated, is_director_recursos_humanos, is_jefe_area, is_tutor, is_vicerrector } from '~/globals/permissions'
+import {
+  is_authenticated,
+  is_director_recursos_humanos,
+  is_jefe_area,
+  is_joven,
+  is_tutor,
+  is_vicerrector,
+} from '~/globals/permissions'
+import { get_current_area_id, get_current_id } from '~/helpers/utils'
+
+interface RouterLink {
+  name: string
+  params?: object
+  query?: object
+}
 
 export class Link {
   name: string
-  router: RouteRecordRaw | undefined
+  router: RouterLink | undefined
   icon: string | undefined
   childrens: Link[] | undefined
   is_accesible: boolean
@@ -52,6 +66,21 @@ const navBarLinks: Link[] = [
         name: 'Gestion de Tutores',
         router: { name: 'asignar-tutores-page' },
         is_accesible: is_jefe_area(),
+      },
+      {
+        name: 'Tutores del Area',
+        router: { name: 'tutores-area-page', params: { id: get_current_area_id() } },
+        is_accesible: is_jefe_area(),
+      },
+      {
+        name: 'Tutorados asignados',
+        router: { name: 'tutorados-asignados-page', params: { id: get_current_id () } },
+        is_accesible: is_jefe_area() || is_tutor(),
+      },
+      {
+        name: 'Tutores asignados',
+        router: { name: 'tutores-asignados-page', params: { id: get_current_id () } },
+        is_accesible: is_joven(),
       },
       {
         name: 'Gestion de Solicitudes de Tutoria',

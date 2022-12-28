@@ -15,7 +15,7 @@ const jovenes = ref<PaginateResponse<JovenModel[]>>([])
 const isLoading = ref(true)
 const areaSelected = ref<AreaModel>({ ...AuthStore().user?.area })
 
-const filters = ref<JovenFilter>(new JovenFilter(1))
+const filters = ref<JovenFilter>(new JovenFilter())
 
 async function loadJovenes(area_id: number, filter: JovenFilter) {
   try {

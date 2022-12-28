@@ -1,7 +1,12 @@
 import { ElNotification } from 'element-plus'
 import type { Response } from '~/globals/config/axios'
 import { CallWithToken, CallWithoutToken, ExceptionResponse, ServerError, ServerResponse } from '~/globals/config/axios'
-import { isExceptionResponse, isServerError } from '~/helpers/utils'
+import {
+  checkIsAuthenticateAndRedirect, checkIsAuthorizedAndRedirect,
+  checkServerErrorAndRedirect,
+  isExceptionResponse,
+  isServerError,
+} from '~/helpers/utils'
 export class Paginate {
   page = 1
   page_size = 10
@@ -56,10 +61,15 @@ export default class AbstractService {
   }
 
   protected handleServerError(error: ServerError): ServerError | boolean {
+    if (checkServerErrorAndRedirect(error))
+      return true
     return error
   }
 
   protected handleExceptionResponse(response: ExceptionResponse): ExceptionResponse | boolean {
+    if (checkIsAuthenticateAndRedirect(response) || checkIsAuthorizedAndRedirect(response))
+      return true
+
     return response
   }
 }

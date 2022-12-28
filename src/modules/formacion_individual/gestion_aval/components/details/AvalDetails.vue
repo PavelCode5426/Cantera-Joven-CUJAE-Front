@@ -11,18 +11,22 @@ interface Props {
   joven: JovenModel
 }
 const props = defineProps<Props>()
-const aval = ref('')
+const aval = ref('El joven no cuenta con avales en el sistema')
 const isLoading = ref(false)
 const userAvalServices = AvalPlantillaServices.UserAvalServices
 
 async function loadAval(joven_id: number) {
   try {
     activateLoading(isLoading)
-    aval.value = await userAvalServices.retrieve_aval(joven_id).texto
+    const avalModel = await userAvalServices.retrieve_aval(joven_id)
+    aval.value = avalModel.texto
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
+
+    if (error.httpCode === 404)
+      aval.value = 'El joven no cuenta con avales en el sistema'
   }
   desactivateLoading(isLoading)
 }

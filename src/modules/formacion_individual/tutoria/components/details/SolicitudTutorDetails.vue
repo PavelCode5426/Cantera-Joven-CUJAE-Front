@@ -42,17 +42,17 @@ loadSolicitud(props.solicitud.id)
     <el-descriptions-item label="Respuesta">
       <solicitud-status v-if="value" :status="value.respuesta" />
     </el-descriptions-item>
-    <el-descriptions-item label="Motivo solicitud">
-      {{ value?.motivo_solicitud }}
-    </el-descriptions-item>
-    <el-descriptions-item v-if="value?.motivo_respuesta" label="Motivo respuesta">
-      {{ value?.motivo_respuesta }}
-    </el-descriptions-item>
     <el-descriptions-item label="Fecha de realizacion">
       {{ value?.fechaCreado }}
     </el-descriptions-item>
     <el-descriptions-item v-if="value?.fechaRespuesta" label="Fecha de respuesta">
       {{ value?.fechaRespuesta }}
+    </el-descriptions-item>
+    <el-descriptions-item label="Motivo solicitud">
+      {{ value?.motivo_solicitud }}
+    </el-descriptions-item>
+    <el-descriptions-item v-if="value?.motivo_respuesta" label="Motivo respuesta">
+      {{ value?.motivo_respuesta }}
     </el-descriptions-item>
   </el-descriptions>
 </template>

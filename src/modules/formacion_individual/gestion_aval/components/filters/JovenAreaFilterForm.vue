@@ -27,7 +27,7 @@ loadAreas()
 </script>
 
 <template>
-  <el-form inline>
+  <filter-form v-model:filter="filter">
     <el-form-item>
       <el-select v-model="area.id" placeholder="Filtrar por area">
         <el-option v-for="item in areas" :key="item.id" :value="item.id" :label="item.nombre" />
@@ -51,13 +51,5 @@ loadAreas()
         <el-option :value="true" label="Con tutor" />
       </el-select>
     </el-form-item>
-    <el-form-item>
-      <el-input v-model="filter.search" placeholder="Buscar joven" style="max-width: 200px" clearable />
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="$emit('submit')">
-        Filtrar
-      </el-button>
-    </el-form-item>
-  </el-form>
+  </filter-form>
 </template>

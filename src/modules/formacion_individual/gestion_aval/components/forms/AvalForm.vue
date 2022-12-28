@@ -69,7 +69,6 @@ async function loadAval(joven: JovenModel) {
   try {
     activateLoading(isLoading)
     if (joven.aval) {
-      // TODO FALTA BUSCAR PORQUE NO PONE EL RESPONSE AQUI
       const avalModel = await UserAvalServices.retrieve_aval(joven.id)
       form.value.texto = avalModel.texto
     }
@@ -109,7 +108,7 @@ loadAval(props.joven)
 <template>
   <el-row>
     <el-col>
-      <joven-details :joven="joven" />
+      <joven-details column="2" border :joven="joven" />
     </el-col>
   </el-row>
   <el-row>
