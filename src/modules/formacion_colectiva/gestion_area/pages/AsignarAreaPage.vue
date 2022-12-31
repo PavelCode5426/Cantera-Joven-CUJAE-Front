@@ -8,41 +8,104 @@ import {PosibleGraduadoModel} from '~/backed_services/models/posible_graduado.mo
 
 import AuthStore from '~/modules/authentication/store/auth.store'
 import type { PaginateResponse } from '~/globals/config/axios'
-import { ExceptionResponse } from '~/globals/config/axios'
-import PosibleGraduadoFilterForm from "../components/filter/PosibleGraduadoFilterForm.vue";
-import PosiblesGraaduadoAreaList from "../components/list/PosiblesGraaduadoAreaList.vue";
+import {ExceptionResponse, ServerError} from '~/globals/config/axios'
+import UserModel from "../../../../backed_services/models/user.model";
+import AreaModel from "../../../../backed_services/models/area.model";
+import usePaginateResponse from "../../../../globals/composables/usePaginateResponse";
+import {useRoute} from "vue-router";
+import {ElNotification} from "element-plus";
+import tutoriaServices, {
+  AsignarSolicitarTutor,
+  SolicitudTutorExterno,
+  TutoriaFilter
+} from "../../../../backed_services/tutoria.services";
+import UbicacionLaboralModel, {UbicadosAreaModel} from "../../../../backed_services/models/ubicacion_laboral.model";
+import {helpers, required} from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
+import AreaService from "../../../../backed_services/area.services";
+import {TutorAsignadoModel} from "../../../../backed_services/models/tutorial.model";
 
-const posiblesgraduados = ref<PaginateResponse<PosibleGraduadoModel[]>>([])
-const isLoading = ref(true)
-const area = AuthStore().user?.area
+interface Preubicacion {
+  area: AreaModel
+  ubicados: PosibleGraduadoModel[]
+}
 
-const filters = ref<PreubicacionFilter>(new PreubicacionFilter(1))
+const posibles_graduados_init = usePaginateResponse<PosibleGraduadoModel>()
+const posibles_graduados = ref<usePaginateResponse<PosibleGraduadoModel>>()
+const selectedPosiblesGraduados = ref([])
+const areas = ref<AreaModel[]>([])
+const selectedArea = ref([])
+const route = useRoute()
 
-async function loadPosiblesGraduados(filter: PreubicacionFilter) {
+
+const preubicados = ref<UbicadosAreaModel[]>([])
+
+async function loadDataPG(filter: PreubicacionFilter) {
   try {
-    activateLoading(isLoading)
-    posiblesgraduados.value = await gestionarAreaServices.preubicados_area(area_id, filter)
+    const response: PaginateResponse<UserModel> = await gestionarAreaServices.get_pgraduados(filter)
+    posibles_graduados_init.value = response.results
+  }
+  catch (error: ExceptionResponse) {
+    if (error.httpCode === 404)
+      ElNotification.error('Error')
+    else ElNotification.error(error.detail)
+  }
+}
+
+async function loadAreas() {
+  try {
+    const response = await AreaService.all_areas()
+    areas.value = response.results
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
   }
-  desactivateLoading(isLoading)
 }
-async function handleCurrentPageChange(page: number) {
-  filters.value.page = page
-  await loadPosiblesGraduados(filters.value)
-}
+async function loadAsignados(area_id: number) {
+  const preubicados: UbicadosAreaModel[] = []
+  try {
+    const filter = new PreubicacionFilter(1, 500)
+    filter.is_preubicado = false
+    let response = await gestionarAreaServices.get_pgraduados(filter)
+    preubicados.ubicados.push(...response.results)
 
-loadPosiblesGraduados(filters.value)
+    while (response.next !== null) {
+      preubicados.ubicados.push(...response.results)
+      filter.page++
+      response = await gestionarAreaServices.get_pgraduados(filter)
+    }
+
+    posibles_graduados.value = posibles_graduados_init
+    preubicados.forEach((i) => {
+      if (!posibles_graduados_init.find(item => item.id === i.ubicados.id))
+        posibles_graduados.value.push(i.ubicados)
+    })
+
+    selectedPosiblesGraduados.value = []
+    preubicados.forEach(item => selectedPosiblesGraduados.value.push(item.ubicados.id))
+  }
+  catch (error: ServerError | ExceptionResponse) {
+    checkServerErrorAndRedirect(error)
+    checkIsAuthenticateAndRedirect(error)
+  }
+}
+loadDataPG(filter)
+loadAreas()
+loadAsignados(Preubicacion.area.id)
 </script>
 
 <template>
-  <h3>Posibles graduados preubicados en {{ area.nombre }}</h3>
+  <h3>Aignación de posibles graduados a áreas</h3>
+    <el-select v-model="area.id" placeholder="Filtrar por area">
+      <el-option v-for="item in areas" :key="item.id" :value="item.id" :label="item.nombre" />
+    </el-select>
+  <el-transfer
+      :v-model="posibles_graduados.results"
+      filterable
+      :filter-method="filterMethod"
+      filter-placeholder="Posible graduado"
+      users-list :data="posibles_graduados_init.results"
+  />
+</template>>
 
-  <posible-graduado-filter-form v-model:filter="filters" @submit="loadPosiblesGraduados(filters)" />
-
-  <posibles-graaduado-area-list :data="posiblesgraduados.results" />
-
-  <paginator :model="posiblesgraduados" @current-change="handleCurrentPageChange" @reload="loadPosiblesGraduados(filters)" />
-</template>

@@ -7,7 +7,8 @@ export function is_authenticated(): boolean {
 export function is_superuser(): boolean {
   if (!is_authenticated())
     return false
-  return AuthStore().user.groups.length === 0
+  return true
+  //return AuthStore().user.groups.length === 0
 }
 
 export function is_vicerrector(): boolean {

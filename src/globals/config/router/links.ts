@@ -110,6 +110,11 @@ const navBarLinks: Link[] = [
         router: { name: 'historial-preubicacion-page' },
         is_accesible: is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
       },
+      {
+        name: 'Posibles graduados preubicados',
+        router: { name: 'preubicados-area-page',params:{id:get_current_area_id()} },
+        is_accesible: is_jefe_area(),
+      },
     ],
   },
 

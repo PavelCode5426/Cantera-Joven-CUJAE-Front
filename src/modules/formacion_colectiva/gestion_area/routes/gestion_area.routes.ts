@@ -23,12 +23,32 @@ const routes: LayoutRouteRecordRaw[] = [
         layout: ['Admin'],
     },
     {
-        path: 'historial-preubicacion',
+        path: 'posibles-graduados',
         name: 'historial-preubicacion-page',
-        component: () => import('../pages/HistorialPreubicacionLaboralPage.vue'),
+        component: () => import('../pages/HistorialPreubicacionPGPage.vue'),
         meta: {
             title: 'Historial de preubicación laboral posible graduado',
             accesible: () => is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
+        },
+        layout: ['Admin'],
+    },
+    {
+        path: 'posibles-graduados/:id/historial-preubicacion',
+        name: 'historial-preubicacion-posible-graduado-page',
+        component: () => import('../pages/HistorialPreubicacionesPage.vue'),
+        meta: {
+            title: 'Historial de preubicaciones laborales de un posible graduado',
+            accesible: () => is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
+        },
+        layout: ['Admin'],
+    },
+    {
+        path: 'area/:id/posibles-graduados',
+        name: 'preubicados-area-page',
+        component: () => import('../pages/PreubicadosAreaPage.vue'),
+        meta: {
+            title: 'Posibles graduados preubicados en el área',
+            accesible: () => is_jefe_area(),
         },
         layout: ['Admin'],
     },
