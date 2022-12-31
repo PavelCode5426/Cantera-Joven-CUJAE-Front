@@ -76,6 +76,10 @@ const axiosWithOutToken = axios.create({
   baseURL: SERVER_URL,
   headers,
 })
+const axiosMultipartData = axios.create({
+  baseURL: SERVER_URL,
+  headers,
+})
 
 export function CallWithToken(): Axios {
   const token = JSON.parse(localStorage.getItem('auth')).token
