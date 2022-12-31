@@ -1,6 +1,5 @@
 import type { Store } from 'pinia'
 import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -10,8 +9,10 @@ import type { Response } from '@/globals/config/axios'
 import authStore, { initialState } from '@/modules/authentication/store/auth.store'
 import AuthStore from '@/modules/authentication/store/auth.store'
 
-const router = useRouter()
-
+const router = undefined
+function getRouter() {
+  return router
+}
 export function putStoreinLocalStorage(store: Store) {
   const local = JSON.parse(localStorage.getItem(store.$id))
   if (local)
@@ -23,12 +24,12 @@ export function putStoreinLocalStorage(store: Store) {
 
 export const isServerError = (response: Response) => response instanceof ServerError
 export const isExceptionResponse = (response: Response) => response instanceof ExceptionResponse
-export const isAuthenticate = (response: Response) => response.httpCode != 401
+export const isAuthenticate = (response: Response) => response.httpCode !== 401
 
 export function checkServerErrorAndRedirect(response: Response) {
   const is = isServerError(response)
   if (is)
-    router.push({ name: 'server-error-page', query: { message: response.error.message } })
+    getRouter().push({ name: 'server-error-page', query: { message: response.error.message } })
   return is
 }
 export function checkServerErrorAndMessage(response: Response) {
@@ -42,7 +43,8 @@ export function checkIsAuthenticateAndRedirect(response: Response) {
   // const router = useRouter()
   if (is) {
     authStore().$patch({ isAuthenticated: false })
-    router.push({ name: 'login-page' })
+    localStorage.clear()
+    getRouter().push({ name: 'login-page' })
   }
 
   return is
@@ -51,7 +53,7 @@ export function checkIsAuthorizedAndRedirect(response: Response) {
   const is = !isAuthenticate(response) && response.httpCode === 403
   // const router = useRouter()
   if (is)
-    router.push({ name: 'acceso-denegado-page' })
+    getRouter().push({ name: 'acceso-denegado-page' })
 
   return is
 }
@@ -60,6 +62,13 @@ export function checkIsAuthenticateAndChangeStorage(response: Response) {
   if (!is)
     authStore().$patch({ isAuthenticated: false })
 
+  return is
+}
+export function checkIsNotFoundAndRedirect(response: Response) {
+  const is = !isAuthenticate(response) && response.httpCode === 404
+  // const router = useRouter()
+  if (is)
+    getRouter().push({ name: 'acceso-denegado-page' })
   return is
 }
 

@@ -5,6 +5,8 @@ import type { SolicitudTutorModel, TutorAsignadoModel, TutoradoAsignadoModel } f
 
 export class TutoriaFilter extends Filter {
   revocation: boolean | undefined
+  has_aval:boolean|undefined
+  has_plan:boolean|undefined
 }
 
 export class SolicitudTutoriaFilter extends Filter {
