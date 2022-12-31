@@ -87,6 +87,11 @@ const navBarLinks: Link[] = [
         router: { name: 'solicitud-tutor-page' },
         is_accesible: is_jefe_area(),
       },
+      {
+        name: 'Planificar Formacion',
+        router: { name: 'planes-tutor-page', params: { id: get_current_id() } },
+        is_accesible: is_tutor(),
+      },
     ],
   },
 
