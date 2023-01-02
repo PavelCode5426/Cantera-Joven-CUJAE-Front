@@ -9,6 +9,8 @@ interface Prop {
 const props = defineProps<Prop>()
 
 const pdf_link = computed(() => {
+  if (props.plan?.documento)
+    return props.plan.documento.archivo
   return `${import.meta.env.VITE_URL_SERVER}/plan-individual/${props.plan?.id}/export-pdf`
 })
 const calendar_link = computed(() => {

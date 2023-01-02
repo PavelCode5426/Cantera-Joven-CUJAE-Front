@@ -67,28 +67,33 @@ onMounted(() => loadPlanFormacion(route?.params?.id))
 </script>
 
 <template>
-  <el-row>
-    <el-col :span="16">
-      <h3>Plan de Formacion Individual</h3>
-    </el-col>
-    <el-col :span="8">
-      <el-row justify="space-evenly">
-        <export-plan-formacion v-if="can_export" :plan="plan" />
-        <cambiar-estado-plan-form v-if="can_change_status" :estado="plan?.estado" @change="changeStatusHandler" />
-        <firmar-plan-formacion-form v-if="is_jefe_area" :plan="plan" />
-      </el-row>
-    </el-col>
-  </el-row>
+  <el-space style="width: 100%" fill direction="vertical">
+    <el-row>
+      <el-col :span="16">
+        <h3>Plan de Formacion Individual</h3>
+      </el-col>
+      <el-col :span="8">
+        <el-row justify="space-evenly">
+          <export-plan-formacion v-if="can_export" :plan="plan" />
+          <cambiar-estado-plan-form v-if="can_change_status" :estado="plan?.estado" @change="changeStatusHandler" />
+          <firmar-plan-formacion-form v-if="is_jefe_area" :plan="plan" />
+        </el-row>
+      </el-col>
+    </el-row>
 
-  <el-row>
-    <plan-formacion-detail style="width: 100%;" border colums="1" :plan="plan" />
-  </el-row>
+    <el-row>
+      <plan-formacion-detail style="width: 100%;" border colums="1" :plan="plan" />
+    </el-row>
 
-  <el-tabs v-if="etapas.length" v-model="activeTab">
-    <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :label="`Etapa #${etapa.numero}`" :name="`${etapa.numero}`">
-      <etapa-formacion-item :etapa="etapa" />
-      <el-divider />
-      <actividad-formacion-list :etapa="etapa" />
-    </el-tab-pane>
-  </el-tabs>
+    <el-tabs v-if="etapas.length" v-model="activeTab">
+      <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :label="`Etapa #${etapa.numero}`" :name="`${etapa.numero}`">
+        <etapa-formacion-item :etapa="etapa" />
+        <el-divider />
+        <actividad-formacion-list :etapa="etapa" />
+      </el-tab-pane>
+      <el-tab-pane v-if="plan.estado !== EstadoPlanFormacion.aprobado" label="Comentarios" name="comentarios">
+        <plan-formacion-comentarios :plan="plan" />
+      </el-tab-pane>
+    </el-tabs>
+  </el-space>
 </template>

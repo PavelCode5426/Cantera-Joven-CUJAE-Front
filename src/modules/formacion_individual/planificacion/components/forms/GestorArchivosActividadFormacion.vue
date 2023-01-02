@@ -1,22 +1,26 @@
 <script lang="ts" setup>
-import { computed, defineProps, ref, watch } from 'vue'
+import { computed, defineProps, ref, watch, withDefaults } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 import type { UploadProps, UploadUserFile } from 'element-plus'
+
 import FIndivServices from '../../../../../backed_services/formacion_individual.services'
 import type { ActividadFormacionModel } from '~/backed_services/models/formacion_individual.model'
 import type ArchivoModel from '~/backed_services/models/archivo.model'
 
 interface Props {
   actividad: ActividadFormacionModel
+  disabled: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false,
+})
 const fileList = ref<UploadUserFile[]>([])
 const headers = ref<Record<string, any>>()
 
 const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
-  console.log(uploadFile)
+  window.open(uploadFile.url, '_blank')
 }
 
 const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
@@ -27,28 +31,28 @@ const onSuccess: UploadProps['onSuccess'] = (response, uploadFile, uploadFiles) 
   const file = response as ArchivoModel
   uploadFile.uid = file.id
   uploadFile.name = file.nombre
-  uploadFile.url = file.url
+  uploadFile.url = file.archivo
   uploadFile.size = file.size
 }
 
 const url = computed(() => {
-  return `${import.meta.env.VITE_URL_SERVER}/actividad-formacion/${props.actividad.id}/subir-archivo`
+  return `${import.meta.env.VITE_URL_SERVER}/actividad-formacion/${props.actividad?.id}/subir-archivo`
 })
 
 watch(props, () => {
   fileList.value = []
-  props.actividad.documentos.forEach(i => fileList.value.push({
+  props.actividad?.documentos.forEach(i => fileList.value.push({
     name: i.nombre,
-    url: i.url,
+    url: i.archivo,
     size: i.size,
     uid: i.id,
   }))
 })
 
-props.actividad.documentos.forEach(i => fileList.value.push({
+props.actividad?.documentos.forEach(i => fileList.value.push({
   uid: i.id,
   name: i.nombre,
-  url: i.nombre,
+  url: i.archivo,
   size: i.size,
 }))
 </script>
@@ -63,6 +67,7 @@ props.actividad.documentos.forEach(i => fileList.value.push({
       :on-remove="handleRemove"
       :before-remove="beforeRemove"
       :on-success="onSuccess"
+      :disabled="props.disabled"
     >
       <template #tip>
         <div class="el-upload__tip">
