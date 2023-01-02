@@ -23,6 +23,13 @@ export default defineConfig({
     },
   },
 
+  server: {
+    port: 3000,
+    strictPort: true,
+    hmr: {
+      port: 9000,
+    },
+  },
   plugins: [
     Vue({
       include: [/\.vue$/, /\.md$/],
@@ -93,9 +100,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'Sistema de Gestion de la Cantera Joven Cujae',
-        short_name: 'Cantera Joven CUJAE',
-        theme_color: '#ffffff',
+        name: 'Sistema de Gestion de la Formacion de Jovenes',
+        short_name: 'Sistema de Gestion de la Formacion de Jovenes',
+        theme_color: '#0ef806',
         icons: [
           {
             src: 'pwa-192x192.png',

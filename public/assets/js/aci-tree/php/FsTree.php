@@ -38,7 +38,7 @@ class FsTree extends Tree {
             $icon = 'folder';
             // here we can return NULL instead of checking for children
             // return null;
-            return !$this->fs->isEmpty($path);
+            return !$this->fs->noMore($path);
         } else {
             $icon = 'file';
             return false;
@@ -129,7 +129,7 @@ class Fs {
      * @param string $path - absolute path
      * @return boolean
      */
-    public function isEmpty($path) {
+    public function noMore($path) {
         $handle = opendir($path);
         if ($handle) {
             while ($entry = readdir($handle)) {
