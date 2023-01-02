@@ -31,7 +31,7 @@ const { user } = storeToRefs(authStore)
       <ul class="nav navbar-right pull-right">
         <nav-bar-notifications-container />
         <li>
-          <span href="">{{ user.first_name }} {{ user.last_name }}</span>
+          <span href="">{{ user?.first_name }} {{ user?.last_name }}</span>
         </li>
         <logout-item />
 

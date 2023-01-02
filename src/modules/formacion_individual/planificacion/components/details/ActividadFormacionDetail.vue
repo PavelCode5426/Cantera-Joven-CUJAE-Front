@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import formacionIndividualStore from '../../store/planificacion_individual.store'
 import CambiarEstadoActividadForm from '../forms/CambiarEstadoActividadForm.vue'
 import { is_joven, is_tutor } from '../../../../../globals/permissions'
+import ActividadFormacionComentarios from '../items/ActividadFormacionComentarios.vue'
 import type { ActividadFormacionModel } from '~/backed_services/models/formacion_individual.model'
 import { EstadoPlanFormacion } from '~/backed_services/models/formacion_individual.model'
 
@@ -24,15 +25,16 @@ const can_manage_execution = computed(() => {
   <el-tabs>
     <el-tab-pane label="Informacion">
       <actividad-formacion-description border colums="2" :actividad="actividad" />
+      <gestor-archivos-actividad-formacion v-if="!can_manage_actividad" :disabled="true" :actividad="actividad" />
     </el-tab-pane>
-    <el-tab-pane v-if="can_manage_execution" label="Gestion">
+    <el-tab-pane v-if="can_manage_actividad && can_manage_execution" label="Gestion">
       <el-form label-position="top">
         <cambiar-estado-actividad-form :actividad="actividad" />
         <gestor-archivos-actividad-formacion :actividad="actividad" />
       </el-form>
     </el-tab-pane>
     <el-tab-pane v-if="can_manage_actividad" label="Comentarios">
-      <actividad-formacion-description border colums="2" :actividad="actividad" />
+      <actividad-formacion-comentarios :actividad="props.actividad" />
     </el-tab-pane>
   </el-tabs>
 </template>

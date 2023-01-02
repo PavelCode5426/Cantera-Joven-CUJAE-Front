@@ -15,7 +15,7 @@ const editorConfig = {}
 </script>
 
 <template>
-  <ckeditor v-model="value" :editor="editor" :config="editorConfig" />
+  <ckeditor v-model="value" :editor="editor" :config="editorConfig" style="width: 100%" />
 </template>
 
 <style scoped>

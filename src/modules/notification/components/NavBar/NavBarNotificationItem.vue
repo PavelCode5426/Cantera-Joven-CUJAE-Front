@@ -16,7 +16,7 @@ const imageURL = ref(`http://intranet.cujae.edu.cu/Image.aspx?ci=${props.from.ca
   <li>
     <a>
       <span class="image pull-right">
-        <img :src="imgUrl" alt="FOTO" class="img-circle">
+        <avatar :src="imgUrl" />
       </span>
       <span v-if="unread" class="line"><strong>{{ from.first_name }} {{ from.last_name }}</strong> - {{ time }}</span>
       <span v-else class="line">{{ from.first_name }} {{ from.last_name }} - {{ time }}</span>

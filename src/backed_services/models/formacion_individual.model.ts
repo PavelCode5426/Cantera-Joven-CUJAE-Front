@@ -56,6 +56,6 @@ export class ActividadFormacionModel {
   fechaFin: string
   fechaCumplimiento?: string
   estado?: EstadoActividadFormacion
-  subactividades?: boolean
+  subactividades: boolean
   documentos?: ArchivoModel[]
 }

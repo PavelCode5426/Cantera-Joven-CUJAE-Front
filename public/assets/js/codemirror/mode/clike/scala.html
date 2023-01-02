@@ -152,7 +152,7 @@
      *
      *  @return    `true` if the $coll contain no elements, `false` otherwise.
      */
-    def isEmpty: Boolean = {
+    def noMore: Boolean = {
       var result = true
       breakable {
         for (x <- this) {
@@ -413,7 +413,7 @@
      *  $orderDependent
      *  @return  the first element of this $coll if it is nonempty, `None` if it is empty.
      */
-    def headOption: Option[A] = if (isEmpty) None else Some(head)
+    def headOption: Option[A] = if (noMore) None else Some(head)
 
     /** Selects all elements except the first.
      *  $orderDependent
@@ -422,7 +422,7 @@
      *  @throws `UnsupportedOperationException` if the $coll is empty.
      */ 
     override def tail: Repr = {
-      if (isEmpty) throw new UnsupportedOperationException("empty.tail")
+      if (noMore) throw new UnsupportedOperationException("empty.tail")
       drop(1)
     }
 
@@ -442,7 +442,7 @@
      *  $orderDependent
      *  @return  the last element of this $coll$ if it is nonempty, `None` if it is empty.
      */
-    def lastOption: Option[A] = if (isEmpty) None else Some(last)
+    def lastOption: Option[A] = if (noMore) None else Some(last)
 
     /** Selects all elements except the last.
      *  $orderDependent
@@ -451,7 +451,7 @@
      *  @throws `UnsupportedOperationException` if the $coll is empty.
      */
     def init: Repr = {
-      if (isEmpty) throw new UnsupportedOperationException("empty.init")
+      if (noMore) throw new UnsupportedOperationException("empty.init")
       var lst = head
       var follow = false
       val b = newBuilder
@@ -747,7 +747,7 @@
 
     // A helper for tails and inits.
     private def iterateUntilEmpty(f: Traversable[A @uV] => Traversable[A @uV]): Iterator[Repr] = {
-      val it = Iterator.iterate(thisCollection)(f) takeWhile (x => !x.isEmpty)
+      val it = Iterator.iterate(thisCollection)(f) takeWhile (x => !x.noMore)
       it ++ Iterator(Nil) map (newBuilder ++= _ result)
     }
   }

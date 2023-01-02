@@ -34,7 +34,7 @@ async function changeNivelCumplimientoHandler() {
 }
 
 watch(props, (newVal) => {
-  estado.value = newVal.actividad.estado
+  estado.value = newVal.actividad?.estado
 })
 const can_request_review = computed(() => {
   return estado.value === EstadoActividadFormacion.pendiente || estado.value === EstadoActividadFormacion.cumplida
@@ -42,7 +42,7 @@ const can_request_review = computed(() => {
 </script>
 
 <template>
-  <el-form-item v-if="!is_joven">
+  <el-form-item v-if="is_joven">
     <el-button :disabled="can_request_review" @click="solicitarRevisionSubmit">
       Solicitar Revision
     </el-button>

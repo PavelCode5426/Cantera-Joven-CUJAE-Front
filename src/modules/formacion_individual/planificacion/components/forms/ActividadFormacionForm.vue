@@ -14,21 +14,19 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['cancel', 'success'])
 
-const form = ref<ActividadFormacionModel>({
+const form = ref({
   nombre: props.actividad?.nombre,
   descripcion: props.actividad?.descripcion,
   observacion: props.actividad?.observacion,
   responsable: props.actividad?.descripcion,
   participantes: props.actividad?.participantes,
-  fechaInicio: props.actividad?.fechaInicio,
-  fechaFin: props.actividad?.fechaFin,
+  fechas: [props.actividad?.fechaInicio, props.actividad?.fechaFin],
 })
 const formValidation = {
   nombre: { required },
   descripcion: { required },
   responsable: { required },
-  fechaInicio: { required },
-  fechaFin: { required },
+  fechas: [{ required }, { required }],
 }
 const $v = useVuelidate(formValidation, form)
 const v = $v.value
@@ -38,9 +36,10 @@ function clearForm() {
     nombre: props.actividad?.nombre,
     descripcion: props.actividad?.descripcion,
     responsable: props.actividad?.descripcion,
+    observacion: props.actividad?.observacion,
     participantes: props.actividad?.participantes,
-    fechaInicio: props.actividad?.fechaInicio,
-    fechaFin: props.actividad?.fechaFin,
+    fechas: [props.actividad?.fechaInicio, props.actividad?.fechaFin],
+
   }
   v.$reset()
 }
@@ -53,7 +52,7 @@ async function submitForm() {
 }
 
 async function createActividad() {
-  const actividad: ActividadFormacionModel = { ...form.value }
+  const actividad: ActividadFormacionModel = { ...form.value, fechaInicio: form.value.fechas[0], fechaFin: form.value.fechas[1] }
   try {
     await FIndivServices.create_actividad_formacion(props.etapa.id, actividad)
     emit('success', actividad)
@@ -64,7 +63,7 @@ async function createActividad() {
   }
 }
 async function editActividad() {
-  const actividad: ActividadFormacionModel = { ...form.value }
+  const actividad: ActividadFormacionModel = { ...form.value, fechaInicio: form.value.fechas[0], fechaFin: form.value.fechas[1] }
   try {
     await FIndivServices.update_actividad_formacion(props.actividad.id, actividad)
     emit('success', actividad)
@@ -89,30 +88,34 @@ watch(props, () => {
     </el-form-item>
     <el-form-item label="Responsable">
       <el-input v-model="form.responsable" @blur="$v.responsable.$touch()" />
+      <input-error-message :items="$v.responsable.$errors" />
     </el-form-item>
     <el-form-item label="Participantes">
-      <el-input v-model="form.participantes" @blur="$v.participantes.$touch()" />
+      <el-input v-model="form.participantes" />
     </el-form-item>
-    <el-form-item label="Fecha de Inicio">
-      <el-date-picker v-model="form.fechaInicio" @blur="$v.fechaInicio.$touch()" />
-    </el-form-item>
-    <el-form-item label="Fecha de Fin">
-      <el-date-picker v-model="form.fechaFin" @blur="$v.fechaFin.$touch()" />
+    <el-form-item label="Fechas">
+      <date-picker
+        v-model="form.fechas"
+        type="daterange" start-placeholder="Fecha de inicio"
+        end-placeholder="Fecha de entrega" range-separator="hasta" @blur="$v.fechas.$touch()"
+      />
+      <input-error-message :items="$v.fechas.$errors" />
     </el-form-item>
     <el-form-item label="Descripcion">
       <el-input v-model="form.descripcion" type="textarea" @blur="$v.descripcion.$touch()" />
+      <input-error-message :items="$v.descripcion.$errors" />
     </el-form-item>
     <el-form-item label="Observacion">
-      <el-input v-model="form.observacion" type="textarea" @blur="$v.observacion.$touch()" />
+      <el-input v-model="form.observacion" type="textarea" />
     </el-form-item>
     <gestor-archivos-actividad-formacion v-if="actividad" :actividad="actividad" />
-    <el-form-item>
+    <el-row justify="end">
       <el-button @click="submitForm">
         Aceptar
       </el-button>
       <el-button @click="emit('cancel')">
         Cancelar
       </el-button>
-    </el-form-item>
+    </el-row>
   </el-form>
 </template>

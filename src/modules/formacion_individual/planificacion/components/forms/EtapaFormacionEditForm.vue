@@ -15,16 +15,14 @@ const emit = defineEmits(['error', 'success'])
 
 const form = ref({
   objetivo: props.etapa?.objetivo,
-  fechaInicio: props.etapa?.fechaInicio,
-  fechaFin: props.etapa?.fechaFin,
+  fechas: [props.etapa?.fechaInicio, props.etapa?.fechaFin],
   dimesion: props.etapa?.dimension !== null ? props.etapa.dimension.id : undefined,
 })
 
 const formValidations = {
   objetivo: { required, minLength: minLength(15) },
-  fechaInicio: { required }, // TODO PONER FECHA LIMITE
-  fechaFin: { required },
   dimesion: { required },
+  fechas: [{ required }, { required }],
 }
 
 const $v = useVuelidate(formValidations, form)
@@ -37,8 +35,8 @@ async function updateEtapa() {
     const etapa: EtapaFormacionModel = {
       id: props.etapa?.id,
       objetivo: valid_form.objetivo,
-      fechaInicio: valid_form.fechaInicio,
-      fechaFin: valid_form.fechaFin,
+      fechaInicio: valid_form.fechas[0],
+      fechaFin: valid_form.fechas[1],
       dimension: valid_form.dimesion,
     }
     try {
@@ -56,22 +54,21 @@ async function updateEtapa() {
 <template>
   <el-form inline label-position="top">
     <el-form-item label="Objetivo">
-      <el-input v-model="form.objetivo" @blur="$v.objetivo.$touch()" />
+      <el-input v-model="form.objetivo" style="width: 300px" @blur="$v.objetivo.$touch()" />
       <input-error-message :items="$v.objetivo.$errors" />
     </el-form-item>
     <el-form-item label="Dimension">
-      <el-select v-model="form.dimesion" @blur="$v.dimesion.$touch()">
+      <el-select v-model="form.dimesion" style="width: 300px" @blur="$v.dimesion.$touch()">
         <el-option v-for="dimension in dimensiones" :value="dimension.id" :label="dimension.nombre" />
       </el-select>
       <input-error-message :items="$v.dimesion.$errors" />
     </el-form-item>
-    <el-form-item label="Fecha de Inicio">
-      <el-date-picker v-model="form.fechaInicio" />
-      <input-error-message :items="$v.fechaInicio.$errors" />
-    </el-form-item>
-    <el-form-item label="Fecha de Fin">
-      <el-date-picker v-model="form.fechaFin" />
-      <input-error-message :items="$v.fechaFin.$errors" />
+    <el-form-item label="Fechas">
+      <date-picker
+        v-model="form.fechas" type="daterange" start-placeholder="Fecha de inicio"
+        end-placeholder="Fecha de fin" range-separator="hasta" @blur="$v.fechas.$touch()"
+      />
+      <input-error-message :items="$v.fechas.$errors" />
     </el-form-item>
   </el-form>
   <el-button @click="updateEtapa">

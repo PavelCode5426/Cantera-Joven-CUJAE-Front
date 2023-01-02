@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { required, requiredIf } from '@vuelidate/validators'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { genFileId } from 'element-plus'
@@ -18,7 +18,8 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['firmado', 'rechazado'])
 const showModal = ref(false)
-const { plan: planStore } = storeToRefs(formacionIndividualStore())
+const formacionStore = formacionIndividualStore()
+const { plan: planStore } = storeToRefs(formacionStore)
 
 const form = ref({
   sign: undefined,
@@ -44,6 +45,14 @@ const onChange: UploadProps['onChange'] = (file, files) => {
   form.value.file = file
 }
 
+function clearForm() {
+  form.value = {
+    sign: undefined,
+    file: undefined,
+  }
+  v.$reset()
+}
+
 async function submitForm() {
   const valid = await v.$validate()
   if (valid) {
@@ -51,13 +60,13 @@ async function submitForm() {
       const params = form.value
       if (params.sign) {
         const response = await FIndivServices.sign_plan_formacion(props.plan.id, new SignPlanFormacion(params.sign, params.file.raw))
-        planStore.estado = EstadoPlanFormacion.aprobado
+        formacionStore.plan.estado = EstadoPlanFormacion.aprobado
         ElNotification.success('Plan firmado correctamente')
         emit('firmado')
       }
       else {
         const response = await FIndivServices.sign_plan_formacion(props.plan.id, new SignPlanFormacion(params.sign))
-        planStore.estado = EstadoPlanFormacion.rechazado
+        formacionStore.plan.estado = EstadoPlanFormacion.rechazado
         ElNotification.success('Plan rechazado correctamente')
         emit('rechazado')
       }
@@ -69,6 +78,10 @@ async function submitForm() {
     }
   }
 }
+watch(showModal, (newValue) => {
+  if (!newValue)
+    clearForm()
+})
 </script>
 
 <template>

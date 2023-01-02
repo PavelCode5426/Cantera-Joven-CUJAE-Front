@@ -50,7 +50,7 @@ async function deleteActividadFormacion(actividad: ActividadFormacionModel) {
   }
 }
 async function manageActividadSuccessHandler(actividad: ActividadFormacionModel) {
-  if (selectedActividad.value)
+  if (!selectedActividad.value)
     ElNotification.success('Actividad creada correctamente')
 
   else
@@ -60,7 +60,7 @@ async function manageActividadSuccessHandler(actividad: ActividadFormacionModel)
 }
 
 const can_edit_plan = computed(() => {
-  return planStore.value.estado === EstadoPlanFormacion.desarrollo && props.etapa.evaluacion === null
+  return planStore.value?.estado === EstadoPlanFormacion.desarrollo && props.etapa.evaluacion === null
 })
 const can_show_estado = computed(() => {
   return planStore.value?.estado === EstadoPlanFormacion.aprobado
@@ -68,8 +68,10 @@ const can_show_estado = computed(() => {
 
 loadData(props.etapa.id)
 watch(showDialog, async () => {
-  if (showDialog.value === false)
+  if (showDialog.value === false) {
     await loadData(props.etapa.id)
+    selectedActividad.value = undefined
+  }
 })
 </script>
 

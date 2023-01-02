@@ -1,4 +1,3 @@
-import { ElNotification } from 'element-plus'
 import type { Response } from '~/globals/config/axios'
 import { CallWithToken, CallWithoutToken, ExceptionResponse, ServerError, ServerResponse } from '~/globals/config/axios'
 import {
@@ -9,7 +8,7 @@ export class Paginate {
   page = 1
   page_size = 10
 
-  constructor(page: number, page_size = 10) {
+  constructor(page = 1, page_size = 10) {
     this.page = page
     this.page_size = page_size
   }
