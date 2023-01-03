@@ -13,6 +13,15 @@ export class PreubicacionFilter extends Filter {
     is_preubicado: boolean | undefined
 }
 
+export class AprobarPreubicacionArea {
+    mensaje: string
+    aceptada: boolean
+
+    constructor(mensaje: string, aceptada: boolean) {
+        this.mensaje = mensaje
+        this.aceptada = aceptada
+    }
+}
 
 export interface IGestionarAreaServices {
 
@@ -43,8 +52,8 @@ export class GestionarAreaServices extends AbstractService implements IGestionar
         return response.data //cuando están pendientes a aprobar x el vicerrector
     }
 
-    async aprobar_ubicacion_laboral(aprobado: false, texto: string){
-        const call = this.callWithToken().post(`/preubicacion-laboral/aceptar-rechazar`)
+    async aprobar_ubicacion_laboral(aprobar: AprobarPreubicacionArea){
+        const call = this.callWithToken().post(`/preubicacion-laboral/aceptar-rechazar`, aprobar)
         const response = await this.parseResponse(call)
         return response.data //Si acepta la preubicacion se pone en TRUE, mientras la preubicacion en preubicaciones sea False
     }

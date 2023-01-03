@@ -3,7 +3,7 @@ import type { JovenModel } from '~/backed_services/models/joven.model'
 import type ArchivoModel from '~/backed_services/models/archivo.model'
 import type AreaModel from '~/backed_services/models/area.model'
 
-export enum EstadoPlanFormacion {
+export enum EstadoPlanFormacionColectiva {
     desarrollo = 'En Desarrollo',
     pendiente = 'Pendiente de Revision',
     aprobado = 'Aprobado',
@@ -15,20 +15,14 @@ export class PlanFormacionColectivaModel {
     aprobadoPor: UserModel | null
     documento: string | null
     fechaCreado: string
-    estado: EstadoPlanFormacion
+    estado: EstadoPlanFormacionColectiva
 }
 
 export class EtapaFormacionModel {
     id: number
-    //dimension: number | null // TODO PONER LA DIMENSION EN EL BACKEND
     fechaInicio: string | null
     fechaFin: string | null
     plan: number
-}
-
-export class DimensionModel {
-    id: number
-    nombre: string
 }
 
 export class ActividadFormacionColectivaModel {
@@ -43,6 +37,6 @@ export class ActividadFormacionColectivaModel {
     subactividades?: boolean
     documentos?: ArchivoModel[]
     area: AreaModel[]
-    esGenera: boolean
+    esGeneral: boolean
     //asistencias:
 }

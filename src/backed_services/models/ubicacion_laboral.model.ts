@@ -14,7 +14,3 @@ export  class UbicadosAreaModel {
     ubicados: UserModel[]
 }
 
-export class AprobarPreubicacion {
-    mensaje: string
-    aceptada: boolean
-}

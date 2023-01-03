@@ -101,24 +101,29 @@ const navBarLinks: Link[] = [
 
     childrens: [
       {
-        name: 'Gestíon de áreas',
+        name: 'Gestíon de Áreas',
         router: { name: 'asignar-area-page' },
         is_accesible: is_director_recursos_humanos(),
       },
       {
-        name: 'Aprobar preubicación laboral',
+        name: 'Aprobar Preubicación Laboral',
         router: { name: 'aprobar-preubicacion-page' },
         is_accesible: is_vicerrector(),
       },
       {
-          name: 'Historial preubicación laboral',
+          name: 'Historial Preubicación Laboral',
         router: { name: 'historial-preubicacion-page' },
         is_accesible: is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
       },
       {
-        name: 'Posibles graduados preubicados',
+        name: 'Posibles Graduados Preubicados',
         router: { name: 'preubicados-area-page',params:{id:get_current_area_id()} },
         is_accesible: is_jefe_area(),
+      },
+      {
+        name: 'Planificar Formación',
+        router: { name: 'planes-formacion-colectiva-page' },
+        is_accesible: is_jefe_area() || is_director_recursos_humanos(),
       },
     ],
   },

@@ -7,7 +7,7 @@ import {PlanFormacionModel} from "~/backed_services/models/formacion_individual.
 
 export interface IFormacionColectivaServices {}
 
-export class SignPlanFormacion {
+export class SignPlanFormacionColectiva {
     sign: boolean
     file: any | null
 
@@ -17,9 +17,10 @@ export class SignPlanFormacion {
     }
 }
 
+
 export class FormacionColectivaServices extends AbstractService implements IFormacionColectivaServices {
     //PLAN
-    async all_planes_formacion(filter: Filter): PaginateResponse<PlanFormacionModel> {
+    async all_planes_formacion(filter: Filter): PaginateResponse<PlanFormacionColectivaModelModel> {
         const call = this.callWithToken().get(`/plan-colectivo`, { params: filter })
         const response = await this.parseResponse(call)
         return response.data
@@ -49,7 +50,7 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         return response.data
     }
 
-    async sign_plan_formacion(plan_id: number, firma: SignPlanFormacion) {
+    async sign_plan_formacion(plan_id: number, firma: SignPlanFormacionColectiva) {
         const data = new FormData()
         data.append('sign', firma.sign)
         if (firma.file)
@@ -182,7 +183,7 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         const call = this.callWithToken().delete(`archivo/${archivo_id}/`)
         const response = await this.parseResponse(call)
     }
-
+    //DIMENSIONES
     async all_dimensiones(): DimensionModel[] {
         const list: DimensionModel[] = []
         const filter = new Filter(1, 100)
@@ -200,8 +201,7 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         return list
     }
 
-    // TODO FALTA PONER LAS COSAS DE DIMENSIONES
 }
 
-const FIndivServices = new FormacionIndividualServices()
-export default FIndivServices
+const FColectivaServices = new FormacionColectivaServices()
+export default FColectivaServices

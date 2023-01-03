@@ -8,7 +8,7 @@ import UbicacionLaboralModel from '../../../../../backed_services/models/ubicaci
 
 <template>
   <el-table>
-    <el-table-column label="Area" prop="area.nombre" />
+    <el-table-column label="Área" prop="area.nombre" />
     <el-table-column label="Fecha" prop="fechaAsignado" />
   </el-table>
 </template>
