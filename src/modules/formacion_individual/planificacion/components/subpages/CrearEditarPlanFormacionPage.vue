@@ -89,7 +89,7 @@ onMounted(() => loadPlanFormacion(route?.params?.id))
       <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :label="`Etapa #${etapa.numero}`" :name="`${etapa.numero}`">
         <etapa-formacion-item :etapa="etapa" />
         <el-divider />
-        <actividad-formacion-list :etapa="etapa" />
+        <actividad-formacion-list-sav :etapa="etapa" />
       </el-tab-pane>
       <el-tab-pane v-if="plan.estado !== EstadoPlanFormacion.aprobado" label="Comentarios" name="comentarios">
         <plan-formacion-comentarios :plan="plan" />

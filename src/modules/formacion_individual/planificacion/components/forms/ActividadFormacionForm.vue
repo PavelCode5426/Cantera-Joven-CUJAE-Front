@@ -8,6 +8,7 @@ import type { ActividadFormacionModel, EtapaFormacionModel } from '~/backed_serv
 
 interface Props {
   actividad: ActividadFormacionModel
+  actividadPadre: ActividadFormacionModel | undefined
   etapa: EtapaFormacionModel
 }
 
@@ -54,8 +55,12 @@ async function submitForm() {
 async function createActividad() {
   const actividad: ActividadFormacionModel = { ...form.value, fechaInicio: form.value.fechas[0], fechaFin: form.value.fechas[1] }
   try {
-    await FIndivServices.create_actividad_formacion(props.etapa.id, actividad)
-    emit('success', actividad)
+    let response
+    if (props.actividadPadre)
+      response = await FIndivServices.create_subactividad_formacion(props.actividadPadre.id, actividad)
+    else
+      response = await FIndivServices.create_actividad_formacion(props.etapa.id, actividad)
+    emit('success', response)
   }
   catch (error: ServerError | ExceptionResponse) {
     alert(error)
@@ -65,8 +70,8 @@ async function createActividad() {
 async function editActividad() {
   const actividad: ActividadFormacionModel = { ...form.value, fechaInicio: form.value.fechas[0], fechaFin: form.value.fechas[1] }
   try {
-    await FIndivServices.update_actividad_formacion(props.actividad.id, actividad)
-    emit('success', actividad)
+    const response = await FIndivServices.update_actividad_formacion(props.actividad.id, actividad)
+    emit('success', response)
   }
   catch (error: ServerError | ExceptionResponse) {
     alert(error)
