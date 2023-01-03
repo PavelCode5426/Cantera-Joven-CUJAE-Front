@@ -1,4 +1,4 @@
-import AbstractService, { Filter } from '~/backed_services/service'
+import AbstractService, { Filter, Paginate } from '~/backed_services/service'
 import type { PaginateResponse } from '~/globals/config/axios'
 import type {
   ActividadFormacionModel,
@@ -124,7 +124,7 @@ export class FormacionIndividualServices extends AbstractService implements IFor
   // TODO FALTA PONER LAS COSAS DE DIMENSIONES
 
   async all_actividades_formacion_from_etapa(etapa_id: number): ActividadFormacionModel[] {
-    const filter = new Filter(1, 100)
+    const filter = new Paginate(1, 100)
     const call = this.callWithToken().get(`etapa-formacion/${etapa_id}/actividades`, { params: filter })
     const response = await this.parseResponse(call)
     const list = [...response.data.results]
@@ -139,8 +139,30 @@ export class FormacionIndividualServices extends AbstractService implements IFor
     return list
   }
 
+  async all_subactividades_from_actividad_formacion(actividad_padre_id: number): ActividadFormacionModel[] {
+    const filter = new Paginate(1, 100)
+    let call = this.callWithToken().get(`actividad-formacion/${actividad_padre_id}/subactividades`, { params: filter })
+    const response = await this.parseResponse(call)
+    const list = [...response.data.results]
+
+    while (response.next) {
+      filter.page++
+      call = this.callWithToken().get(`actividad-formacion/${actividad_padre_id}/subactividades`, { params: filter })
+      const response = await this.parseResponse(call)
+      list.push(...response.data.results)
+    }
+
+    return list
+  }
+
   async create_actividad_formacion(etapa_id: number, actividad: ActividadFormacionModel): ActividadFormacionModel {
     const call = this.callWithToken().post(`etapa-formacion/${etapa_id}/actividades`, actividad)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async create_subactividad_formacion(actividad_padre_id: number, actividad: ActividadFormacionModel): ActividadFormacionModel {
+    const call = this.callWithToken().post(`actividad-formacion/${actividad_padre_id}/subactividades`, actividad)
     const response = await this.parseResponse(call)
     return response.data
   }
