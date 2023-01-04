@@ -20,7 +20,7 @@ async function solicitarRevisionSubmit() {
     ElNotification.success('Revision solicitada correctamente')
   }
   catch (error: ExceptionResponse | ServerResponse) {
-    alert(error.httpCode)
+    ElNotification.error(error.detail)
   }
 }
 async function changeNivelCumplimientoHandler() {
@@ -29,7 +29,7 @@ async function changeNivelCumplimientoHandler() {
     ElNotification.success('Estado cambiado correctamente')
   }
   catch (error: ExceptionResponse | ServerResponse) {
-    alert(error.httpCode)
+    ElNotification.error(error.detail)
   }
 }
 

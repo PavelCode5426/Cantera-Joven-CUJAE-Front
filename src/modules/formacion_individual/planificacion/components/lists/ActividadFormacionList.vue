@@ -68,7 +68,6 @@ async function deleteActividadFormacion(actividad: ActividadFormacionModel, acti
 async function manageActividadSuccessHandler(actividad: ActividadFormacionModel) {
   if (!selectedActividad.value)
     ElNotification.success('Actividad creada correctamente')
-
   else
     ElNotification.success('Actividad editada correctamente')
 
@@ -116,21 +115,22 @@ const can_show_estado = computed(() => {
   return planStore.value?.estado === EstadoPlanFormacion.aprobado
 })
 const can_manage_subactividad = computed(() => {
-  return planStore.value?.estado === EstadoPlanFormacion.aprobado && is_joven()
+  return can_show_estado.value && props.etapa.evaluacion === null && is_joven()
 })
 
 loadData(props.etapa.id)
-watch(showDialog, async () => {
-  if (showDialog.value === false) {
-    await loadData(props.etapa.id)
+watch(showDialog, async (newValue) => {
+  if (newValue === false) {
     selectedActividad.value = undefined
     selectedActividadPadre.value = undefined
+    await loadData(props.etapa.id)
   }
 })
 </script>
 
+<!-- <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades" :tree-props="{ children: 'subactividades', hasChildren: 'hasSubactividades' }"> -->
 <template>
-  <el-table v-model:data="actividadesFormacion" row-key="id" lazy :load="loadSubactividades" :tree-props="{ children: 'subactividades', hasChildren: 'hasSubactividades' }">
+  <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades">
     <el-table-column label="Nombre" prop="nombre" />
     <el-table-column v-if="can_show_estado" label="Estado">
       <template #default="{ row }">
@@ -140,38 +140,37 @@ watch(showDialog, async () => {
     <el-table-column label="Fecha de Incio" prop="fechaInicio" />
     <el-table-column label="Fecha de Fin" prop="fechaFin" />
     <el-table-column v-if="can_edit_plan">
+      <template #header>
+        <p-button v-if="can_edit_plan" button-type="success" button-title="Adicionar Actividad" button-icon="fa fa-plus" @click="showCreateUpdateActividadFormacion(undefined)" />
+      </template>
       <template #default="{ row }">
-        <el-button type="info" @click="showCreateUpdateActividadFormacion(row)">
-          <i class="fa fa-edit" />
-        </el-button>
-        <el-button type="danger" @click="deleteActividadFormacion(row)">
-          <i class="fa fa-trash-o" />
-        </el-button>
+        <p-button button-type="info" button-icon="fa fa-edit" @click="showCreateUpdateSubactividadFormacion(row)" />
+        <confirm-pop-button
+          confirm-button-type="danger"
+          button-type="danger"
+          button-icon="fa fa-trash-o"
+          title="¿Esta seguro que desea eliminar el elemento?"
+          @on-confirm="deleteActividadFormacion(row)"
+        />
       </template>
     </el-table-column>
     <el-table-column v-else>
       <template #default="{ row }">
         <template v-if="can_manage_subactividad">
-          <el-button @click="showCreateUpdateSubactividadFormacion(undefined, row)">
-            +
-          </el-button>
-          <el-button v-if="row.esSubactividad" type="info" @click="showCreateUpdateSubactividadFormacion(row)">
-            <i class="fa fa-edit" />
-          </el-button>
-          <el-button v-if="row.esSubactividad" type="danger" @click="deleteActividadFormacion(row)">
-            <i class="fa fa-trash-o" />
-          </el-button>
+          <p-button button-type="success" button-icon="fa fa-plus-circle" @click="showCreateUpdateSubactividadFormacion(undefined, row)" />
+          <p-button v-if="row.esSubactividad" button-type="primary" button-icon="fa fa-edit" @click="showCreateUpdateSubactividadFormacion(row)" />
+          <confirm-pop-button
+            v-if="row.esSubactividad"
+            confirm-button-type="danger"
+            button-type="danger"
+            button-icon="fa fa-trash-o"
+            title="¿Esta seguro que desea eliminar el elemento?"
+            @on-confirm="deleteActividadFormacion(row)"
+          />
         </template>
-        <el-button type="info" @click="showDetailsActividadFormacion(row)">
-          Detalles
-        </el-button>
+        <p-button button-type="info" button-icon="fa fa-external-link" @click="showDetailsActividadFormacion(row)" />
       </template>
     </el-table-column>
-    <template #append>
-      <el-button v-if="can_edit_plan" style="width: 100%" @click="showCreateUpdateActividadFormacion(undefined)">
-        Adicionar Actividad
-      </el-button>
-    </template>
   </el-table>
 
   <el-dialog v-if="can_edit_plan || can_manage_subactividad" v-model="showDialog" :title="dialogTitle">

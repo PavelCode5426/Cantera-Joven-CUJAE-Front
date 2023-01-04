@@ -28,7 +28,7 @@ function onClickButton() {
 </script>
 
 <template>
-  <simple-button
+  <p-button
     :loading="loading"
     :button-type="buttonType"
     :button-title="buttonTitle"

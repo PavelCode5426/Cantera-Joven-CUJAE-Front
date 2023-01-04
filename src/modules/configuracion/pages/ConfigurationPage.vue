@@ -1,8 +1,5 @@
 <template>
   <h2>Configuraciones del Sistema</h2>
-  <br/>
-  <configuration-form/>
+  <br>
+  <configuration-form />
 </template>
-
-<script setup lang="ts">
-</script>

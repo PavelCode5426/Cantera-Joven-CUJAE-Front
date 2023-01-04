@@ -30,7 +30,7 @@ onConfirmEvent = toogleLoadingDecorator(onConfirmEvent, loadingConfirm)
     @cancel="emit('on-cancel')"
   >
     <template #reference>
-      <simple-button
+      <p-button
         :loading="loadingConfirm"
         :button-type="buttonType"
         :button-title="buttonTitle"

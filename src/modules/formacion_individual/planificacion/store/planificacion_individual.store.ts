@@ -8,6 +8,11 @@ const formacionIndividualStore = defineStore('plan-individual', () => {
   const etapas = ref<EtapaFormacionModel[]>([])
   const dimensiones = ref<DimensionModel[]>([])
 
-  return { plan, etapas, dimensiones }
+  function ultimaEtapa(): EtapaFormacionModel | undefined {
+    const steps = [...etapas.value]
+    return steps.sort((a, b) => a.numero >= b.numero).pop()
+  }
+
+  return { plan, etapas, dimensiones, ultimaEtapa }
 })
 export default formacionIndividualStore

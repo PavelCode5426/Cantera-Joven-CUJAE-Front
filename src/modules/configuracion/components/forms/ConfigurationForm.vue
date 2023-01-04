@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ElMessage, ElNotification } from 'element-plus'
+import { ElNotification } from 'element-plus'
 import { ref, watch } from 'vue'
 import type { ConfigurationModel } from '~/backed_services/models/configuration.model'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
 import { ConfigHelper } from '~/modules/configuracion/helpers/config.helpers'
 import { ExceptionResponse, ServerError } from '~/globals/config/axios'
-import { clearArrayRefs, newArrayRef, registerArrayRefs } from '~/globals/composables/useRegisterArrayRef'
+import { clearArrayRefs, newArrayRef } from '~/globals/composables/useRegisterArrayRef'
 import ConfigService from '~/backed_services/configuration.services'
 import useLoading, { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
 

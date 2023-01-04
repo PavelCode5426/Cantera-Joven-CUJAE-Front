@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import { computed, defineEmits, defineProps, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { ElTable } from 'element-plus'
-import type { ActividadFormacionModel, EtapaFormacionModel } from '../../../../../backed_services/models/formacion_individual.model'
+import { EstadoPlanFormacion } from '../../../../../backed_services/models/formacion_individual.model'
+import type {
+  ActividadFormacionModel, EstadoActividadFormacion, EtapaFormacionModel,
+} from '../../../../../backed_services/models/formacion_individual.model'
+
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
 import FIndivServices from '../../../../../backed_services/formacion_individual.services'
 import ActividadFormacionForm from '../forms/ActividadFormacionForm.vue'
 import formacionIndividualStore from '../../store/planificacion_individual.store'
-import { EstadoPlanFormacion } from '../../../../../backed_services/models/formacion_individual.model'
 import { is_joven } from '../../../../../globals/permissions'
 
 interface Props {
@@ -15,10 +17,12 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
 const emit = defineEmits(['error', 'success'])
+
 const { plan: planStore } = storeToRefs(formacionIndividualStore())
 
-const actividadesFormacion = ref([])
+const actividadesFormacion = ref<ActividadFormacionModel[]>([])
 const showDialog = ref(false)
 const showDetallesDialog = ref(false)
 const selectedActividad = ref<ActividadFormacionModel | undefined>(undefined)
@@ -56,9 +60,9 @@ async function deleteActividadFormacion(actividad: ActividadFormacionModel, acti
   try {
     await FIndivServices.delete_actividad_formacion(actividad.id)
 
-    await loadData(props.etapa.id)
-    // const result = recursiveDelete(actividadesFormacion.value, actividad)
-    // actividadesFormacion.value = result
+    // await loadData(props.etapa.id)
+    const result = recursiveDelete(actividadesFormacion.value, actividad)
+    actividadesFormacion.value = result
 
     ElNotification.success('Actividad eliminada correctamente')
   }
@@ -91,7 +95,6 @@ async function manageActividadSuccessHandler(actividad: ActividadFormacionModel)
  */
 async function loadSubactividades(row: ActividadFormacionModel, treeNode: unknown, resolve) {
   try {
-    console.log(treeNode, row)
     const response = await FIndivServices.all_subactividades_from_actividad_formacion(row.id)
     row.subactividades = [...response]
     return resolve(response)
@@ -124,7 +127,6 @@ const can_manage_subactividad = computed(() => {
 loadData(props.etapa.id)
 watch(showDialog, async () => {
   if (showDialog.value === false) {
-    actividadesFormacion.value = []
     await loadData(props.etapa.id)
     selectedActividad.value = undefined
     selectedActividadPadre.value = undefined
@@ -133,8 +135,8 @@ watch(showDialog, async () => {
 </script>
 
 <template>
-  <el-scrollbar height="300px">
-    <el-table :data="actividadesFormacion" row-key="id" lazy :load="loadSubactividades" :tree-props="{ children: 'subactividades', hasChildren: 'hasSubactividades' }">
+  <el-scrollbar max-height="300px">
+    <el-table :data="actividadesFormacion" row-key="id">
       <el-table-column label="Nombre" prop="nombre" />
       <el-table-column v-if="can_show_estado" label="Estado">
         <template #default="{ row }">
@@ -179,11 +181,11 @@ watch(showDialog, async () => {
     </el-table>
   </el-scrollbar>
 
-  <el-dialog v-if="can_edit_plan || can_manage_subactividad" v-model="showDialog" align-center :title="dialogTitle">
+  <el-dialog v-if="can_edit_plan || can_manage_subactividad" v-model="showDialog" :title="dialogTitle">
     <actividad-formacion-form :actividad="selectedActividad" :actividad-padre="selectedActividadPadre" :etapa="etapa" @cancel="showDialog = false" @success="manageActividadSuccessHandler" />
   </el-dialog>
 
-  <el-dialog v-if="!can_edit_plan || can_manage_subactividad" v-model="showDetallesDialog" align-center title="Detalles de actividad de formacion" style="width: 80%;">
+  <el-dialog v-if="!can_edit_plan || can_manage_subactividad" v-model="showDetallesDialog" title="Detalles de actividad de formacion" style="width: 80%;">
     <actividad-formacion-detail :actividad="selectedActividad" />
   </el-dialog>
 </template>

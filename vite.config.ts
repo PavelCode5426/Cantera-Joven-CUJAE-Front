@@ -24,18 +24,16 @@ export default defineConfig({
   },
 
   server: {
+    host: true, // needed for the Docker Container port mapping to work
     port: 3000,
     strictPort: true,
-    hmr: {
-      port: 9000,
-    },
+    // hmr: false,
   },
   plugins: [
     Vue({
       include: [/\.vue$/, /\.md$/],
       reactivityTransform: true,
     }),
-
     // https://github.com/hannoeru/vite-plugin-pages
     Pages({
       extensions: ['vue', 'md'],
