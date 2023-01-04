@@ -6,6 +6,7 @@ export enum EstadoPlanFormacion {
   desarrollo = 'En Desarrollo',
   pendiente = 'Pendiente de Revision',
   aprobado = 'Aprobado',
+  finalizado = 'Finalizado',
   rechazado = 'Rechazado',
 }
 export enum EstadoActividadFormacion {
@@ -24,7 +25,7 @@ export class PlanFormacionModel {
   documento: string | null
   fechaCreado: string
   estado: EstadoPlanFormacion
-  evaluacion: null // TODO PONER LA EVALUACION
+  evaluacion: EvaluacionFinalModel | null // TODO PONER LA EVALUACION
   evaluacion_prorroga: null
 }
 
@@ -32,8 +33,8 @@ export class EtapaFormacionModel {
   id: number
   numero: number
   esProrroga: boolean
-  dimension: number | null // TODO PONER LA DIMENSION EN EL BACKEND
-  evaluacion: number | number // TODO PONER LA EVALUACION EN EL BACKEND
+  dimension: DimensionModel | null// TODO PONER LA DIMENSION EN EL BACKEND
+  evaluacion: EvaluacionFormacionModel | null // TODO PONER LA EVALUACION EN EL BACKEND
   fechaInicio: string | null
   fechaFin: string | null
   objetivo: string | null
@@ -56,8 +57,35 @@ export class ActividadFormacionModel {
   fechaFin: string
   fechaCumplimiento?: string
   estado?: EstadoActividadFormacion
-  hasSubactividades: boolean
   esSubactividad: boolean
-  subactividades?: ActividadFormacionModel[] = []
+  // hasSubactividades: boolean
+  // subactividades?: ActividadFormacionModel[] = []
+  children?: ActividadFormacionModel[] = []
   documentos?: ArchivoModel[]
+}
+
+export class PropuestaMovimientoModel {
+  id: number
+  nombre: string
+}
+
+export abstract class EvaluacionModel {
+  id: number
+  texto: string
+  esSatisfactorio: boolean
+  aprobadoPor: UserModel
+  fechaCreado: string
+
+  joven?: JovenModel
+  etapa?: EtapaFormacionModel
+  plan?: PlanFormacionModel
+}
+
+export class EvaluacionFormacionModel extends EvaluacionModel {
+  replanificar = false
+  cerrarPlan = false
+}
+
+export class EvaluacionFinalModel extends EvaluacionModel {
+  propuestaMovimiento: number | PropuestaMovimientoModel
 }

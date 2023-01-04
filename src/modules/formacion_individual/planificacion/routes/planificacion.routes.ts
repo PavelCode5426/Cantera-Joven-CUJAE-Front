@@ -28,6 +28,16 @@ const routes: LayoutRouteRecordRaw[] = [
     layout: ['Admin'],
     props: true,
   },
+  {
+    name: 'evaluaciones-page',
+    path: 'evaluaciones',
+    component: () => import('../pages/GestionarEvaluacionPage.vue'),
+    meta: {
+      title: 'Gestionar Evaluaciones de la Formacion',
+      accesible: () => is_jefe_area(),
+    },
+    layout: ['Admin'],
+  },
 
 ]
 export default routes

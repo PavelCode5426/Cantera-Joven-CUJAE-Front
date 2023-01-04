@@ -13,7 +13,7 @@ const props = defineProps<Props>()
 const formacionStore = formacionIndividualStore()
 
 const can_edit = computed(() => {
-  const can = props.etapa.evaluacion !== null || formacionStore?.plan?.estado === EstadoPlanFormacion.desarrollo
+  const can = props.etapa.evaluacion === null && formacionStore?.plan?.estado === EstadoPlanFormacion.desarrollo
   return can
 })
 </script>

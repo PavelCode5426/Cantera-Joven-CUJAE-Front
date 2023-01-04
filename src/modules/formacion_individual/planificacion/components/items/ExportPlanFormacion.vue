@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
 import type { PlanFormacionModel } from '../../../../../backed_services/models/formacion_individual.model'
+import { EstadoPlanFormacion } from '../../../../../backed_services/models/formacion_individual.model'
 
 interface Prop {
   plan: PlanFormacionModel
@@ -9,7 +10,7 @@ interface Prop {
 const props = defineProps<Prop>()
 
 const pdf_link = computed(() => {
-  if (props.plan?.documento)
+  if (props.plan?.documento && props.plan?.estado === EstadoPlanFormacion.aprobado)
     return props.plan.documento.archivo
   return `${import.meta.env.VITE_URL_SERVER}/plan-individual/${props.plan?.id}/export-pdf`
 })

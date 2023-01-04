@@ -12,6 +12,10 @@ export class Paginate {
     this.page = page
     this.page_size = page_size
   }
+
+  reset() {
+    this.page = 1
+  }
 }
 
 export class Filter extends Paginate {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 import type { PlanFormacionModel } from '../../../../../backed_services/models/formacion_individual.model'
+import ButtonEvaluacionDetail from './ButtonEvaluacionDetail.vue'
 
 interface Prop {
   plan: PlanFormacionModel
@@ -31,6 +32,12 @@ const props = defineProps<Prop>()
     </el-descriptions-item>
     <el-descriptions-item v-if="props.plan?.aprobadoPor" label="Aprobado por:">
       {{ props.plan?.aprobadoPor.first_name }} {{ props.plan?.aprobadoPor.last_name }}
+    </el-descriptions-item>
+    <el-descriptions-item v-if="props.plan?.evaluacion" label="Evaluacion">
+      <button-evaluacion-detail :evaluacion="props.plan?.evaluacion" />
+    </el-descriptions-item>
+    <el-descriptions-item v-if="props.plan?.evaluacion_prorroga" label="Evaluacion Prorroga">
+      <button-evaluacion-detail :evaluacion="props.plan?.evaluacion_prorroga" />
     </el-descriptions-item>
   </el-descriptions>
 </template>
