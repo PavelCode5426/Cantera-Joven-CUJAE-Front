@@ -6,7 +6,9 @@ import type {
   EstadoActividadFormacion,
   EstadoPlanFormacion,
   EtapaFormacionModel,
-  PlanFormacionModel,
+  EvaluacionFinalModel,
+  EvaluacionFormacionModel, PlanFormacionModel,
+  PropuestaMovimientoModel,
 } from '~/backed_services/models/formacion_individual.model'
 
 export interface IFormacionIndividualServices {}
@@ -21,14 +23,19 @@ export class SignPlanFormacion {
   }
 }
 
+export class EvaluacionFilter extends Filter {
+  pendiente: boolean | undefined
+  esSatisfactorio: boolean | undefined
+}
+
 export class FormacionIndividualServices extends AbstractService implements IFormacionIndividualServices {
-  async all_planes_formacion_from_area(area_id: number, filter: Filter): PaginateResponse<PlanFormacionModel> {
+  async list_planes_formacion_from_area(area_id: number, filter: Filter): PaginateResponse<PlanFormacionModel> {
     const call = this.callWithToken().get(`/area/${area_id}/planes`, { params: filter })
     const response = await this.parseResponse(call)
     return response.data
   }
 
-  async all_planes_formacion_from_tutor(tutor_id: number, filter: Filter): PaginateResponse<PlanFormacionModel> {
+  async list_planes_formacion_from_tutor(tutor_id: number, filter: Filter): PaginateResponse<PlanFormacionModel> {
     const call = this.callWithToken().get(`/tutor/${tutor_id}/planes`, { params: filter })
     const response = await this.parseResponse(call)
     return response.data
@@ -104,6 +111,10 @@ export class FormacionIndividualServices extends AbstractService implements IFor
     return response.data
   }
 
+  /**
+   *  GESTION DE DIMENSIONES
+   */
+
   async all_dimensiones(): DimensionModel[] {
     const list: DimensionModel[] = []
     const filter = new Filter(1, 100)
@@ -122,6 +133,9 @@ export class FormacionIndividualServices extends AbstractService implements IFor
   }
 
   // TODO FALTA PONER LAS COSAS DE DIMENSIONES
+  /**
+   *  GESTION DE ACTIVIDADES
+   */
 
   async all_actividades_formacion_from_etapa(etapa_id: number): ActividadFormacionModel[] {
     const filter = new Paginate(1, 100)
@@ -195,9 +209,95 @@ export class FormacionIndividualServices extends AbstractService implements IFor
     return response.data
   }
 
+  /**
+   *  GESTION DE ARCHIVOS
+   */
+
   async delete_archivo(archivo_id: number) {
     const call = this.callWithToken().delete(`archivo/${archivo_id}/`)
     const response = await this.parseResponse(call)
+  }
+
+  /**
+   *  GESTION DE EVALUACIONES
+   */
+
+  async list_evaluaciones(filter: EvaluacionFilter): PaginateResponse<EvaluacionFormacionModel | EvaluacionFinalModel> {
+    const call = this.callWithToken().get('evaluacion/', { params: filter })
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async retrieve_evaluaciones(evaluacion_id: number): EvaluacionFinalModel | EvaluacionFormacionModel {
+    const call = this.callWithToken().get(`evaluacion/${evaluacion_id}`)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async evaluar_etapa_formacion(etapa_id: number, evaluacion: EvaluacionFormacionModel): EvaluacionFormacionModel {
+    const call = this.callWithToken().post(`etapa-formacion/${etapa_id}/evaluar`, evaluacion)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async evaluar_plan_individual(plan_id: number, evaluacion: EvaluacionFinalModel): EvaluacionFinalModel {
+    const call = this.callWithToken().post(`plan-individual/${plan_id}/evaluar`, evaluacion)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async aprobar_evaluacion_formacion(evaluacion_id: number) {
+    const call = this.callWithToken().post(`evaluacion-formacion/${evaluacion_id}/aprobar`)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  /**
+   * GESTION DE PROPUESTAS DE MOVIMIENTO
+   */
+
+  async list_propuestas_movimiento(filter: Filter): PaginateResponse<PropuestaMovimientoModel> {
+    const call = this.callWithToken().get('propuesta-movimiento/', { params: filter })
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async all_propuestas_movimiento(): PropuestaMovimientoModel[] {
+    const filter = new Paginate(1, 100)
+    let response = await this.list_propuestas_movimiento(filter)
+    const list = [...response.results]
+
+    while (response.next) {
+      filter.page++
+      response = await this.list_propuestas_movimiento(filter)
+      list.push(...response.results)
+    }
+
+    return list
+  }
+
+  async retrieve_propuesta_movimiento(propuesta_id: number): PropuestaMovimientoModel {
+    const call = this.callWithToken().get(`propuesta-movimiento/${propuesta_id}`)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async create_propuestas_movimiento(propuesta: PropuestaMovimientoModel): PropuestaMovimientoModel {
+    const call = this.callWithToken().post('propuesta-movimiento', propuesta)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async update_propuestas_movimiento(propuesta_id: number, propuesta: PropuestaMovimientoModel): PropuestaMovimientoModel {
+    const call = this.callWithToken().put(`propuesta-movimiento/${propuesta_id}`, propuesta)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async delete_propuestas_movimiento(propuesta_id: number) {
+    const call = this.callWithToken().delete(`propuesta-movimiento/${propuesta_id}`)
+    const response = await this.parseResponse(call)
+    return response.data
   }
 }
 

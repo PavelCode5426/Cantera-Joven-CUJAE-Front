@@ -1,5 +1,5 @@
 import type { ConfigurationModel } from '~/backed_services/models/configuration.model'
-import { ActionFlagEnum } from '~/services/models/logs/actionFlag.enum'
+import { ActionFlagEnum } from '~/backed_services/models/log.model'
 import type { ContentTypeModel } from '~/services/models/logs/contentType.model'
 
 export function convertConfigLabelToTitle(label: string) {

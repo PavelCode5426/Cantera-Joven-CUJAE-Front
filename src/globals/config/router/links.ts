@@ -50,7 +50,6 @@ const navBarLinks: Link[] = [
   {
     name: 'Formacion Individual',
     is_accesible: is_authenticated(),
-
     childrens: [
       {
         name: 'Gestion de Plantillas',
@@ -91,6 +90,11 @@ const navBarLinks: Link[] = [
         name: 'Planificar Formacion',
         router: { name: 'planes-tutor-page', params: { id: get_current_id() } },
         is_accesible: is_tutor(),
+      },
+      {
+        name: 'Revisar Evaluaciones',
+        router: { name: 'evaluaciones-page' },
+        is_accesible: is_jefe_area(),
       },
     ],
   },

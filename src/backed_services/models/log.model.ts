@@ -13,3 +13,9 @@ export default class LogModel {
   change_message: string
   content_type: ContentType
 }
+
+export enum ActionFlagEnum {
+  DELETE = 1,
+  EDIT = 2,
+  NUEVO = 3,
+}

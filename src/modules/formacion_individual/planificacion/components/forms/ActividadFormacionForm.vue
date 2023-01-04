@@ -46,10 +46,14 @@ function clearForm() {
 }
 async function submitForm() {
   const valid = await v.$validate()
-  if (valid && props.actividad)
-    await editActividad()
-  else if (valid && props.actividad === undefined)
-    await createActividad()
+  if (valid) {
+    if (props.actividad)
+      await editActividad()
+    else if (valid && props.actividad === undefined)
+      await createActividad()
+
+    clearForm()
+  }
 }
 
 async function createActividad() {

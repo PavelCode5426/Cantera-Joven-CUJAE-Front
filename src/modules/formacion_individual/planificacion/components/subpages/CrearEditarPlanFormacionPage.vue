@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, provide, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import { ExceptionResponse } from '../../../../../globals/config/axios'
 import formacionIndividualStore from '../../store/planificacion_individual.store'
-import { EstadoPlanFormacion } from '../../../../../backed_services/models/formacion_individual.model'
+import type {
+  EtapaFormacionModel,
+} from '../../../../../backed_services/models/formacion_individual.model'
+import {
+  EstadoPlanFormacion,
+} from '../../../../../backed_services/models/formacion_individual.model'
 import { is_jefe_area, is_tutor } from '../../../../../globals/permissions'
 import FirmarPlanFormacionForm from '../forms/FirmarPlanFormacionForm.vue'
 import FIndivServices from '~/backed_services/formacion_individual.services'
@@ -54,12 +59,24 @@ async function changeStatusHandler(value) {
     alert(error.detail)
   }
 }
+function searchEtapa(etapa_id: number): EtapaFormacionModel | undefined {
+  return etapas.value?.find(i => i.id === etapa_id)
+}
+
+provide('searchEtapa', searchEtapa)
 
 const can_change_status = computed(() => {
   return is_tutor() && plan.value?.estado !== EstadoPlanFormacion.aprobado
 })
 const can_export = computed(() => {
-  return plan.value?.estado === EstadoPlanFormacion.pendiente || plan.value?.estado === EstadoPlanFormacion.aprobado
+  return plan.value?.estado === EstadoPlanFormacion.pendiente || plan.value?.estado === EstadoPlanFormacion.aprobado && plan.value?.estado !== EstadoPlanFormacion.finalizado
+})
+const can_evaluate = computed(() => {
+  return plan.value?.estado === EstadoPlanFormacion.aprobado && is_tutor()
+})
+const etapa_evaluar = computed(() => {
+  const etapa = etapas.value.find(i => i.evaluacion === null || (i.evaluacion && i.evaluacion.aprobadoPor === null))
+  return etapa
 })
 
 loadPlanFormacion(plan_formacion_id)
@@ -77,6 +94,8 @@ onMounted(() => loadPlanFormacion(route?.params?.id))
           <export-plan-formacion v-if="can_export" :plan="plan" />
           <cambiar-estado-plan-form v-if="can_change_status" :estado="plan?.estado" @change="changeStatusHandler" />
           <firmar-plan-formacion-form v-if="is_jefe_area" :plan="plan" />
+          <evaluar-formacion v-if="can_evaluate && etapa_evaluar" v-model:etapa="etapa_evaluar" />
+          <evaluar-formacion v-else-if="can_evaluate" v-model:plan="plan" />
         </el-row>
       </el-col>
     </el-row>
@@ -89,7 +108,7 @@ onMounted(() => loadPlanFormacion(route?.params?.id))
       <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :label="`Etapa #${etapa.numero}`" :name="`${etapa.numero}`">
         <etapa-formacion-item :etapa="etapa" />
         <el-divider />
-        <actividad-formacion-list-sav :etapa="etapa" />
+        <actividad-formacion-list :etapa="etapa" />
       </el-tab-pane>
       <el-tab-pane v-if="plan.estado !== EstadoPlanFormacion.aprobado" label="Comentarios" name="comentarios">
         <plan-formacion-comentarios :plan="plan" />
