@@ -37,11 +37,6 @@ async function loadUbicaciones() {
   }
 }
 
-async function onSuccessAprove() {
-  await gestionarAreaServices.aprobar_ubicacion_laboral(false, '')
-  ElMessage.success({ message: 'Asignación de áreas revisada' })
-}
-
 provide('closeCreateDialog', () => {
   showCreateForm.value = false
 })
@@ -65,6 +60,6 @@ loadUbicaciones()
       </button>
     </el-col>
   </el-row>
-  <aprobar-preubicacion-form :dialog-visible="showCreateForm" @on-success-create="onSuccessAprove()" />
+  <aprobar-preubicacion-form :dialog-visible="showCreateForm"/>
 </template>
 

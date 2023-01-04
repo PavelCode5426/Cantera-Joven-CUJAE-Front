@@ -7,14 +7,14 @@ import { ExceptionResponse } from '../../../../../globals/config/axios'
 
 import { EstadoPlanFormacion } from '../../../../../backed_services/models/formacion_individual.model'
 import { is_jefe_area, is_director_recursos_humanos, is_vicerrector } from '../../../../../globals/permissions'
-import FirmarPlanFormacionForm from '../forms/FirmarPlanFormacionColectivoForm.vue'
+import FirmarPlanFormacionForm from '../forms/FirmarPlanFormacionColectivaForm.vue'
 import FColectivaServices from '../../../../backed_services/formacion_colectiva.services'
-import formacionColectivaStore from "../../store/planificacion_colectiva.store";
-import {EstadoPlanFormacionColectiva} from "../../../../../backed_services/models/formacion_colectiva.model";
-import ExportPlanFormacionColectiva from "../items/ExportPlanFormacionColectiva.vue";
-import CambiarEstadoPlanColectivoForm from "../forms/CambiarEstadoPlanColectivoForm.vue";
-import FirmarPlanFormacionColectivoForm from "../forms/FirmarPlanFormacionColectivoForm.vue";
-import PlanFormacionColectivoDetail from "../details/PlanFormacionColectivoDetail.vue";
+import formacionColectivaStore from '../../store/planificacion_colectiva.store'
+import { EstadoPlanFormacionColectiva } from '../../../../../backed_services/models/formacion_colectiva.model'
+import ExportPlanFormacionColectiva from '../items/ExportPlanFormacionColectiva.vue'
+import CambiarEstadoPlanColectivoForm from '../forms/CambiarEstadoPlanColectivoForm.vue'
+import FirmarPlanFormacionColectivoForm from '../forms/FirmarPlanFormacionColectivaForm.vue'
+import PlanFormacionColectivoDetail from '../details/PlanFormacionColectivoDetail.vue'
 
 const route = useRoute()
 const plan_formacion_id = route.params.id
@@ -33,7 +33,7 @@ async function loadPlanFormacionColetiva(plan_id: number) {
     etapas.value = etapasFormacion
 
     try {
-      activeTab.value = etapas.find(i => i.evaluacion != null).numero //evaluacion????
+      activeTab.value = etapas.numero
     }
     catch (error) {
       activeTab.value = '1'
@@ -59,7 +59,7 @@ async function changeStatusHandler(value) {
 }
 
 const can_change_status = computed(() => {
-  return is_jefe_area() && plan.value?.estado !== EstadoPlanFormacionColectiva.aprobado
+  return is_director_recursos_humanos() && plan.value?.estado !== EstadoPlanFormacionColectiva.aprobado
 })
 const can_export = computed(() => {
   return plan.value?.estado === EstadoPlanFormacionColectiva.pendiente || plan.value?.estado === EstadoPlanFormacion.aprobado

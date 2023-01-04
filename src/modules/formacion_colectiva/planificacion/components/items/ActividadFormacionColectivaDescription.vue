@@ -32,7 +32,7 @@ const props = defineProps<Props>()
       {{ actividad?.fechaFin }}
     </el-descriptions-item>
     <el-descriptions-item label="Estado">
-      <estado-elemento :estado="actividad?.estado" />
+      <estado-plan-elemento :estado="actividad?.estado" />
     </el-descriptions-item>
   </el-descriptions>
 </template>

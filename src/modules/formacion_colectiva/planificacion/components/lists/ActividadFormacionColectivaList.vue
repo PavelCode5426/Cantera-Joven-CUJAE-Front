@@ -5,13 +5,9 @@ import type { ActividadFormacionModel, EtapaFormacionModel } from '../../../../.
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
 import FColectivaServices from '../../../../../backed_services/formacion_colectiva.services'
 import formacionColectivaStore from '../../store/planificacion_colectiva.store'
-import {
-  ActividadFormacionColectivaModel,
-  EstadoPlanFormacionColectiva
-} from '../../../../../backed_services/models/formacion_colectiva.model'
-
+import type { ActividadFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model';
+import { EstadoPlanFormacionColectiva } from '../../../../../backed_services/models/formacion_colectiva.model'
 import ActividadFormacionColectivaForm from '../forms/ActividadFormacionColectivaForm.vue'
-
 
 interface Props {
   etapa: EtapaFormacionModel
@@ -118,6 +114,6 @@ watch(showDialog, async () => {
     <actividad-formacion-colectiva-form :actividad="selectedActividad" :etapa="etapa" @cancel="showDialog = false" @success="manageActividadSuccessHandler" />
   </el-dialog>
   <el-dialog v-else v-model="showDialog" title="Detalles de actividad de formación" style="width: 80%;">
-    <actividad-formacion-detail :actividad="selectedActividad" />
+    <actividad-formacion-colectiva-detail :actividad="selectedActividad" />
   </el-dialog>
 </template>

@@ -14,15 +14,16 @@ import Filter from '../../../../backed_services/service'
 import UserModel from "../../../../backed_services/models/user.model";
 import PreubicadosAreaList from "../components/list/PGPreubicadosAreaList.vue";
 import PGPreubicadosAreaList from "../components/list/PGPreubicadosAreaList.vue";
+import type { PosibleGraduadoModel } from "../../../../backed_services/models/posible_graduado.model";
 
-const data = usePaginateResponse<UbicacionLaboralModel>()
+const data = usePaginateResponse<PosibleGraduadoModel>()
 const filter = ref<Filter>(new Filter())
 const route = useRoute()
 const current_area = route.params.id
 
 async function loadData(id: number, filter: Filter) {
   try {
-    const response: PaginateResponse<UbicacionLaboralModel> = await gestionarAreaServices.preubicados_area(id, filter)
+    const response: PaginateResponse<PosibleGraduadoModel> = await gestionarAreaServices.preubicados_area(id, filter)
     data.value = response
   }
 
@@ -35,7 +36,7 @@ async function loadData(id: number, filter: Filter) {
 
 async function handleCurrentPageChange(page = 1) {
   filter.value.page = page
-  await loadData(current_area)
+  await loadData(current_area, filter.value)
 }
 
 handleCurrentPageChange(1)

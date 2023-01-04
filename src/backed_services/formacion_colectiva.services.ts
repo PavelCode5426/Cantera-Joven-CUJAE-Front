@@ -20,7 +20,7 @@ export class SignPlanFormacionColectiva {
 
 export class FormacionColectivaServices extends AbstractService implements IFormacionColectivaServices {
     //PLAN
-    async all_planes_formacion(filter: Filter): PaginateResponse<PlanFormacionColectivaModelModel> {
+    async plan_formacion_colectivo(filter: Filter): PaginateResponse<PlanFormacionColectivaModel> {
         const call = this.callWithToken().get(`/plan-colectivo`, { params: filter })
         const response = await this.parseResponse(call)
         return response.data
@@ -183,24 +183,36 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         const call = this.callWithToken().delete(`archivo/${archivo_id}/`)
         const response = await this.parseResponse(call)
     }
-    //DIMENSIONES
-    async all_dimensiones(): DimensionModel[] {
-        const list: DimensionModel[] = []
-        const filter = new Filter(1, 100)
-        let call = this.callWithToken().get('dimension/')
-        let response: PaginateResponse<DimensionModel> = await this.parseResponse(call)
-        list.push(...response.data.results)
-
-        while (response.next) {
-            filter.page++
-            call = this.callWithToken().get('dimension/')
-            response = await this.parseResponse(call)
-            list.push(...response.data.results)
-        }
-
-        return list
+    //ASISTENCIAS
+    async all_asistencias_actividad(actividad_id: number) {
+        const call = this.callWithToken().get(`actividad/${actividad_id}/asistencia`)
+        const response = await this.parseResponse(call)
+        return response.data
     }
 
+    async asistencia_joven(joven_id: number) {
+        const call = this.callWithToken().get(`joven/${joven_id}/asistencias`)
+        const response = await this.parseResponse(call)
+        return response.data
+    }
+
+    async pasar_asistencia_actividad(actividad_id: number) {
+        const call = this.callWithToken().post(`actividad/${actividad_id}/asistencia`)
+        const response = await this.parseResponse(call)
+        return response.data
+    }
+    //EVALUACION
+    async evaluacion_joven(joven_id: number) {
+        const call = this.callWithToken().get(`joven/${joven_id}/evaluacion`)
+        const response = await this.parseResponse(call)
+        return response.data
+    }
+
+    async evaluar_joven(joven_id: number) {
+        const call = this.callWithToken().post(`joven/${joven_id}/evaluacion`)
+        const response = await this.parseResponse(call)
+        return response.data
+    }
 }
 
 const FColectivaServices = new FormacionColectivaServices()

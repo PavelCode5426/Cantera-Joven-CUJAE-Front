@@ -111,7 +111,7 @@ const navBarLinks: Link[] = [
         is_accesible: is_vicerrector(),
       },
       {
-          name: 'Historial Preubicación Laboral',
+        name: 'Historial Preubicación Laboral',
         router: { name: 'historial-preubicacion-page' },
         is_accesible: is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
       },
@@ -122,8 +122,8 @@ const navBarLinks: Link[] = [
       },
       {
         name: 'Planificar Formación',
-        router: { name: 'planes-formacion-colectiva-page' },
-        is_accesible: is_jefe_area() || is_director_recursos_humanos(),
+        router: { name: 'planes-formacion-colectiva' },
+        is_accesible: is_jefe_area() || is_director_recursos_humanos() || is_vicerrector(),
       },
     ],
   },

@@ -21,7 +21,7 @@ const current_user = route.params.id
 
 async function loadData(filter: Filter) {
   try {
-    const response: PaginateResponse<PlanFormacionColectivaModel> = await FColectivaServices.all_planes_formacion(filter) 
+    const response: PaginateResponse<PlanFormacionColectivaModel> = await FColectivaServices.all_planes_formacion(filter)
     data.value = response
   }
   catch (error: ExceptionResponse) {
@@ -54,9 +54,9 @@ async function createPlanFormacionColectiva() {
 <template>
   <h3>Planes de Formación Colectiva</h3>
   <plan-formacion-colectiva-list :data="data.results">
-   <template #default>
-     <el-table-column>
-       <template #default="scope">
+    <template #default>
+      <el-table-column>
+        <template #default="scope">
           <router-link v-if="scope.row.estado === EstadoPlanFormacion.desarrollo" :to="{ name: 'plan-formacion-colectiva-page', params: { id: scope.row.id } }">
             <el-button>
               Editar Planificación
@@ -67,9 +67,9 @@ async function createPlanFormacionColectiva() {
               Revisar Planificacion
             </el-button>
           </router-link>
-       </template>
-     </el-table-column>
-   </template>
+        </template>
+      </el-table-column>
+    </template>
   </plan-formacion-colectiva-list>
 
   <el-row justify="end">

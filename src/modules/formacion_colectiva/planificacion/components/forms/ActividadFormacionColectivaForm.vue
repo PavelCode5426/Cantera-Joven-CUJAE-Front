@@ -108,7 +108,7 @@ watch(props, () => {
     <el-form-item label="Observacion">
       <el-input v-model="form.observacion" type="textarea" />
     </el-form-item>
-    <gestor-archivos-actividad-formacion v-if="actividad" :actividad="actividad" />
+    <gestor-archivos-formacion v-if="actividad" :actividad="actividad" />
     <el-row justify="end">
       <el-button @click="submitForm">
         Aceptar

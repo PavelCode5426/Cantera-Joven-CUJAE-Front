@@ -17,16 +17,19 @@ const { plan: planStore } = storeToRefs(formacionColectivaStore())
 const can_manage_actividad = computed(() => {
   return planStore.value.estado === EstadoPlanFormacionColectiva.aprobado
 })
-const can_manage_execution = computed(() => {
-  return is_director_recursos_humanos() || is_jefe_area() || is_vicerrector()
+const can_manage_assistance = computed(() => {
+  return is_jefe_area()
 })
 </script>
 
 <template>
   <el-tabs>
     <el-tab-pane label="Información">
-      <actividad-formacion-description border colums="2" :actividad="actividad" />
-      <gestor-archivos-actividad-formacion v-if="!can_manage_actividad" :disabled="true" :actividad="actividad" />
+      <actividad-formacion-colectiva-description border colums="2" :actividad="actividad" />
+      <gestor-archivos-formacion v-if="!can_manage_actividad" :disabled="true" :actividad="actividad" />
+    </el-tab-pane>
+    <el-tab-pane v-if="can_manage_assistance" label="Asistencia">
+      <posibles-graduados-asistencia-list :actividad="props.actividad" />
     </el-tab-pane>
   </el-tabs>
 </template>

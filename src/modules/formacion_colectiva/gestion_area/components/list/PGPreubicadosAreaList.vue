@@ -3,6 +3,7 @@ import { computed, useSlots } from 'vue'
 import type { TutorAsignadoModel, TutoradoAsignadoModel } from '../../../../../backed_services/models/tutorial.model'
 import UbicacionLaboralModel from '../../../../../backed_services/models/ubicacion_laboral.model'
 
+const slots = useSlots()
 </script>
 
 <template>

@@ -2,6 +2,7 @@ import type UserModel from '~/backed_services/models/user.model'
 import type { JovenModel } from '~/backed_services/models/joven.model'
 import type ArchivoModel from '~/backed_services/models/archivo.model'
 import type AreaModel from '~/backed_services/models/area.model'
+import {PosibleGraduadoModel} from "~/backed_services/models/posible_graduado.model";
 
 export enum EstadoPlanFormacionColectiva {
     desarrollo = 'En Desarrollo',
@@ -36,7 +37,7 @@ export class ActividadFormacionColectivaModel {
     fechaFin: string
     subactividades?: boolean
     documentos?: ArchivoModel[]
-    area: AreaModel[]
+    area: AreaModel
     esGeneral: boolean
-    //asistencias:
+    asistencias: PosibleGraduadoModel[]
 }
