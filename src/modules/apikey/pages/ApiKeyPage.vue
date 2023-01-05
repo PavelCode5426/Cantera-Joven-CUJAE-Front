@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { provide, ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus'
 import usePaginateResponse from '../../../globals/composables/usePaginateResponse'
 import { Filter } from '../../../backed_services/service'
 import type { PaginateResponse } from '~/globals/config/axios'
@@ -33,27 +33,24 @@ async function deleteItem(id: number) {
   try {
     const response = await AKeyService.delete_apikey(id)
     await loadApiKeys()
-    ElMessage.success({ message: 'Elemento eliminado correctamente' })
+    ElNotification.success({ message: 'Elemento eliminado correctamente' })
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
 
     if (error.httpCode === 404)
-      ElMessage.error({ message: 'Elemento no encontrado' })
+      ElNotification.error({ message: 'Elemento no encontrado' })
   }
 
   desactivateLoading(isLoading)
 }
 
 async function onSuccessCreateApiKey() {
-  ElMessage.success({ message: 'Credenciales creados correctamente' })
+  ElNotification.success({ message: 'Credenciales creados correctamente' })
+  showCreateForm.value = false
   await loadApiKeys()
 }
-
-provide('closeCreateDialog', () => {
-  showCreateForm.value = false
-})
 
 loadApiKeys()
 </script>
@@ -62,9 +59,7 @@ loadApiKeys()
   <h3>Gestion de Credenciales de Acceso</h3>
   <el-row>
     <el-col :offset="22">
-      <button type="button" class="btn btn-primary uk-text-bold" @click="showCreateForm = !showCreateForm">
-        <i class="entypo-list-add" data-test="add-api-key" /> Nuevo
-      </button>
+      <p-button button-type="success" button-title="Nuevo" button-icon="entypo-list-add" @click="showCreateForm = true" />
     </el-col>
   </el-row>
   <el-table v-loading="isLoading" :data="apiKeys.results" max-height="350">
@@ -76,8 +71,7 @@ loadApiKeys()
         <confirm-pop-button
           confirm-button-type="danger"
           button-title="Eliminar"
-          button-type="btn-danger"
-          button-icon=""
+          button-type="danger"
           title="¿Esta seguro que desea eliminar el elemento?"
           @on-confirm="deleteItem(scope.row.id)"
         />
@@ -85,5 +79,8 @@ loadApiKeys()
     </el-table-column>
   </el-table>
   <paginator :model="apiKeys" @current-change="loadApiKeys" />
-  <create-api-key-form :dialog-visible="showCreateForm" @on-success-create="onSuccessCreateApiKey()" />
+
+  <el-dialog v-model="showCreateForm" title="Crear nuevo credencial de acceso">
+    <create-api-key-form :dialog-visible="showCreateForm" @on-success-create="onSuccessCreateApiKey()" />
+  </el-dialog>
 </template>

@@ -39,9 +39,7 @@ loadPlantillas()
   <h3>Gestion de Plantillas de Aval</h3>
   <el-row>
     <el-col :offset="22">
-      <button type="button" class="btn btn-primary uk-text-bold" @click="showModal = true">
-        <i class="entypo-list-add" data-test="add-api-key" /> Nuevo
-      </button>
+      <p-button button-type="success" button-title="Nuevo" button-icon="entypo-list-add" @click="showModal = true" />
     </el-col>
   </el-row>
   <plantilla-aval-list :data="plantillas" @item-deleted="loadPlantillas" @item-updated="loadPlantillas" />

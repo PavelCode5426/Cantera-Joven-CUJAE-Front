@@ -57,6 +57,16 @@ const navBarLinks: Link[] = [
         is_accesible: is_director_recursos_humanos(),
       },
       {
+        name: 'Gestion de Propuestas de Movimiento',
+        router: { name: 'gestionar-propuestas-movimiento-page' },
+        is_accesible: is_director_recursos_humanos(),
+      },
+      {
+        name: 'Gestion de Dimensiones',
+        router: { name: 'gestionar-dimension-page' },
+        is_accesible: is_director_recursos_humanos(),
+      },
+      {
         name: 'Gestion de Avales',
         router: { name: 'gestionar-aval-page' },
         is_accesible: is_director_recursos_humanos() || is_jefe_area(),
