@@ -136,7 +136,7 @@ watch(showDialog, async () => {
 
 <template>
   <el-scrollbar max-height="300px">
-    <el-table :data="actividadesFormacion" row-key="id">
+    <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id">
       <el-table-column label="Nombre" prop="nombre" />
       <el-table-column v-if="can_show_estado" label="Estado">
         <template #default="{ row }">

@@ -141,9 +141,9 @@ watch(showDetallesDialog, async (newValue) => {
 provide('updateActividad', updateActividadProvide)
 </script>
 
-<!-- <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades" :tree-props="{ children: 'subactividades', hasChildren: 'hasSubactividades' }"> -->
+<!-- <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades" > -->
 <template>
-  <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades">
+  <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades" :tree-props="{ children: 'subactividades', hasChildren: 'hasSubactividades' }">
     <el-table-column label="Nombre" prop="nombre" />
     <el-table-column v-if="can_show_estado" label="Estado">
       <template #default="{ row }">
