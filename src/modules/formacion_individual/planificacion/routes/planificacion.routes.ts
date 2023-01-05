@@ -8,7 +8,7 @@ import {
 const routes: LayoutRouteRecordRaw[] = [
   {
     name: 'planes-tutor-page',
-    path: 'tutor/:id/planes',
+    path: 'tutor/:id/formar',
     component: () => import('../pages/PlanesTutorPage.vue'),
     meta: {
       title: 'Planes del tutor',
@@ -19,7 +19,7 @@ const routes: LayoutRouteRecordRaw[] = [
   },
   {
     name: 'plan-formacion-page',
-    path: 'plan-formacion/:id',
+    path: 'plan-individual/:id',
     component: () => import('../pages/PlanFormacionPage.vue'),
     meta: {
       title: 'Plan de Formacion',
@@ -27,6 +27,39 @@ const routes: LayoutRouteRecordRaw[] = [
     },
     layout: ['Admin'],
     props: true,
+  },
+  {
+    name: 'planes-formacion-joven-page',
+    path: 'joven/:id/planes-formacion-individual',
+    component: () => import('../pages/PlanesFormacionJovenPage.vue'),
+    meta: {
+      title: 'Planes de Formacion',
+      accesible: () => is_jefe_area() || is_tutor() || is_joven(),
+    },
+    layout: ['Admin'],
+    props: true,
+  },
+  {
+    name: 'planes-formacion-tutor-page',
+    path: 'tutor/:id/planes-formacion-individual',
+    component: () => import('../pages/PlanesFormacionTutorPage.vue'),
+    meta: {
+      title: 'Planes de Formacion',
+      accesible: () => is_jefe_area() || is_tutor(),
+    },
+    layout: ['Admin'],
+    props: true,
+  },
+  {
+    name: 'planes-formacion-area-page',
+    path: 'area/planes-formacion-individual',
+    component: () => import('../pages/PlanesFormacionAreaPage.vue'),
+    meta: {
+      title: 'Planes de Formacion del Area',
+      accesible: () => is_jefe_area(),
+    },
+    layout: ['Admin'],
+    // props: true,
   },
   {
     name: 'evaluaciones-page',

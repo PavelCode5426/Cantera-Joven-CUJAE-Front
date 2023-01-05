@@ -10,6 +10,7 @@ import type {
   EvaluacionFormacionModel, PlanFormacionModel,
   PropuestaMovimientoModel,
 } from '~/backed_services/models/formacion_individual.model'
+import type ArchivoModel from '~/backed_services/models/archivo.model'
 
 export interface IFormacionIndividualServices {}
 
@@ -28,6 +29,10 @@ export class EvaluacionFilter extends Filter {
   esSatisfactorio: boolean | undefined
 }
 
+export class PlanFormacionFilter extends Filter {
+  estado: EstadoPlanFormacion
+}
+
 export class FormacionIndividualServices extends AbstractService implements IFormacionIndividualServices {
   async list_planes_formacion_from_area(area_id: number, filter: Filter): PaginateResponse<PlanFormacionModel> {
     const call = this.callWithToken().get(`/area/${area_id}/planes`, { params: filter })
@@ -37,6 +42,12 @@ export class FormacionIndividualServices extends AbstractService implements IFor
 
   async list_planes_formacion_from_tutor(tutor_id: number, filter: Filter): PaginateResponse<PlanFormacionModel> {
     const call = this.callWithToken().get(`/tutor/${tutor_id}/planes`, { params: filter })
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async list_planes_formacion_from_joven(joven_id: number, filter: Filter): PaginateResponse<PlanFormacionModel> {
+    const call = this.callWithToken().get(`/joven/${joven_id}/planes`, { params: filter })
     const response = await this.parseResponse(call)
     return response.data
   }
@@ -55,6 +66,12 @@ export class FormacionIndividualServices extends AbstractService implements IFor
 
   async retrieve_plan_formacion(plan_id: number): PlanFormacionModel {
     const call = this.callWithToken().get(`/plan-individual/${plan_id}`)
+    const response = await this.parseResponse(call)
+    return response.data
+  }
+
+  async list_versiones_plan_formacion(plan_id: number, paginate: Paginate): PaginateResponse<ArchivoModel> {
+    const call = this.callWithToken().get(`/plan-individual/${plan_id}/versiones`, { params: paginate })
     const response = await this.parseResponse(call)
     return response.data
   }

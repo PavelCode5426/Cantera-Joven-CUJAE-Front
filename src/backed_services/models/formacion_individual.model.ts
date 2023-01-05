@@ -48,6 +48,7 @@ export class DimensionModel {
 
 export class ActividadFormacionModel {
   id: number
+  estapa: number
   nombre: string
   descripcion: string
   observacion: string
@@ -58,9 +59,9 @@ export class ActividadFormacionModel {
   fechaCumplimiento?: string
   estado?: EstadoActividadFormacion
   esSubactividad: boolean
-  // hasSubactividades: boolean
-  // subactividades?: ActividadFormacionModel[] = []
-  children?: ActividadFormacionModel[] = []
+  hasSubactividades: boolean
+  subactividades?: ActividadFormacionModel[] = []
+  // children?: ActividadFormacionModel[] = []
   documentos?: ArchivoModel[]
 }
 

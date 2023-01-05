@@ -49,7 +49,7 @@ const hasExtras = computed(() => {
   </el-button>
 
   <el-dialog v-model="showModal" :title="dialogTitle">
-    <evaluar-etapa-form v-if="etapa" :etapa="etapa" :has-extras="hasExtras" @success="evaluacionFormacionSuccessHandler" />
-    <evaluar-plan-form v-else :plan="plan" @success="evaluacionFinalSuccessHandler" />
+    <evaluar-etapa-form v-if="etapa" :etapa="etapa" :has-extras="hasExtras" @success="evaluacionFormacionSuccessHandler" @cancel="showModal = false" />
+    <evaluar-plan-form v-else :plan="plan" @success="evaluacionFinalSuccessHandler" @cancel="showModal = false" />
   </el-dialog>
 </template>

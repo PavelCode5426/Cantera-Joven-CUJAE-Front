@@ -28,6 +28,12 @@ defineExpose({ activateLocalLoading, desactivateLocalLoading })
   <!--  </button> -->
 
   <el-button :type="buttonType" :loading="loading || forceLoading">
-    <i :class="buttonIcon" /> {{ buttonTitle }}
+    <i v-if="!(loading || forceLoading)" :class="[buttonIcon, { margin: buttonTitle }]" />{{ buttonTitle }}
   </el-button>
 </template>
+
+<style scope>
+.margin{
+  margin-right: 6px;
+}
+</style>

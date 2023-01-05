@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { defineEmits } from 'vue'
+import { defineEmits, useSlots } from 'vue'
 
 const emit = defineEmits(['import-item'])
+const slot = useSlots()
 </script>
 
 <template>
@@ -27,5 +28,6 @@ const emit = defineEmits(['import-item'])
         />
       </template>
     </el-table-column>
+    <slot />
   </el-table>
 </template>

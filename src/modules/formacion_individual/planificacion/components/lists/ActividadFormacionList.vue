@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import type { ActividadFormacionModel, EtapaFormacionModel } from '../../../../../backed_services/models/formacion_individual.model'
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
@@ -83,6 +83,13 @@ async function manageActividadSuccessHandler(actividad: ActividadFormacionModel)
 
   showDialog.value = false
 }
+function updateActividadProvide(response: ActividadFormacionModel) {
+  actividadesFormacion.value = actividadesFormacion.value.map((item) => {
+    if (item.id !== response.id)
+      return item
+    return response
+  })
+}
 
 /**
  * SUBACTIVIDADES
@@ -126,11 +133,17 @@ watch(showDialog, async (newValue) => {
     await loadData(props.etapa.id)
   }
 })
+watch(showDetallesDialog, async (newValue) => {
+  if (newValue === false)
+    await loadData(props.etapa.id)
+})
+
+provide('updateActividad', updateActividadProvide)
 </script>
 
-<!-- <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades" :tree-props="{ children: 'subactividades', hasChildren: 'hasSubactividades' }"> -->
+<!-- <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades" > -->
 <template>
-  <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades">
+  <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadSubactividades" :tree-props="{ children: 'subactividades', hasChildren: 'hasSubactividades' }">
     <el-table-column label="Nombre" prop="nombre" />
     <el-table-column v-if="can_show_estado" label="Estado">
       <template #default="{ row }">
@@ -178,6 +191,6 @@ watch(showDialog, async (newValue) => {
   </el-dialog>
 
   <el-dialog v-if="!can_edit_plan || can_manage_subactividad" v-model="showDetallesDialog" title="Detalles de actividad de formacion" style="width: 80%;">
-    <actividad-formacion-detail :actividad="selectedActividad" />
+    <actividad-formacion-detail :actividad="selectedActividad" @status-changed="statusChangedSuccessHandler" />
   </el-dialog>
 </template>

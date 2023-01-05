@@ -19,6 +19,6 @@ const can_edit = computed(() => {
 </script>
 
 <template>
-  <etapa-formacion-edit-form v-if="can_edit" :etapa="etapa" :dimensiones="formacionStore.dimensiones" />
+  <etapa-formacion-edit-form v-if="can_edit" :etapa="etapa" :dimensiones="formacionStore.dimensiones" @success="successEditHandler" />
   <etapa-formacion-detail v-else :etapa="etapa" />
 </template>

@@ -67,7 +67,7 @@ const searchElement = () => {
 async function loadTutores() {
   try {
     const area = authStore.user.area?.id
-    tutores_init = (await ImportService.all_tutores(area))
+    tutores_init = await ImportService.all_tutores(area)
     tutores.value = tutores_init
   }
   catch (error: ServerError | ExceptionResponse) {
@@ -86,9 +86,7 @@ onMounted(loadTutores)
       <filter-form v-model:filter="filter" @submit="searchElement" />
     </el-col>
     <el-col :span="7">
-      <button type="button" class="btn btn-primary uk-text-bold" :disabled="!multipleSelection.length" @click="importManyElement(multipleSelection)">
-        <loading v-if="isLoading" /><i v-else class="entypo-list-add" /> Importar Seleccionados
-      </button>
+      <p-button :loading="isLoading" button-type="success" button-title="Importar seleccionados" button-icon="entypo-list-add" :disabled="!multipleSelection.length" @click="importManyElement(multipleSelection)" />
     </el-col>
   </el-row>
 

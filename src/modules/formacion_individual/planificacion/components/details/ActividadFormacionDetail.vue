@@ -12,6 +12,7 @@ interface Props {
   actividad: ActividadFormacionModel
 }
 const props = defineProps<Props>()
+
 const formacionStore = formacionIndividualStore()
 const { plan: planStore } = storeToRefs(formacionStore)
 const searchEtapa = inject('searchEtapa')
