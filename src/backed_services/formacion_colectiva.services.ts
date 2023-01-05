@@ -3,7 +3,10 @@ import type { PaginateResponse } from '~/globals/config/axios'
 import type {
     PlanFormacionColectivaModel, ActividadFormacionColectivaModel, EstadoPlanFormacion, EtapaFormacionModel, DimensionModel
 } from '~/backed_services/models/formacion_colectiva.model'
-import {PlanFormacionModel} from "~/backed_services/models/formacion_individual.model";
+import {
+    EtapaFormacionColectivaModel,
+    EvaluacionColectivaModel
+} from "~/backed_services/models/formacion_colectiva.model";
 
 export interface IFormacionColectivaServices {}
 
@@ -20,14 +23,14 @@ export class SignPlanFormacionColectiva {
 
 export class FormacionColectivaServices extends AbstractService implements IFormacionColectivaServices {
     //PLAN
-    async plan_formacion_colectivo(filter: Filter): PaginateResponse<PlanFormacionColectivaModel> {
-        const call = this.callWithToken().get(`/plan-colectivo`, { params: filter })
+    async list_formacion_colectivo(filter: Filter): PaginateResponse<PlanFormacionColectivaModel> {
+        const call = this.callWithToken().get(`/plan-colectivo/`, { params: filter })
         const response = await this.parseResponse(call)
         return response.data
     }
 
     async retrieve_plan_formacion_colectiva(plan_id: number): PlanFormacionColectivaModel {
-        const call = this.callWithToken().get(`/plan-colectivo/${plan_id}`)
+        const call = this.callWithToken().get(`/plan-colectivo/${plan_id}/`)
         const response = await this.parseResponse(call)
         return response.data
     }
@@ -45,7 +48,7 @@ export class FormacionColectivaServices extends AbstractService implements IForm
     }
 
     async change_status_plan_formacion(plan_id: number, estado: EstadoPlanFormacion) {
-        const call = this.callWithToken().put(`/plan-colectivo/${plan_id}`, { estado })
+        const call = this.callWithToken().put(`/plan-colectivo/${plan_id}/`, { estado })
         const response = await this.parseResponse(call)
         return response.data
     }
@@ -67,11 +70,11 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         return response.data
     }
     //ETAPAS
-    async all_etapas_formacion_from_plan(plan_id: number): EtapaFormacionModel[] {
-        const list: EtapaFormacionModel[] = []
+    async all_etapas_from_plan(plan_id: number): EtapaFormacionColectivaModel[] {
+        const list: EtapaFormacionColectivaModel[] = []
         const filter = new Filter(1, 100)
         let call = this.callWithToken().get(`plan-colectivo/${plan_id}/etapas`, { params: filter })
-        let response: PaginateResponse<EtapaFormacionModel> = await this.parseResponse(call)
+        let response: PaginateResponse<EtapaFormacionColectivaModel> = await this.parseResponse(call)
         list.push(...response.data.results)
 
         while (response.next) {
@@ -84,14 +87,14 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         return list
     }
 
-    async retrieve_etapa(etapa_id: number): EtapaFormacionModel {
-        const call = this.callWithToken().get(`etapa/${etapa_id}`)
+    async retrieve_etapa(etapa_id: number): EtapaFormacionColectivaModel {
+        const call = this.callWithToken().get(`etapa/${etapa_id}/`)
         const response = await this.parseResponse(call)
         return response.data
     }
 
-    async update_etapa(etapa_id: number, etapa: EtapaFormacionModel) {
-        const call = this.callWithToken().put(`etapa/${etapa_id}`, { ...etapa })
+    async update_etapa(etapa_id: number, etapa: EtapaFormacionColectivaModel) {
+        const call = this.callWithToken().put(`etapa/${etapa_id}/`, { ...etapa })
         const response = await this.parseResponse(call)
         return response.data
     }
@@ -140,15 +143,15 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         const response = await this.parseResponse(call)
     }
     //ACTIVIDADES AREA
-    async all_actividades_especificas(actividad_id: number): ActividadFormacionColectivaModel[] {
+    async all_actividades_especificas(actividad_general_id: number): ActividadFormacionColectivaModel[] {
         const filter = new Filter(1, 100)
-        const call = this.callWithToken().get(`actividad-colectiva/${actividad_id}/actividades-area`, { params: filter })
+        const call = this.callWithToken().get(`actividad-colectiva/${actividad_general_id}/actividades-area`, { params: filter })
         const response = await this.parseResponse(call)
         const list = [...response.data.results]
 
         while (response.next) {
             filter.page++
-            const call = this.callWithToken().get(`actividad-colectiva/${actividad_id}/actividades-area`, { params: filter })
+            const call = this.callWithToken().get(`actividad-colectiva/${actividad_general_id}/actividades-area`, { params: filter })
             const response = await this.parseResponse(call)
             list.push(...response.data.results)
         }
@@ -156,8 +159,8 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         return list
     }
 
-    async create_actividad_especifica(actividad_id: number, actividad: ActividadFormacionColectivaModel): ActividadFormacionColectivaModel {
-        const call = this.callWithToken().post(`actividad-colectiva/${actividad_id}/actividades-area`, actividad)
+    async create_actividad_especifica(actividad_general_id: number, actividad: ActividadFormacionColectivaModel): ActividadFormacionColectivaModel {
+        const call = this.callWithToken().post(`actividad-colectiva/${actividad_general_id}/actividades-area`, actividad)
         const response = await this.parseResponse(call)
         return response.data
     }
@@ -208,8 +211,8 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         return response.data
     }
 
-    async evaluar_joven(joven_id: number) {
-        const call = this.callWithToken().post(`joven/${joven_id}/evaluacion`)
+    async evaluar_joven(joven_id: number, evaluacion: EvaluacionColectivaModel) EvaluacionColectivaModel {
+        const call = this.callWithToken().post(`joven/${joven_id}/evaluacion`, evaluacion)
         const response = await this.parseResponse(call)
         return response.data
     }
