@@ -4,11 +4,12 @@ import { required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
 import FColectivaServices from '../../../../../backed_services/formacion_colectiva.services'
-import type { ActividadFormacionColectivaModel, EtapaFormacionModel } from '../../../../../backed_services/models/formacion_colectiva.model'
+import type { ActividadFormacionColectivaModel, EtapaFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model'
 
 interface Props {
   actividad: ActividadFormacionColectivaModel
-  etapa: EtapaFormacionModel
+  actividadGeneral: ActividadFormacionColectivaModel | undefined
+  etapa: EtapaFormacionColectivaModel
 }
 
 const props = defineProps<Props>()
@@ -54,8 +55,12 @@ async function submitForm() {
 async function createActividad() {
   const actividad: ActividadFormacionColectivaModel = { ...form.value, fechaInicio: form.value.fechas[0], fechaFin: form.value.fechas[1] }
   try {
-    await FColectivaServices.create_actividad_general(props.etapa.id, actividad)
-    emit('success', actividad)
+    let response
+    if (props.actividadGeneral)
+      response = await FColectivaServices.create_actividad_especifica(props.actividadGeneral.id, actividad)
+    else
+      response = await FColectivaServices.create_actividad_general(props.etapa.id, actividad)
+    emit('success', response)
   }
   catch (error: ServerError | ExceptionResponse) {
     alert(error)
@@ -65,8 +70,8 @@ async function createActividad() {
 async function editActividad() {
   const actividad: ActividadFormacionColectivaModel = { ...form.value, fechaInicio: form.value.fechas[0], fechaFin: form.value.fechas[1] }
   try {
-    await FColectivaServices.update_actividad_general(props.actividad.id, actividad)
-    emit('success', actividad)
+    const response = await FColectivaServices.update_actividad_general(props.actividad.id, actividad)
+    emit('success', response)
   }
   catch (error: ServerError | ExceptionResponse) {
     alert(error)
@@ -108,7 +113,6 @@ watch(props, () => {
     <el-form-item label="Observacion">
       <el-input v-model="form.observacion" type="textarea" />
     </el-form-item>
-    <gestor-archivos-formacion v-if="actividad" :actividad="actividad" />
     <el-row justify="end">
       <el-button @click="submitForm">
         Aceptar

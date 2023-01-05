@@ -22,7 +22,7 @@ const noMore = ref(false)
 async function loadData(plan_id, paginator: Paginate) {
   activateLoading(isLoading)
   try {
-    const response = await comentarioService.list_comentarios_from_plan_individual(plan_id, paginator)
+    const response = await comentarioService.list_comentarios_from_plan_colectivo(plan_id, paginator)
     if (response.next !== null) {
       paginator.page++
       noMore.value = false

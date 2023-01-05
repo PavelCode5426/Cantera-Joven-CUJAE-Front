@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import type {ActividadFormacionColectivaModel} from '../../../../../backed_services/models/formacion_colectiva.model'
+import type { ActividadFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model'
 
 interface Props {
   actividad: ActividadFormacionColectivaModel
@@ -30,9 +30,6 @@ const props = defineProps<Props>()
     </el-descriptions-item>
     <el-descriptions-item label="Fecha de Fin">
       {{ actividad?.fechaFin }}
-    </el-descriptions-item>
-    <el-descriptions-item label="Estado">
-      <estado-plan-elemento :estado="actividad?.estado" />
     </el-descriptions-item>
   </el-descriptions>
 </template>

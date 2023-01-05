@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import type {EtapaFormacionModel } from '../../../../../backed_services/models/formacion_colectiva.model'
+import type { EtapaFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model'
 
 interface Props {
-  etapa: EtapaFormacionModel
+  etapa: EtapaFormacionColectivaModel
 }
 
 const props = defineProps<Props>()

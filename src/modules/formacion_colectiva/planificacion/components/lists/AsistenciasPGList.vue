@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import type { TutorAsignadoModel, TutoradoAsignadoModel } from '../../../../../backed_services/models/tutorial.model'
-import UbicacionLaboralModel from '../../../../../backed_services/models/ubicacion_laboral.model'
-
+import { ActividadFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model'
 
 </script>
 
 <template>
   <el-table>
-    <el-table-column label="Área" prop="area.nombre" />
-    <el-table-column label="Fecha" prop="fechaAsignado" />
+    <el-table-column label="Nombre" prop="nombre" />
+    <el-table-column label="Fecha Inicio" prop="fechaInicio" />
+    <el-table-column label="Fecha Fin" prop="fechaFin" />
+    <el-table-column label="¿Actividad Específica?" prop="esEspecifica" />
   </el-table>
 </template>

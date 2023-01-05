@@ -3,23 +3,20 @@ import { defineProps, ref } from 'vue'
 import { minLength, minValue, required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import FColectivaServices from '../../../../../backed_services/formacion_colectiva.services'
-import type { EtapaFormacionModel } form '../../../../../backed_services/formacion_colectiva.services'
+import type { EtapaFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model'
 
 interface Props {
-  etapa: EtapaFormacionModel
+  etapa: EtapaFormacionColectivaModel
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits(['error', 'success'])
 
 const form = ref({
-  objetivo: props.etapa?.objetivo,
   fechas: [props.etapa?.fechaInicio, props.etapa?.fechaFin],
 })
 
 const formValidations = {
-  objetivo: { required, minLength: minLength(15) },
-  dimesion: { required },
   fechas: [{ required }, { required }],
 }
 
@@ -30,9 +27,8 @@ async function updateEtapa() {
   const valid = await v.$validate()
   if (valid) {
     const valid_form = form.value
-    const etapa: EtapaFormacionModel = {
+    const etapa: EtapaFormacionColectivaModel = {
       id: props.etapa?.id,
-      objetivo: valid_form.objetivo,
       fechaInicio: valid_form.fechas[0],
       fechaFin: valid_form.fechas[1],
     }
@@ -50,10 +46,6 @@ async function updateEtapa() {
 
 <template>
   <el-form inline label-position="top">
-    <el-form-item label="Objetivo">
-      <el-input v-model="form.objetivo" style="width: 300px" @blur="$v.objetivo.$touch()" />
-      <input-error-message :items="$v.objetivo.$errors" />
-    </el-form-item>
     <el-form-item label="Fechas">
       <date-picker
         v-model="form.fechas" type="daterange" start-placeholder="Fecha de inicio"

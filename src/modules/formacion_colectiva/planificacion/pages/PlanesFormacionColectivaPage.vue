@@ -6,12 +6,10 @@ import usePaginateResponse from '../../../../globals/composables/usePaginateResp
 import type { PaginateResponse } from '../../../../globals/config/axios'
 import { ExceptionResponse, ServerError } from '../../../../globals/config/axios'
 import FColectivaServices from '../../../../backed_services/formacion_colectiva.services'
-import {
-  EstadoPlanFormacionColectiva,
-  PlanFormacionColectivaModel
-} from '../../../../backed_services/models/formacion_colectiva.model'
-import {Filter} from "../../../../backed_services/service";
-import PlanFormacionColectivaList from "../components/lists/PlanFormacionColectivaList.vue";
+import type { PlanFormacionColectivaModel } from '../../../../backed_services/models/formacion_colectiva.model'
+import { Filter } from '../../../../backed_services/service'
+import PlanFormacionColectivaList from '../components/lists/PlanFormacionColectivaList.vue'
+import {EstadoPlanFormacion} from "../../../../backed_services/models/formacion_individual.model";
 
 const data = usePaginateResponse<PlanFormacionColectivaModel>()
 const filter = ref<Filter>(new Filter())
@@ -21,7 +19,7 @@ const current_user = route.params.id
 
 async function loadData(filter: Filter) {
   try {
-    const response: PaginateResponse<PlanFormacionColectivaModel> = await FColectivaServices.all_planes_formacion(filter)
+    const response: PaginateResponse<PlanFormacionColectivaModel> = await FColectivaServices.list_formacion_colectivo(filter)
     data.value = response
   }
   catch (error: ExceptionResponse) {
@@ -32,12 +30,12 @@ async function loadData(filter: Filter) {
 }
 async function handleCurrentPageChange(page = 1) {
   filter.value.page = page
-  await loadData(filter)
+  await loadData(filter.value)
 }
 handleCurrentPageChange(1)
 
 async function createPlanFormacionColectiva() {
-  const response = await ElMessageBox.confirm(`¿Está seguro de crear un nuevo Plan de Formación Complementaria?`, 'Alerta')
+  const response = await ElMessageBox.confirm(`¿Está seguro de crear un nuevo Plan de Formación Colectiva?`, 'Alerta')
   try {
     if (response) {
       const plan_formacion = await FColectivaServices.create_plan_formacion()
@@ -54,22 +52,18 @@ async function createPlanFormacionColectiva() {
 <template>
   <h3>Planes de Formación Colectiva</h3>
   <plan-formacion-colectiva-list :data="data.results">
-    <template #default>
       <el-table-column>
-        <template #default="scope">
-          <router-link v-if="scope.row.estado === EstadoPlanFormacion.desarrollo" :to="{ name: 'plan-formacion-colectiva-page', params: { id: scope.row.id } }">
-            <el-button>
+        <template #default="{row}">
+          <router-link :to="{ name: 'plan-formacion-colectiva-page', params: { id: row?.id } }">
+            <el-button v-if="row?.estado === EstadoPlanFormacion.desarrollo">
               Editar Planificación
             </el-button>
-          </router-link>
-          <router-link v-else :to="{ name: 'plan-formacion-colectiva-page', params: { id: scope.row.id  } }">
-            <el-button>
+            <el-button v-else>
               Revisar Planificacion
             </el-button>
           </router-link>
         </template>
       </el-table-column>
-    </template>
   </plan-formacion-colectiva-list>
 
   <el-row justify="end">

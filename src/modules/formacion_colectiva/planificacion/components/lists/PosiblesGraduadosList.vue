@@ -6,6 +6,7 @@ const slots = useSlots()
 
 <template>
   <el-table>
+    <el-table-column type="selection" width="55" />
     <el-table-column label="Nombre y Apellido">
       <template #default="scope">
         {{ scope.row.first_name }} {{ scope.row.last_name }}

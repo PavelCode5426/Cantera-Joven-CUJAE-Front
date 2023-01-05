@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
-import { EstadoPlanFormacionColectiva } from '../../../../../backed_services/models/formacion_colectiva.model'
-import type { EtapaFormacionModel } from '../../../../../backed_services/models/formacion_colectiva.model'
-import EtapaFormacionDetail from '../details/EtapaFormacionColectivaDetail.vue'
+import useVuelidate from '@vuelidate/core'
+import FColectivaServices from '../../../../../backed_services/formacion_colectiva.services'
+import {
+  EstadoPlanFormacionColectiva,
+  EtapaFormacionColectivaModel
+} from '../../../../../backed_services/models/formacion_colectiva.model'
 import formacionColectivaStore from '../../store/planificacion_colectiva.store'
 
 interface Props {
-  etapa: EtapaFormacionModel
+  etapa: EtapaFormacionColectivaModel
 }
 
 const props = defineProps<Props>()

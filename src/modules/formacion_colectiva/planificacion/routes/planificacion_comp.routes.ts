@@ -28,6 +28,16 @@ const routes: LayoutRouteRecordRaw[] = [
         layout: ['Admin'],
         props: true,
     },
+    {
+        path: 'posibles-graduados-evaluacion',
+        name: 'posibles-graduados-familiarizados-page',
+        component: () => import('../pages/PosiblesGraduadosFamiliarizadosPage.vue'),
+        meta: {
+            title: 'Evaluar asistencia de posible graduado',
+            accesible: () => is_jefe_area(),
+        },
+        layout: ['Admin'],
+    },
 
 ]
 export default routes

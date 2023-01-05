@@ -3,22 +3,19 @@ import { useRoute } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import { storeToRefs } from 'pinia'
-import { ExceptionResponse } from '../../../../../globals/config/axios'
-
-import { EstadoPlanFormacion } from '../../../../../backed_services/models/formacion_individual.model'
-import { is_jefe_area, is_director_recursos_humanos, is_vicerrector } from '../../../../../globals/permissions'
 import FirmarPlanFormacionForm from '../forms/FirmarPlanFormacionColectivaForm.vue'
-import FColectivaServices from '../../../../backed_services/formacion_colectiva.services'
 import formacionColectivaStore from '../../store/planificacion_colectiva.store'
-import { EstadoPlanFormacionColectiva } from '../../../../../backed_services/models/formacion_colectiva.model'
 import ExportPlanFormacionColectiva from '../items/ExportPlanFormacionColectiva.vue'
 import CambiarEstadoPlanColectivoForm from '../forms/CambiarEstadoPlanColectivoForm.vue'
 import FirmarPlanFormacionColectivoForm from '../forms/FirmarPlanFormacionColectivaForm.vue'
 import PlanFormacionColectivoDetail from '../details/PlanFormacionColectivoDetail.vue'
+import { is_director_recursos_humanos, is_jefe_area, is_vicerrector } from '~/globals/permissions'
+import { EstadoPlanFormacionColectiva } from '~/backed_services/models/formacion_colectiva.model'
+import FColectivaServices from '~/backed_services/formacion_colectiva.services'
+import { ExceptionResponse } from '~/globals/config/axios'
 
 const route = useRoute()
 const plan_formacion_id = route.params.id
-
 const formacionStore = formacionColectivaStore()
 const { plan, etapas } = storeToRefs(formacionStore)
 
@@ -27,7 +24,7 @@ const activeTab = ref<string>('1')
 async function loadPlanFormacionColetiva(plan_id: number) {
   try {
     const planFormacion = await FColectivaServices.retrieve_plan_formacion_colectiva(plan_id)
-    const etapasFormacion = await FColectivaServices.all_etapas_formacion_from_plan(planFormacion.id)
+    const etapasFormacion = await FColectivaServices.all_etapas_from_plan(plan_id)
 
     plan.value = planFormacion
     etapas.value = etapasFormacion
@@ -62,7 +59,7 @@ const can_change_status = computed(() => {
   return is_director_recursos_humanos() && plan.value?.estado !== EstadoPlanFormacionColectiva.aprobado
 })
 const can_export = computed(() => {
-  return plan.value?.estado === EstadoPlanFormacionColectiva.pendiente || plan.value?.estado === EstadoPlanFormacion.aprobado
+  return plan.value?.estado === EstadoPlanFormacionColectiva.pendiente || plan.value?.estado === EstadoPlanFormacionColectiva.aprobado
 })
 
 loadPlanFormacionColetiva(plan_formacion_id)
@@ -90,12 +87,12 @@ onMounted(() => loadPlanFormacionColetiva(route?.params?.id))
 
     <el-tabs v-if="etapas.length" v-model="activeTab">
       <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :label="`Etapa #${etapa.numero}`" :name="`${etapa.numero}`">
-        <etapa-formacion-item :etapa="etapa" />
+        <etapa-formacion-colectiva-item :etapa="etapa" />
         <el-divider />
-        <actividad-formacion-list :etapa="etapa" />
+        <actividad-formacion-colectiva-list :etapa="etapa" />
       </el-tab-pane>
-      <el-tab-pane v-if="plan.estado !== EstadoPlanFormacion.aprobado" label="Comentarios" name="comentarios">
-        <plan-formacion-comentarios :plan="plan" />
+      <el-tab-pane v-if="plan.estado !== EstadoPlanFormacionColectiva.aprobado" label="Comentarios" name="comentarios">
+        <plan-formacion-colectiva-comentarios :plan="plan" />
       </el-tab-pane>
     </el-tabs>
   </el-space>

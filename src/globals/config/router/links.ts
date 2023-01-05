@@ -105,7 +105,7 @@ const navBarLinks: Link[] = [
 
     childrens: [
       {
-        name: 'Gestíon de Áreas',
+        name: 'Gestíonar Área al Posibel Graduado',
         router: { name: 'asignar-area-page' },
         is_accesible: is_director_recursos_humanos(),
       },
@@ -115,12 +115,12 @@ const navBarLinks: Link[] = [
         is_accesible: is_vicerrector(),
       },
       {
-        name: 'Historial Preubicación Laboral',
+        name: 'Ver Historial Preubicación Laboral',
         router: { name: 'historial-preubicacion-page' },
         is_accesible: is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
       },
       {
-        name: 'Posibles Graduados Preubicados',
+        name: 'Ver Posibles Graduados Preubicados',
         router: { name: 'preubicados-area-page',params:{id:get_current_area_id()} },
         is_accesible: is_jefe_area(),
       },
@@ -128,6 +128,11 @@ const navBarLinks: Link[] = [
         name: 'Planificar Formación',
         router: { name: 'planes-formacion-colectiva' },
         is_accesible: is_jefe_area() || is_director_recursos_humanos() || is_vicerrector(),
+      },
+      {
+        name: 'Evaluar posible graduado',
+        router: { name: 'posibles-graduados-familiarizados-page' },
+        is_accesible: is_jefe_area(),
       },
     ],
   },

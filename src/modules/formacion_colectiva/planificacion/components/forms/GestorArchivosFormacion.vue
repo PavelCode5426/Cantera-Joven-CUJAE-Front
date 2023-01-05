@@ -3,7 +3,8 @@ import { computed, defineProps, ref, watch, withDefaults } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 import type { UploadProps, UploadUserFile } from 'element-plus'
-import FColectivaServices from '../../../../../backed_services/formacion_colectiva.services'
+
+import FColectivaServices from '~/backed_services/formacion_colectiva.services'
 import type { ActividadFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model'
 import type ArchivoModel from '~/backed_services/models/archivo.model'
 
@@ -76,3 +77,6 @@ props.actividad?.documentos.forEach(i => fileList.value.push({
     </el-upload>
   </el-form-item>
 </template>
+
+
+
