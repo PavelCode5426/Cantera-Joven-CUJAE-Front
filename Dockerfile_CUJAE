@@ -1,0 +1,12 @@
+FROM node:14-alpine
+
+WORKDIR code
+
+COPY . .
+
+RUN npm config set proxy http://10.8.6.50:3128
+RUN npm config set https-proxy https://10.8.6.50:3128
+RUN npm config set strict-ssl false
+RUN npm install
+
+EXPOSE 3000

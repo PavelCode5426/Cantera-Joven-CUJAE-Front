@@ -1,13 +1,5 @@
 <script setup lang="ts">
 import { toogleLoadingDecorator } from '~/globals/composables/useLoading'
-
-withDefaults(defineProps<Props>(), {
-  confirmButtonType: 'primary',
-  buttonType: 'btn-info',
-  buttonIcon: '',
-})
-const emit = defineEmits(['on-confirm', 'on-cancel'])
-const loadingConfirm = ref(false)
 interface Props {
   title: string
   buttonType: string
@@ -15,10 +7,13 @@ interface Props {
   buttonTitle: string
   buttonIcon: string
 }
-let onConfirmEvent = () => {
-  emit('on-confirm')
-}
-onConfirmEvent = toogleLoadingDecorator(onConfirmEvent, loadingConfirm)
+withDefaults(defineProps<Props>(), {
+  confirmButtonType: 'primary',
+  buttonType: 'btn-info',
+  buttonIcon: '',
+})
+const emit = defineEmits(['on-confirm', 'on-cancel'])
+const loadingConfirm = ref(false)
 </script>
 
 <template>
@@ -26,7 +21,7 @@ onConfirmEvent = toogleLoadingDecorator(onConfirmEvent, loadingConfirm)
     :title="title"
     :confirm-button-type="confirmButtonType"
     :hide-icon="true"
-    @confirm="onConfirmEvent()"
+    @confirm="emit('on-confirm')"
     @cancel="emit('on-cancel')"
   >
     <template #reference>

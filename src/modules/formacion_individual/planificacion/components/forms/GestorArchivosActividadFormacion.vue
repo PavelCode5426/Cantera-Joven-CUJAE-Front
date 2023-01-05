@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, defineProps, ref, watch, withDefaults } from 'vue'
+import { computed, defineProps, inject, ref, watch, withDefaults } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 import type { UploadProps, UploadUserFile } from 'element-plus'
@@ -18,13 +18,16 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const fileList = ref<UploadUserFile[]>([])
 const headers = ref<Record<string, any>>()
+const updateActividad = inject('updateActividad')
 
 const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
   window.open(uploadFile.url, '_blank')
 }
 
-const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
-  return ElMessageBox.confirm(`¿Esta seguro que desea eliminar el archivo ${uploadFile.name}?`).then(() => FIndivServices.delete_archivo(uploadFile.uid)).catch(() => false)
+const beforeRemove: (uploadFile, uploadFiles) => Promise<void | boolean> = (uploadFile, uploadFiles) => {
+  return ElMessageBox.confirm(`¿Esta seguro que desea eliminar el archivo ${uploadFile.name}?`).then(() => {
+    FIndivServices.delete_archivo(uploadFile.uid).then()
+  }).catch(() => false)
 }
 
 const onSuccess: UploadProps['onSuccess'] = (response, uploadFile, uploadFiles) => {
@@ -64,7 +67,6 @@ props.actividad?.documentos.forEach(i => fileList.value.push({
       :action="url"
       multiple
       :on-preview="handlePreview"
-      :on-remove="handleRemove"
       :before-remove="beforeRemove"
       :on-success="onSuccess"
       :disabled="props.disabled"

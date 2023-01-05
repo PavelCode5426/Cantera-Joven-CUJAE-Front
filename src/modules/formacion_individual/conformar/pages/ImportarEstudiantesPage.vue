@@ -14,7 +14,8 @@ const isImportLoading = ref(false)
 const isTableLoading = ref(false)
 let estudiantes_init: EstudianteLDAPModel[] = []
 const estudiantes = ref<EstudianteLDAPModel[]>([])
-const filter = ref<Filter>(new Filter())
+const filter = ref<Filter>(new Filter(0))
+const scroll_disabled = ref(false)
 const multipleSelection = ref<EstudianteLDAPModel[]>([])
 
 function handleSelectionChange(val: EstudianteLDAPModel[]) {
@@ -35,7 +36,7 @@ async function importSingleElement(element) {
   }
 }
 async function importManyElement(elements) {
-  activateLoading(isLoading)
+  activateLoading(isImportLoading)
   try {
     await ImportService.import_estudiantes(authStore.user.area?.id, elements)
     estudiantes_init = estudiantes_init.filter(i => !elements.find(e => e.identification === i.identification))
@@ -48,15 +49,16 @@ async function importManyElement(elements) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
   }
-  desactivateLoading(isLoading)
+  desactivateLoading(isImportLoading)
 }
 const searchElement = () => {
+  const paginate = filter.value
   const s = filter.value.search.toLowerCase()
   if (s === '') {
-    estudiantes.value = estudiantes_init
+    return estudiantes_init
   }
   else {
-    estudiantes.value = estudiantes_init.filter(i =>
+    return estudiantes_init.slice(paginate.page * paginate.page_size).filter(i =>
       i.name?.toLowerCase().startsWith(s)
         || i.lastname?.toLowerCase().startsWith(s)
         || i.identification?.toLowerCase().startsWith(s)
@@ -64,19 +66,31 @@ const searchElement = () => {
     )
   }
 }
-
 async function loadEstudiantes() {
   try {
     activateLoading(isTableLoading)
     const area = authStore.user.area?.id
-    estudiantes_init = (await ImportService.all_estudiantes(area))
-    estudiantes.value = estudiantes_init
+    const response = await ImportService.all_estudiantes(area)
+    estudiantes_init = response
+    changeCurrentPage()
+    desactivateLoading(isTableLoading)
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
   }
-  desactivateLoading(isTableLoading)
+}
+
+function submitFilter() {
+  filter.value.page = 0
+  changeCurrentPage()
+}
+function changeCurrentPage() {
+  const paginate = filter.value
+  const elements = searchElement().slice(paginate.page * paginate.page_size, (++paginate.page) * paginate.page_size)
+  if (elements.length)
+    estudiantes.value.push(...elements)
+  else scroll_disabled.value = true
 }
 
 onMounted(loadEstudiantes)
@@ -86,14 +100,12 @@ onMounted(loadEstudiantes)
   <h3>Importar Estudiantes</h3>
   <el-row justify="space-between">
     <el-col :span="6">
-      <filter-form v-model:filter="filter" @submit="searchElement" />
+      <filter-form v-model:filter="filter" @submit="submitFilter" />
     </el-col>
     <el-col :span="7">
-      <button type="button" class="btn btn-primary uk-text-bold" :disabled="!multipleSelection.length" @click="importManyElement(multipleSelection)">
-        <loading v-if="isLoading" /><i v-else class="entypo-list-add" /> Importar Seleccionados
-      </button>
+      <p-button :loading="isImportLoading" button-type="success" button-title="Importar seleccionados" button-icon="entypo-list-add" :disabled="!multipleSelection.length" @click="importManyElement(multipleSelection)" />
     </el-col>
   </el-row>
 
-  <l-d-a-p-list v-loading="isTableLoading" max-height="500" :data="estudiantes" @import-item="importSingleElement" @selection-change="handleSelectionChange" />
+  <l-d-a-p-list :infinite-scroll-disabled="scroll_disabled" :loading="isTableLoading" max-height="500" :data="estudiantes" @import-item="importSingleElement" @selection-change="handleSelectionChange" />
 </template>

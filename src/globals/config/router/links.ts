@@ -92,6 +92,21 @@ const navBarLinks: Link[] = [
         is_accesible: is_tutor(),
       },
       {
+        name: 'Planes de Formacion (JOVEN)',
+        router: { name: 'planes-formacion-joven-page', params: { id: get_current_id() } },
+        is_accesible: is_joven(),
+      },
+      {
+        name: 'Planes de Formacion (TUTOR)',
+        router: { name: 'planes-formacion-tutor-page', params: { id: get_current_id() } },
+        is_accesible: is_tutor(),
+      },
+      {
+        name: 'Planes de Formacion del Area (JEFE AREA)',
+        router: { name: 'planes-formacion-area-page', params: { id: get_current_id() } },
+        is_accesible: is_jefe_area(),
+      },
+      {
         name: 'Revisar Evaluaciones',
         router: { name: 'evaluaciones-page' },
         is_accesible: is_jefe_area(),

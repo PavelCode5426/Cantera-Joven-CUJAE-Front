@@ -110,11 +110,12 @@ loadTutores(props.solicitud.area.id)
     </el-col>
     <el-col :span="10">
       <el-form v-model="form" label-position="top">
-        <el-form-item label="Respuesta" required>
+        <el-form-item label="Respuesta">
           <el-select v-model="form.respuesta" @blur="$v.respuesta.$touch()">
             <el-option :value="true" label="Aceptar solicitud" />
             <el-option :value="false" label="Rechazar solicitud" />
           </el-select>
+          <input-error-message :items="$v.respuesta.$touch()" />
         </el-form-item>
         <el-form-item label="Seleccionar tutores">
           <el-select v-model="form.selectedTutores" :disabled="form.respuesta === false || form.respuesta === undefined" multiple="true" filterable="true" @blur="$v.selectedTutores.$touch()">
@@ -123,6 +124,7 @@ loadTutores(props.solicitud.area.id)
         </el-form-item>
         <el-form-item label="Motivo respuesta">
           <el-input v-model="form.motivo_respuesta" type="textarea" @blur="$v.motivo_respuesta.$touch()" />
+          <input-error-message :items="$v.motivo_respuesta.$touch()" />
         </el-form-item>
         <el-form-item>
           <el-button @click="submitForm">

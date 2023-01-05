@@ -41,7 +41,6 @@ async function loadPlanFormacion(plan_id: number) {
     }
   }
   catch (error: ServerError | ExceptionResponse) {
-    console.log(error)
     ElNotification.error(error.detail)
   }
 }
@@ -59,6 +58,13 @@ async function changeStatusHandler(value) {
     alert(error.detail)
   }
 }
+function successEtapaEditHandler(response) {
+  etapas.value = etapas.value.map((item) => {
+    if (item.id !== response.id)
+      return item
+    return response
+  })
+}
 function searchEtapa(etapa_id: number): EtapaFormacionModel | undefined {
   return etapas.value?.find(i => i.id === etapa_id)
 }
@@ -66,7 +72,7 @@ function searchEtapa(etapa_id: number): EtapaFormacionModel | undefined {
 provide('searchEtapa', searchEtapa)
 
 const can_change_status = computed(() => {
-  return is_tutor() && plan.value?.estado !== EstadoPlanFormacion.aprobado
+  return is_tutor() && !(plan.value?.estado === EstadoPlanFormacion.aprobado || plan.value?.estado === EstadoPlanFormacion.finalizado)
 })
 const can_export = computed(() => {
   return plan.value?.estado === EstadoPlanFormacion.pendiente || plan.value?.estado === EstadoPlanFormacion.aprobado && plan.value?.estado !== EstadoPlanFormacion.finalizado
@@ -79,7 +85,7 @@ const etapa_evaluar = computed(() => {
   return etapa
 })
 
-loadPlanFormacion(plan_formacion_id)
+// loadPlanFormacion(plan_formacion_id)
 onMounted(() => loadPlanFormacion(route?.params?.id))
 </script>
 
@@ -93,7 +99,7 @@ onMounted(() => loadPlanFormacion(route?.params?.id))
         <el-row justify="space-evenly">
           <export-plan-formacion v-if="can_export" :plan="plan" />
           <cambiar-estado-plan-form v-if="can_change_status" :estado="plan?.estado" @change="changeStatusHandler" />
-          <firmar-plan-formacion-form v-if="is_jefe_area" :plan="plan" />
+          <firmar-plan-formacion-form v-if="is_jefe_area" :plan="plan" @firmado="loadPlanFormacion(plan_formacion_id)" />
           <evaluar-formacion v-if="can_evaluate && etapa_evaluar" v-model:etapa="etapa_evaluar" />
           <evaluar-formacion v-else-if="can_evaluate" v-model:plan="plan" />
         </el-row>
@@ -105,13 +111,21 @@ onMounted(() => loadPlanFormacion(route?.params?.id))
     </el-row>
 
     <el-tabs v-if="etapas.length" v-model="activeTab">
-      <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :label="`Etapa #${etapa.numero}`" :name="`${etapa.numero}`">
-        <etapa-formacion-item :etapa="etapa" />
+      <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :name="`${etapa.numero}`">
+        <template #label>
+          <el-badge :is-dot="etapa.esProrroga && can_change_status">
+            Etapa #{{ etapa.numero }}
+          </el-badge>
+        </template>
+        <etapa-formacion-item :etapa="etapa" @success="successEtapaEditHandler" />
         <el-divider />
         <actividad-formacion-list :etapa="etapa" />
       </el-tab-pane>
       <el-tab-pane v-if="plan.estado !== EstadoPlanFormacion.aprobado" label="Comentarios" name="comentarios">
         <plan-formacion-comentarios :plan="plan" />
+      </el-tab-pane>
+      <el-tab-pane v-if="plan.documento" label="Versiones" name="versiones">
+        <plan-formacion-versiones :plan="plan" />
       </el-tab-pane>
     </el-tabs>
   </el-space>

@@ -52,7 +52,7 @@ defineExpose({ saveConfigurationVar, canSaveConfigurationVar, hasChangeConfigura
       <component
         :is="valueComponent"
         v-model="v.valor.$model"
-        :min="formConfig.validation?.min"
+        :min="1"
         :max="formConfig.validation?.max"
         @blur="v.valor.$touch()"
         @change="v.valor.$touch()"

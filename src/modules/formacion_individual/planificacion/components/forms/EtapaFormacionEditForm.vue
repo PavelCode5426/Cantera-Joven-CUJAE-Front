@@ -42,7 +42,7 @@ async function updateEtapa() {
     try {
       const response = await FIndivServices.update_etapa_formacion(etapa.id, etapa)
       ElNotification.success('Etapa actualizada correctamente')
-      emit('success')
+      emit('success', response)
     }
     catch (error) {
       ElNotification.error(error.detail)

@@ -140,7 +140,7 @@ async function submitForm() {
   }
 }
 async function addSolicitud() {
-  const valid = await v.solicitudes.$validate() || solicitudes.value.length == 0
+  const valid = solicitudes.value.length === 0 || await v.solicitudes.$validate()
   if (valid) {
     solicitudes.value.push({
       area: undefined, motivo_solicitud: '',
@@ -171,32 +171,26 @@ loadJovenTutores(props.joven.id)
     </el-col>
     <el-col :span="10">
       <el-form label-position="top">
-        <el-form-item label="Seleccione los tutores del joven" required>
+        <el-form-item label="Seleccione los tutores del joven">
           <el-select v-model="$v.selectedTutores.$model" collapse-tags="true" collapse-tags-tooltip="true" aria-modal="false" filterable="true" multiple="true" @blur="$v.selectedTutores.$touch()">
             <el-option v-for="tutor in tutoresArea" :value="tutor.id" :label="`${tutor.first_name} ${tutor.last_name}`" />
           </el-select>
-          <template #error>
-            <input-error-message :items="$v.selectedTutores.$errors" />
-          </template>
+          <input-error-message :items="$v.selectedTutores.$touch()" />
         </el-form-item>
 
         <template v-for="(solicitud, index) in solicitudes">
           <p class="bold">
             Solicitud de tutor externo #{{ index + 1 }}
           </p>
-          <el-form-item label="Seleccione el area" required>
+          <el-form-item label="Seleccione el area">
             <el-select v-model="solicitud.area" aria-modal="false" filterable="true">
               <el-option v-for="area in areas" :value="area.id" :label="area.nombre" />
             </el-select>
-            <template #error>
-              <input-error-message :items="$v.solicitudes.$each.$response.$errors[index].area" />
-            </template>
+            <input-error-message :items="$v.solicitudes.$each.$response.$errors[index].area" />
           </el-form-item>
-          <el-form-item label="Motivo de la solicitud" required>
+          <el-form-item label="Motivo de la solicitud">
             <el-input v-model="solicitud.motivo_solicitud" type="textarea" />
-            <template #error>
-              <input-error-message :items="$v.solicitudes.$each.$response.$errors[index].motivo_solicitud" />
-            </template>
+            <input-error-message :items="$v.solicitudes.$each.$response.$errors[index].motivo_solicitud" />
           </el-form-item>
         </template>
 

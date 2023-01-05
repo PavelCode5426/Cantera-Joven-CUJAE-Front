@@ -91,7 +91,6 @@ loadConfigurations()
       button-title="Guardar Cambios"
       button-icon="fa fa-save"
       button-type="btn-primary"
-      data-test="submit-config"
       dialog-message="¿Esta seguro de aplicar la configuracion actual al sistema?"
       @on-confirm="submitForm()"
     />
