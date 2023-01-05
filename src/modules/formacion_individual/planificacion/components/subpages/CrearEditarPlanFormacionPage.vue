@@ -59,6 +59,13 @@ async function changeStatusHandler(value) {
     alert(error.detail)
   }
 }
+function successEtapaEditHandler(response) {
+  etapas.value = etapas.value.map((item) => {
+    if (item.id !== response.id)
+      return item
+    return response
+  })
+}
 function searchEtapa(etapa_id: number): EtapaFormacionModel | undefined {
   return etapas.value?.find(i => i.id === etapa_id)
 }
@@ -106,7 +113,7 @@ onMounted(() => loadPlanFormacion(route?.params?.id))
 
     <el-tabs v-if="etapas.length" v-model="activeTab">
       <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :label="`Etapa #${etapa.numero}`" :name="`${etapa.numero}`">
-        <etapa-formacion-item :etapa="etapa" />
+        <etapa-formacion-item :etapa="etapa" @success="successEtapaEditHandler" />
         <el-divider />
         <actividad-formacion-list :etapa="etapa" />
       </el-tab-pane>

@@ -48,6 +48,7 @@ export class DimensionModel {
 
 export class ActividadFormacionModel {
   id: number
+  estapa: number
   nombre: string
   descripcion: string
   observacion: string

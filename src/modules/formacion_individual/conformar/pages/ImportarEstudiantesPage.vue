@@ -35,7 +35,7 @@ async function importSingleElement(element) {
   }
 }
 async function importManyElement(elements) {
-  activateLoading(isLoading)
+  activateLoading(isImportLoading)
   try {
     await ImportService.import_estudiantes(authStore.user.area?.id, elements)
     estudiantes_init = estudiantes_init.filter(i => !elements.find(e => e.identification === i.identification))
@@ -48,7 +48,7 @@ async function importManyElement(elements) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
   }
-  desactivateLoading(isLoading)
+  desactivateLoading(isImportLoading)
 }
 const searchElement = () => {
   const s = filter.value.search.toLowerCase()
@@ -69,14 +69,15 @@ async function loadEstudiantes() {
   try {
     activateLoading(isTableLoading)
     const area = authStore.user.area?.id
-    estudiantes_init = (await ImportService.all_estudiantes(area))
+    const response = await ImportService.all_estudiantes(area)
+    estudiantes_init = response
     estudiantes.value = estudiantes_init
+    desactivateLoading(isTableLoading)
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
   }
-  desactivateLoading(isTableLoading)
 }
 
 onMounted(loadEstudiantes)
@@ -89,9 +90,7 @@ onMounted(loadEstudiantes)
       <filter-form v-model:filter="filter" @submit="searchElement" />
     </el-col>
     <el-col :span="7">
-      <button type="button" class="btn btn-primary uk-text-bold" :disabled="!multipleSelection.length" @click="importManyElement(multipleSelection)">
-        <loading v-if="isLoading" /><i v-else class="entypo-list-add" /> Importar Seleccionados
-      </button>
+      <p-button :loading="isImportLoading" button-type="success" button-title="Importar seleccionados" button-icon="entypo-list-add" :disabled="!multipleSelection.length" @click="importManyElement(multipleSelection)" />
     </el-col>
   </el-row>
 

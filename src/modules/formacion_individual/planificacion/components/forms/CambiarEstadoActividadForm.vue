@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, defineProps, ref, watch } from 'vue'
+import { computed, defineEmits, defineProps, inject, ref, watch } from 'vue'
 import { ElNotification } from 'element-plus'
 import { EstadoActividadFormacion } from '../../../../../backed_services/models/formacion_individual.model'
 import type { ActividadFormacionModel } from '../../../../../backed_services/models/formacion_individual.model'
-import { is_jefe_area, is_tutor } from '../../../../../globals/permissions'
+import { is_joven } from '../../../../../globals/permissions'
 import { ExceptionResponse, ServerResponse } from '../../../../../globals/config/axios'
 import FIndivServices from '../../../../../backed_services/formacion_individual.services'
 
@@ -11,12 +11,15 @@ interface Props {
   actividad: ActividadFormacionModel
 }
 const props = defineProps<Props>()
+const emit = defineEmits(['statusChanged'])
 const estado = ref(props.actividad?.estado)
+// const updateActividad = inject('updateActividad')
 
 async function solicitarRevisionSubmit() {
   try {
     const response = await FIndivServices.request_review_actividad_formacion(props.actividad.id)
     estado.value = EstadoActividadFormacion.pendiente
+    // updateActividad(props.actividad.estado)
     ElNotification.success('Revision solicitada correctamente')
   }
   catch (error: ExceptionResponse | ServerResponse) {
@@ -26,6 +29,8 @@ async function solicitarRevisionSubmit() {
 async function changeNivelCumplimientoHandler() {
   try {
     const response = await FIndivServices.change_status_actividad_formacion(props.actividad.id, estado.value)
+    emit('statusChanged', response)
+    // updateActividad(response)
     ElNotification.success('Estado cambiado correctamente')
   }
   catch (error: ExceptionResponse | ServerResponse) {
@@ -42,7 +47,7 @@ const can_request_review = computed(() => {
 </script>
 
 <template>
-  <el-form-item v-if="is_joven">
+  <el-form-item v-if="!is_joven">
     <el-button :disabled="can_request_review" @click="solicitarRevisionSubmit">
       Solicitar Revision
     </el-button>
