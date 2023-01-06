@@ -1,16 +1,17 @@
-import {defineStore} from "pinia";
+import { defineStore } from 'pinia'
 
-export type siteModel = {
-    title: string|undefined,
-    lastTitle:string|undefined,
-    isLoading: boolean|undefined,
+export interface siteModel {
+  title: string | undefined
+  lastTitle: string | undefined
+  isLoading: boolean | undefined
 }
-const initialState:siteModel = {
-    title: "Cargando...",
-    lastTitle:undefined,
-    isLoading: true
+const initialState: siteModel = {
+  title: 'Cargando...',
+  lastTitle: undefined,
+  isLoading: true,
 }
 
+/**
 const siteStore = defineStore('site',{
     state:() => initialState,
     actions: {
@@ -20,5 +21,14 @@ const siteStore = defineStore('site',{
     },
     getters: {
     }
+}) */
+
+const siteStore = defineStore('site', () => {
+  const title = ref('Cargando...')
+  const lastTitle = ref(undefined)
+  const isLoading = ref(true)
+
+  return { title, lastTitle, isLoading }
 })
+
 export default siteStore

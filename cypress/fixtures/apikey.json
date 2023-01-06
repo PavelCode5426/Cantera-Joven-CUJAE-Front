@@ -1,0 +1,7 @@
+{
+  "credentials": {"username": "pperez","password": "1234"},
+  "tokens": [
+    {"name": "Token de Prueba 1"},
+    {"name": "Token de Prueba 2"}
+  ]
+}

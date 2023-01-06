@@ -1,7 +1,7 @@
 import { createPinia } from 'pinia'
 import { type UserModule } from '@/types/types'
-import {putStoreinLocalStorage} from "@/helpers/utils"
-import AuthStore from "@/modules/authentication/store/auth.store";
+import { putStoreinLocalStorage } from '@/helpers/utils'
+import AuthStore from '@/modules/authentication/store/auth.store'
 
 // Setup Pinia
 // https://pinia.esm.dev/

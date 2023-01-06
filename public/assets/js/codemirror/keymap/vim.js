@@ -2960,7 +2960,7 @@
 
     // Ex command handling
     // Care must be taken when adding to the default Ex command map. For any
-    // pair of commands that have a shared prefix, at least one of their
+    // pair of commands that have a forms prefix, at least one of their
     // shortNames must not match the prefix of the other command.
     var defaultExCommandMap = [
       { name: 'map' },

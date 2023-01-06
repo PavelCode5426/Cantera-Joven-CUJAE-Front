@@ -5110,7 +5110,7 @@ window.CodeMirror = (function() {
         other.unlinkDoc(this);
         break;
       }
-      // If the histories were shared, split them again
+      // If the histories were forms, split them again
       if (other.history == this.history) {
         var splitIds = [other.id];
         linkedDocs(other, function(doc) {splitIds.push(doc.id);}, true);
@@ -5378,7 +5378,7 @@ window.CodeMirror = (function() {
   // before the event, the event's positions are updated. Uses a
   // copy-on-write scheme for the positions, to avoid having to
   // reallocate them all on every rebase, but also avoid problems with
-  // shared position objects being unsafely updated.
+  // forms position objects being unsafely updated.
   function rebaseHistArray(array, from, to, diff) {
     for (var i = 0; i < array.length; ++i) {
       var sub = array[i], ok = true;

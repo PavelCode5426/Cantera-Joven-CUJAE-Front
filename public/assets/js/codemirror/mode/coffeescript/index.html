@@ -538,7 +538,7 @@ _.isEqual = (a, b) ->
 
 
 # Is a given array or object empty?
-_.isEmpty = (obj) ->
+_.noMore = (obj) ->
   return obj.length is 0 if _.isArray(obj) or _.isString(obj)
   return false for own key of obj
   true
