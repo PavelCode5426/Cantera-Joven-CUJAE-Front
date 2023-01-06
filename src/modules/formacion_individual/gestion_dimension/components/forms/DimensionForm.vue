@@ -6,40 +6,38 @@ import { ExceptionResponse, ServerError } from '../../../../../globals/config/ax
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../../helpers/utils'
 import AvalServices from '../../../../../backed_services/aval.services'
 import loading, { activateLoading, desactivateLoading } from '../../../../../globals/composables/useLoading'
+import type { DimensionModel } from '../../../../../backed_services/models/formacion_individual.model'
+import FIndivServices from '../../../../../backed_services/formacion_individual.services'
 import type { PlantillaAvalModel } from '~/backed_services/models/aval.model'
 
 interface Props {
-  plantilla: PlantillaAvalModel | undefined
+  dimension: DimensionModel | undefined
 }
-const props = withDefaults(defineProps<Props>(), { plantilla: undefined })
+const props = withDefaults(defineProps<Props>(), { dimension: undefined })
 
 const emit = defineEmits(['cancel', 'success'])
 
 const isLoading = loading(false)
-const form = ref<PlantillaAvalModel>({
-  id: props.plantilla?.id,
-  texto: props.plantilla?.texto,
-  nombre: props.plantilla?.nombre,
+const form = ref<DimensionModel>({
+  id: props.dimension?.id,
+  nombre: props.dimension?.nombre,
 })
 
 const validationsRules = {
   nombre: { required },
-  texto: { required },
 }
 const $v = useVuelidate(validationsRules, form)
 const v = $v.value
-
-const PlantillaServices = AvalServices.PlantillaServices
 
 async function submitForm() {
   const valid = await v.$validate()
   if (valid) {
     try {
       activateLoading(isLoading)
-      const plantilla = form.value as PlantillaAvalModel
-      if (plantilla.id)
-        await PlantillaServices.edit_plantilla(plantilla.id, plantilla)
-      else await PlantillaServices.create_plantilla(plantilla)
+      const dimension = form.value as DimensionModel
+      if (dimension.id)
+        await FIndivServices.update_dimension(dimension.id, dimension)
+      else await FIndivServices.create_dimension(dimension)
 
       emit('success')
       await clearForm()
@@ -52,18 +50,16 @@ async function submitForm() {
   }
 }
 async function clearForm() {
-  if (props.plantilla) {
+  if (props.dimension) {
     form.value = {
-      id: props.plantilla?.id,
-      texto: props.plantilla?.texto,
-      nombre: props.plantilla?.nombre,
+      id: props.dimension?.id,
+      nombre: props.dimension?.nombre,
     }
   }
   else {
     form.value = {
       id: undefined,
       nombre: '',
-      texto: '',
     }
   }
   v.$reset()
@@ -74,18 +70,9 @@ watch(props, clearForm)
 
 <template>
   <el-form>
-    <el-form-item>
-      <el-input v-model="form.nombre" placeholder="Nombre de la Plantilla" @blur="$v.nombre.$touch()" />
-      <template #error>
-        <input-error-message :items="$v.nombre.$errors" />
-      </template>
-    </el-form-item>
-
-    <el-form-item>
-      <editor v-model="form.texto" @update:content="form.texto = $event" @blur="$v.texto.$touch()" />
-      <template #error>
-        <input-error-message :items="$v.texto.$errors" />
-      </template>
+    <el-form-item label="Nombre">
+      <el-input v-model="form.nombre" @blur="$v.nombre.$touch()" />
+      <input-error-message :items="$v.nombre.$errors" />
     </el-form-item>
   </el-form>
   <el-row justify="end">

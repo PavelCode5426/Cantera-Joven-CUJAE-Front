@@ -25,12 +25,9 @@ const form = ref({
 })
 const validationsRules = {
   name: { required },
-  expired_at: { minValue: minValue(Date()) },
 }
 const $v = useVuelidate(validationsRules, form)
 const v = $v.value
-
-const close: Function | undefined = inject('closeCreateDialog')
 
 async function submitForm() {
   activateLoading(isLoading)
@@ -62,27 +59,17 @@ function closeDialog() {
 </script>
 
 <template>
-  <el-dialog v-model="dialogVisible" title="Crear nuevo credencial de acceso" :closed="clearForm" :show-close="false">
-    <el-form>
-      <el-form-item label="Nombre del Sistema">
-        <el-input v-model="$v.name.$model" @blur="$v.name.$touch()" />
-        <error-help-block :items="$v.name.$errors" />
-      </el-form-item>
-      <el-form-item label="Fecha de Expiracion">
-        <el-date-picker v-model="$v.expired_at.$model" @blur="$v.expired_at.$touch()" />
-        <error-help-block :items="$v.expired_at.$errors" />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <div class="modal-footer">
-        <button class="btn btn-info" @click="submitForm">
-          <loading v-if="isLoading" />
-          Aceptar
-        </button>
-        <button class="btn btn-default" @click="closeDialog">
-          Cerrar
-        </button>
-      </div>
-    </template>
-  </el-dialog>
+  <el-form>
+    <el-form-item label="Nombre del Sistema">
+      <el-input v-model="$v.name.$model" @blur="$v.name.$touch()" />
+      <input-error-message :items="$v.name.$errors" />
+    </el-form-item>
+    <el-form-item label="Fecha de Expiracion">
+      <date-picker v-model="form.expired_at" />
+    </el-form-item>
+  </el-form>
+  <el-row justify="end">
+    <p-button button-title="Aceptar" button-type="primary" :loading="isLoading" @click="submitForm" />
+    <p-button button-title="Cancelar" @click="closeDialog" />
+  </el-row>
 </template>

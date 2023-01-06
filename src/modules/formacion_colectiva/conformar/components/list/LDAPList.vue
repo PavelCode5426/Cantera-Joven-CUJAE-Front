@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineEmits, useSlots } from 'vue'
 
-const emit = defineEmits(['import-item'])
+const emit = defineEmits(['import-item', 'next'])
 const slot = useSlots()
 </script>
 
@@ -28,6 +28,9 @@ const slot = useSlots()
         />
       </template>
     </el-table-column>
+    <template #append>
+      <infinite-scroller @entry="emit('next')" />
+    </template>
     <slot />
   </el-table>
 </template>

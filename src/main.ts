@@ -14,6 +14,7 @@ import '../public/assets/css/custom.css'
 import '../public/assets/css/font-icons/font-awesome/css/font-awesome.min.css'
 
 import 'element-plus/dist/index.css'
+import 'v3-infinite-loading/lib/style.css'
 import 'nprogress/nprogress.css'
 
 // https://github.com/antfu/vite-ssg
