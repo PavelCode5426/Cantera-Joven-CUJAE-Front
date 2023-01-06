@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { get_current_area_id, get_current_id } from '../../../../helpers/utils'
 import usePaginateResponse from '../../../../globals/composables/usePaginateResponse'
+import { EstadoPlanFormacion } from '../../../../backed_services/models/formacion_individual.model'
 import type { PlanFormacionModel } from '../../../../backed_services/models/formacion_individual.model'
 import { Filter } from '../../../../backed_services/service'
 import { ExceptionResponse, ServerError } from '../../../../globals/config/axios'
@@ -47,7 +48,7 @@ loadData(filter.value)
     </el-table-column>
     <el-table-column>
       <template #default="{ row }">
-        <router-link :to="{ name: 'plan-formacion-page', params: { id: row?.id } }">
+        <router-link v-if="row.estado !== EstadoPlanFormacion.desarrollo" :to="{ name: 'plan-formacion-page', params: { id: row?.id } }">
           <el-button>
             Detalles
           </el-button>

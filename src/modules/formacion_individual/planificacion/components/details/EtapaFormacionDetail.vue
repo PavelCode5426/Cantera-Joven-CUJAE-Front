@@ -24,7 +24,7 @@ const showDialog = ref(false)
     <el-descriptions-item label="Fecha de Fin:">
       {{ etapa.fechaFin }}
     </el-descriptions-item>
-    <el-descriptions-item label="Evaluacion:">
+    <el-descriptions-item v-if="etapa.evaluacion" label="Evaluacion:">
       <evaluacion-tag :value="etapa.evaluacion.esSatisfactorio" />
       <button-evaluacion-detail :evaluacion="etapa.evaluacion" />
     </el-descriptions-item>
