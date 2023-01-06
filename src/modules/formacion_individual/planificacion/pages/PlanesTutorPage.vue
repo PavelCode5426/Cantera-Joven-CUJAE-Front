@@ -13,7 +13,7 @@ import { EstadoPlanFormacion } from '../../../../backed_services/models/formacio
 
 const data = usePaginateResponse<TutoradoAsignadoModel>()
 const filters = ref<TutoriaFilter>(new TutoriaFilter())
-filters.value.revocation = false
+filters.value.revocado = false
 const route = useRoute()
 const router = useRouter()
 const current_user = route.params.id

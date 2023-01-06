@@ -22,7 +22,6 @@ const slot = useSlots()
           confirm-button-type="primary"
           button-title="Importar"
           button-type="btn-primary"
-          button-icon=""
           title="¿Esta seguro que desea imporar el elemento?"
           @on-confirm="emit('import-item', scope.row)"
         />

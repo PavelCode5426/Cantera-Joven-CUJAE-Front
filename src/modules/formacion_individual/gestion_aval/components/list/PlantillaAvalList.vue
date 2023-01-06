@@ -58,7 +58,7 @@ async function itemUpdated() {
     </el-table-column>
   </el-table>
 
-  <el-dialog v-model="showDialog" title="Editar Plantilla de Aval" @close="selectedItem = undefined">
+  <el-dialog v-model="showDialog" title="Editar Plantilla de Aval" destroy-on-close @close="selectedItem = undefined">
     <plantilla-aval-form :plantilla="selectedItem" @cancel="selectedItem = undefined" @success="plantillaUpdated" />
   </el-dialog>
 </template>

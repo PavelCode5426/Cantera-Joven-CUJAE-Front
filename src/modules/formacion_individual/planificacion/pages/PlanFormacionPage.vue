@@ -1,11 +1,132 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import CrearEditarPlanFormacionPage from '../components/subpages/CrearEditarPlanFormacionPage.vue'
+import { computed, onMounted, provide, ref } from 'vue'
+import { ElNotification } from 'element-plus'
+import { storeToRefs } from 'pinia'
+import formacionIndividualStore from '../store/planificacion_individual.store'
+import FirmarPlanFormacionForm from '../components/forms/FirmarPlanFormacionForm.vue'
+import { ExceptionResponse } from '~/globals/config/axios'
+import type {
+  EtapaFormacionModel,
+} from '~/backed_services/models/formacion_individual.model'
+import {
+  EstadoPlanFormacion,
+} from '~/backed_services/models/formacion_individual.model'
+import { is_jefe_area, is_tutor } from '~/globals/permissions'
+import FIndivServices from '~/backed_services/formacion_individual.services'
 
 const route = useRoute()
-const is_review = route.params.revision
+const plan_formacion_id = route.params.id
+
+const formacionStore = formacionIndividualStore()
+const { plan, etapas, dimensiones } = storeToRefs(formacionStore)
+
+const activeTab = ref<string>('1')
+
+async function loadPlanFormacion(plan_id: number) {
+  try {
+    const planFormacion = await FIndivServices.retrieve_plan_formacion(plan_id)
+    const etapasFormacion = await FIndivServices.all_etapas_formacion_from_plan(planFormacion.id)
+    const dimensionesFormacion = await FIndivServices.all_dimensiones()
+
+    plan.value = planFormacion
+    etapas.value = etapasFormacion
+    dimensiones.value = dimensionesFormacion
+
+    try {
+      activeTab.value = etapas.find(i => i.evaluacion != null).numero
+    }
+    catch (error) {
+      activeTab.value = '1'
+    }
+  }
+  catch (error: ServerError | ExceptionResponse) {
+    ElNotification.error(error.detail)
+  }
+}
+async function changeStatusHandler(value) {
+  try {
+    if (value === EstadoPlanFormacion.desarrollo || value === EstadoPlanFormacion.pendiente) {
+      const response = await FIndivServices.change_status_plan_formacion(plan_formacion_id, value)
+      plan.value.estado = value
+      ElNotification.success('Estado cambiado correctamente')
+    }
+  }
+  catch (error: ServerError | ExceptionResponse) {
+    alert(error.httpCode)
+    alert(error)
+    alert(error.detail)
+  }
+}
+function successEtapaEditHandler(response) {
+  etapas.value = etapas.value.map((item) => {
+    if (item.id !== response.id)
+      return item
+    return response
+  })
+}
+function searchEtapa(etapa_id: number): EtapaFormacionModel | undefined {
+  return etapas.value?.find(i => i.id === etapa_id)
+}
+
+provide('searchEtapa', searchEtapa)
+
+const can_change_status = computed(() => {
+  return is_tutor() && !(plan.value?.estado === EstadoPlanFormacion.aprobado || plan.value?.estado === EstadoPlanFormacion.finalizado)
+})
+const can_export = computed(() => {
+  return plan.value?.estado === EstadoPlanFormacion.pendiente || plan.value?.estado === EstadoPlanFormacion.aprobado && plan.value?.estado !== EstadoPlanFormacion.finalizado
+})
+const can_evaluate = computed(() => {
+  return plan.value?.estado === EstadoPlanFormacion.aprobado && is_tutor()
+})
+const etapa_evaluar = computed(() => {
+  const etapa = etapas.value.find(i => i.evaluacion === null || (i.evaluacion && i.evaluacion.aprobadoPor === null))
+  return etapa
+})
+
+// loadPlanFormacion(plan_formacion_id)
+onMounted(() => loadPlanFormacion(route?.params?.id))
 </script>
 
 <template>
-  <crear-editar-plan-formacion-page />
+  <el-space style="width: 100%" fill direction="vertical">
+    <el-row>
+      <el-col :span="16">
+        <h3>Plan de Formacion Individual</h3>
+      </el-col>
+      <el-col :span="8">
+        <el-row justify="space-evenly">
+          <export-plan-formacion v-if="can_export" :plan="plan" />
+          <cambiar-estado-plan-form v-if="can_change_status" :estado="plan?.estado" @change="changeStatusHandler" />
+          <firmar-plan-formacion-form v-if="is_jefe_area" :plan="plan" @firmado="loadPlanFormacion(plan_formacion_id)" />
+          <evaluar-formacion v-if="can_evaluate && etapa_evaluar" v-model:etapa="etapa_evaluar" />
+          <evaluar-formacion v-else-if="can_evaluate" v-model:plan="plan" />
+        </el-row>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <plan-formacion-detail style="width: 100%;" border colums="1" :plan="plan" />
+    </el-row>
+
+    <el-tabs v-if="etapas.length" v-model="activeTab">
+      <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :name="`${etapa.numero}`">
+        <template #label>
+          <el-badge :is-dot="etapa.esProrroga && can_change_status">
+            Etapa #{{ etapa.numero }}
+          </el-badge>
+        </template>
+        <etapa-formacion-item :etapa="etapa" @success="successEtapaEditHandler" />
+        <el-divider />
+        <actividad-formacion-list :etapa="etapa" />
+      </el-tab-pane>
+      <el-tab-pane v-if="plan.estado !== EstadoPlanFormacion.aprobado" label="Comentarios" name="comentarios">
+        <plan-formacion-comentarios :plan="plan" />
+      </el-tab-pane>
+      <el-tab-pane v-if="plan.documento" label="Versiones" name="versiones">
+        <plan-formacion-versiones :plan="plan" />
+      </el-tab-pane>
+    </el-tabs>
+  </el-space>
 </template>

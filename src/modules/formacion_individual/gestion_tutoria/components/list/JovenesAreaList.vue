@@ -39,7 +39,7 @@ function canManageTutor(joven: JovenModel) {
     </el-table-column>
   </users-list>
 
-  <el-dialog v-model="modal" title="Gestionar tutores del joven" width="80%">
+  <el-dialog v-model="modal" title="Gestionar tutores del joven" width="80%" :destroy-on-close="true">
     <asignar-tutor-form :joven="selectedUser" @cancel="modal = false" @success="modal = false" />
   </el-dialog>
 </template>

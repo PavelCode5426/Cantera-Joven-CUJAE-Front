@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, ref, watch } from 'vue'
+import { defineEmits, defineProps, onMounted, ref, watch } from 'vue'
 import { required, requiredIf } from '@vuelidate/validators'
 
 import useVuelidate from '@vuelidate/core'
@@ -99,7 +99,7 @@ watch(form, (newValue) => {
     newValue.selectedTutores = []
 })
 
-loadTutores(props.solicitud.area.id)
+onMounted(loadTutores(props.solicitud.area.id))
 </script>
 
 <template>

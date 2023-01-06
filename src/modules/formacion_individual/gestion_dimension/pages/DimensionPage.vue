@@ -48,10 +48,10 @@ onMounted(changePageHandler)
       <p-button button-type="success" button-title="Nuevo" button-icon="entypo-list-add" @click="showModal = true" />
     </el-col>
   </el-row>
-  <dimension-list :data="dimensiones.results" @item-deleted="loadData" @item-updated="loadData" />
-  <paginator :model="dimensiones" @current-change="changePageHandler" @reload="loadData(paginate)" />
+  <dimension-list :data="dimensiones.results" @item-deleted="changePageHandler" @item-updated="changePageHandler" />
+  <paginator :model="dimensiones" @current-change="changePageHandler" @reload="changePageHandler" />
 
-  <el-dialog v-model="showModal" title="Crear dimension" @close="loadData">
+  <el-dialog v-model="showModal" title="Crear dimension" destroy-on-close @close="changePageHandler">
     <dimension-form @cancel="showModal = false" @success="dimensionCreated" />
   </el-dialog>
 </template>

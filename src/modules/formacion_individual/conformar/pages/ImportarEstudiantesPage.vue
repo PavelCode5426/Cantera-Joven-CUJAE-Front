@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, provide, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import AuthStore from '../../../authentication/store/auth.store'
 import ImportService from '../../../../backed_services/importar.services'
@@ -22,7 +22,7 @@ function handleSelectionChange(val: EstudianteLDAPModel[]) {
 }
 async function importSingleElement(element) {
   try {
-    await ImportService.import_estudiantes(authStore.user.area?.id, [element])
+    ImportService.import_estudiantes(authStore.user.area?.id, [element])
     estudiantes_init = estudiantes_init.filter(i => i.identification !== element.identification)
     estudiantes.value = estudiantes_init
     multipleSelection.value = []
@@ -78,6 +78,8 @@ async function loadEstudiantes() {
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
+    if (error.httpCode == 500)
+      ElNotification.error('Error al conectar con el directorio')
   }
 }
 

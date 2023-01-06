@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
@@ -27,19 +27,19 @@ async function loadJovenes(filter: JovenFilter) {
   }
   desactivateLoading(isLoading)
 }
-async function handleCurrentPageChange(page: number) {
+async function handleCurrentPageChange(page = 1) {
   filters.value.page = page
   await loadJovenes(filters.value)
 }
 
-loadJovenes(filters.value)
+onMounted(handleCurrentPageChange)
 </script>
 
 <template>
   <h3>Gestion de Avales en {{ area.nombre }}</h3>
 
-  <joven-filter-form v-model:filter="filters" @submit="loadJovenes(filters)" />
+  <joven-filter-form v-model:filter="filters" @submit="handleCurrentPageChange" />
 
-  <aval-list :data="jovenes.results" />
-  <paginator :model="jovenes" @current-change="handleCurrentPageChange" @reload="loadJovenes(filters)" />
+  <aval-list :data="jovenes.results" @reload="handleCurrentPageChange" />
+  <paginator :model="jovenes" @current-change="handleCurrentPageChange" />
 </template>

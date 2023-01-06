@@ -13,9 +13,11 @@ const showDialog = ref(false)
 </script>
 
 <template>
-  <el-button @click="showDialog = true">
-    Mostrar Evaluacion
-  </el-button>
+  <p-button button-icon="fa fa-external-link" size="small" @click="showDialog = true" />
+
+  <!--  <el-button @click="showDialog = true"> -->
+  <!--    Mostrar Evaluacion -->
+  <!--  </el-button> -->
 
   <el-dialog v-model="showDialog">
     <evaluacion-detail :evaluacion="evaluacion" />
