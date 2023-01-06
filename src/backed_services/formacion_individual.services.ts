@@ -134,19 +134,41 @@ export class FormacionIndividualServices extends AbstractService implements IFor
 
   async all_dimensiones(): DimensionModel[] {
     const list: DimensionModel[] = []
-    const filter = new Filter(1, 100)
-    let call = this.callWithToken().get('dimension/')
-    let response: PaginateResponse<DimensionModel> = await this.parseResponse(call)
+    const paginate = new Paginate(1, 100)
+    const response = await this.list_dimensiones(paginate)
     list.push(...response.data.results)
 
     while (response.next) {
       filter.page++
-      call = this.callWithToken().get('dimension/')
-      response = await this.parseResponse(call)
+      response = await this.this.list_dimensiones(filter)
       list.push(...response.data.results)
     }
 
     return list
+  }
+
+  async list_dimensiones(filter: Paginate): PaginateResponse<DimensionModel> {
+    const call = this.callWithToken().get('dimension/', { params: filter })
+    const response: PaginateResponse<DimensionModel> = await this.parseResponse(call)
+    return response.data
+  }
+
+  async update_dimension(id: number, dimension: DimensionModel): DimensionModel {
+    const call = this.callWithToken().put(`dimension/${id}/`, dimension)
+    const response: DimensionModel = await this.parseResponse(call)
+    return response.data
+  }
+
+  async create_dimension(dimension: DimensionModel): DimensionModel {
+    const call = this.callWithToken().post('dimension/', dimension)
+    const response: DimensionModel = await this.parseResponse(call)
+    return response.data
+  }
+
+  async delete_dimension(id: number) {
+    const call = this.callWithToken().delete(`dimension/${id}/`)
+    const response: DimensionModel = await this.parseResponse(call)
+    return response.data
   }
 
   // TODO FALTA PONER LAS COSAS DE DIMENSIONES
@@ -273,7 +295,7 @@ export class FormacionIndividualServices extends AbstractService implements IFor
    * GESTION DE PROPUESTAS DE MOVIMIENTO
    */
 
-  async list_propuestas_movimiento(filter: Filter): PaginateResponse<PropuestaMovimientoModel> {
+  async list_propuestas_movimiento(filter: Paginate): PaginateResponse<PropuestaMovimientoModel> {
     const call = this.callWithToken().get('propuesta-movimiento/', { params: filter })
     const response = await this.parseResponse(call)
     return response.data
@@ -300,19 +322,19 @@ export class FormacionIndividualServices extends AbstractService implements IFor
   }
 
   async create_propuestas_movimiento(propuesta: PropuestaMovimientoModel): PropuestaMovimientoModel {
-    const call = this.callWithToken().post('propuesta-movimiento', propuesta)
+    const call = this.callWithToken().post('propuesta-movimiento/', propuesta)
     const response = await this.parseResponse(call)
     return response.data
   }
 
   async update_propuestas_movimiento(propuesta_id: number, propuesta: PropuestaMovimientoModel): PropuestaMovimientoModel {
-    const call = this.callWithToken().put(`propuesta-movimiento/${propuesta_id}`, propuesta)
+    const call = this.callWithToken().put(`propuesta-movimiento/${propuesta_id}/`, propuesta)
     const response = await this.parseResponse(call)
     return response.data
   }
 
   async delete_propuestas_movimiento(propuesta_id: number) {
-    const call = this.callWithToken().delete(`propuesta-movimiento/${propuesta_id}`)
+    const call = this.callWithToken().delete(`propuesta-movimiento/${propuesta_id}/`)
     const response = await this.parseResponse(call)
     return response.data
   }
