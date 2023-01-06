@@ -13,7 +13,8 @@ const area = AuthStore().user?.area
 
 async function loadSolicitudes(area_id, filters) {
   try {
-    solicitudes.value = await tutoriaServices.all_solicitudes(area_id, filters)
+    const response = await tutoriaServices.all_solicitudes(area_id, filters)
+    solicitudes.value = response
   }
   catch (error: ServerError | ExceptionResponse) {
     checkIsAuthenticateAndRedirect(error)
@@ -23,7 +24,7 @@ async function loadSolicitudes(area_id, filters) {
 
 async function handleCurrentPageChange(page = 1) {
   filters.value.page = page
-  await loadData(area.id, filters.value)
+  await loadSolicitudes(area.id, filters.value)
 }
 
 onMounted(handleCurrentPageChange)

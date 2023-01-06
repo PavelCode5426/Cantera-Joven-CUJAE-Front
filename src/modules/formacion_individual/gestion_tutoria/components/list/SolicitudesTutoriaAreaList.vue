@@ -36,7 +36,7 @@ function showModalDetalle(solicitud: SolicitudTutorModel) {
     <el-table-column label="Area Recibida" prop="joven.area.nombre" />
     <el-table-column>
       <template #default="scope">
-        <el-button v-if="scope.row.respondida == null && scope.row.area.id === current_area.id" @click="showModalResponder(scope.row)">
+        <el-button v-if="scope.row.respuesta === null && scope.row.area.id === current_area.id" @click="showModalResponder(scope.row)">
           Responder Solicitud
         </el-button>
         <el-button v-else @click="showModalDetalle(scope.row)">
@@ -47,7 +47,7 @@ function showModalDetalle(solicitud: SolicitudTutorModel) {
   </el-table>
 
   <el-dialog v-model="modalResponder" title="Responder solicitud de tutoria" width="80%" @cancel="modalResponder = false">
-    <asignar-tutor-externo-form :solicitud="selectedSolicitud" />
+    <asignar-tutor-externo-form :solicitud="selectedSolicitud" @submit="modalResponder = false" />
   </el-dialog>
   <el-dialog v-model="modalDetails" width="80%" @cancel="modalDetails = false">
     <solicitud-tutor-details title="Informacion de la solicitud" column="2" :solicitud="selectedSolicitud" />
