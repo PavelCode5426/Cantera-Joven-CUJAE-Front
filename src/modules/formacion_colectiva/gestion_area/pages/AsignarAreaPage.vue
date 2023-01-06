@@ -1,30 +1,15 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue'
-
-import { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
-import gestionarAreaServices, {PreubicacionFilter} from '~/backed_services/gestionar_area.services'
-import {PosibleGraduadoModel} from '~/backed_services/models/posible_graduado.model'
-
-import AuthStore from '~/modules/authentication/store/auth.store'
-import type { PaginateResponse } from '~/globals/config/axios'
+import gestionarAreaServices from '~/backed_services/gestionar_area.services'
 import {ExceptionResponse, ServerError} from '~/globals/config/axios'
-import UserModel from "../../../../backed_services/models/user.model";
 import AreaModel from "../../../../backed_services/models/area.model";
-import usePaginateResponse from "../../../../globals/composables/usePaginateResponse";
 import {useRoute} from "vue-router";
 import {ElNotification} from "element-plus";
-import tutoriaServices, {
-  AsignarSolicitarTutor,
-  SolicitudTutorExterno,
-  TutoriaFilter
-} from "../../../../backed_services/tutoria.services";
 import UbicacionLaboralModel, {UbicadosAreaModel} from "../../../../backed_services/models/ubicacion_laboral.model";
-import {helpers, required} from "@vuelidate/validators";
-import useVuelidate from "@vuelidate/core";
 import AreaService from "../../../../backed_services/area.services";
-import {TutorAsignadoModel} from "../../../../backed_services/models/tutorial.model";
-import gestionar_areaServices from "~/backed_services/gestionar_area.services";
+import {PosibleGraduadoModel} from "../../../../backed_services/models/posible_graduado.model";
+import FColectivaServices from "../../../../backed_services/formacion_colectiva.services";
 
 interface Preubicacion {
   area: number
@@ -37,7 +22,6 @@ const selectedArea = ref<number>()
 const route = useRoute()
 
 const ubicaciones = ref<Preubicacion[]>([])
-
 
 const preubicados = ref<UbicadosAreaModel[]>([])
 
@@ -68,7 +52,7 @@ async function loadAsignados() {
   let preubicados: UbicadosAreaModel[] = []
   try {
 
-    preubicados = await gestionarAreaServices.get_ubicacion_laboral()
+    preubicados = await gestionarAreaServices.
     ubicaciones.value = []
 
     preubicados.forEach(item=>{
@@ -120,6 +104,17 @@ function onChange(values){
   ubicaciones.value.find(ubi=>ubi.area === selectedArea.value).ubicados = values
 }
 
+async function create_ubicacion_laboral(ubicaciones: Preubicacion) {
+  try {
+    await gestionarAreaServices.create_ubicacion_laboral(ubicaciones)
+    ElNotification.success('Preubicacion Laboral relizada exitosamente')
+  }
+  catch (error: ServerError | ExceptionResponse) {
+    checkServerErrorAndRedirect(error)
+    checkIsAuthenticateAndRedirect(error)
+  }
+}
+
 loadDataPG()
 loadAreas()
 loadAsignados()
@@ -139,8 +134,11 @@ loadAsignados()
       filter-placeholder="Posible graduado"
       :data="data"
   >
-
-
   </el-transfer>
+  <el-table-column>
+    <el-button @click="create_ubicacion_laboral(ubicaciones)">
+      Guardar Asignacion
+    </el-button>
+  </el-table-column>
 </template>>
 

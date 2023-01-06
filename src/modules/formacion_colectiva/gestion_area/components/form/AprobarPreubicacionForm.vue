@@ -6,11 +6,11 @@ import { genFileId } from 'element-plus'
 import useVuelidate from '@vuelidate/core'
 import { storeToRefs } from 'pinia'
 import gestionarAreaServices, { AprobarPreubicacionArea } from '../../../../../backed_services/gestionar_area.services'
+import type UbicacionLaboralModel from '../../../../../backed_services/models/ubicacion_laboral.model'
 import { ExceptionResponse } from '~/globals/config/axios'
 import defaulDialogFormProps from '@/globals/composables/useDialogForm'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '@/helpers/utils'
 import loading, { activateLoading, desactivateLoading } from '@/globals/composables/useLoading'
-import type UbicacionLaboralModel from '../../../../../backed_services/models/ubicacion_laboral.model'
 
 interface Props {
   preubicacion: UbicacionLaboralModel
@@ -18,7 +18,6 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['aprobada', 'rechazada'])
 const showModal = ref(false)
-const isLoading = ref(false)
 
 const form = ref({
   mensaje: undefined,
@@ -28,7 +27,6 @@ const validationsRules = {
   mensaje: { required },
   aceptada: { required },
 }
-const upload = ref<UploadInstance>()
 
 const $v = useVuelidate(validationsRules, form)
 const v = $v.value
@@ -70,6 +68,7 @@ watch(showModal, (newValue) => {
     clearForm()
 })
 </script>
+
 <template>
   <el-dialog v-model="showModal" title="Revisar Preubicación Laboral">
     <el-form>

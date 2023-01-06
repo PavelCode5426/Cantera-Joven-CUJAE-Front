@@ -55,7 +55,7 @@ loadUbicaciones()
   <el-row justify="end">
     <el-col :span="6">
       <button type="button" class="btn btn-primary uk-text-bold" @click="showModal = true">
-        <i class="entypo:new-message" data-test="aprobar-preubicacion-form" /> Aprobar asignación
+         Aprobar asignación
       </button>
     </el-col>
   </el-row>
