@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import {
   is_authenticated,
   is_director_recursos_humanos, is_estudiante,
@@ -124,6 +125,39 @@ const navBarLinks: Link[] = [
   },
 
   {
+    name: 'Formacion Colectiva',
+    is_accesible: is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
+
+    childrens: [
+      {
+        name: 'Gestíonar Área al Posible Graduado',
+        router: { name: 'asignar-area-page' },
+        is_accesible: is_director_recursos_humanos(),
+      },
+      {
+        name: 'Aprobar Preubicación Laboral',
+        router: { name: 'aprobar-preubicacion-page' },
+        is_accesible: is_vicerrector(),
+      },
+      {
+        name: 'Ver Historial Preubicación Laboral',
+        router: { name: 'historial-preubicacion-page' },
+        is_accesible: is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
+      },
+      {
+        name: 'Planificar Formación',
+        router: { name: 'planes-formacion-colectiva-page' },
+        is_accesible: is_jefe_area() || is_director_recursos_humanos() || is_vicerrector(),
+      },
+      {
+        name: 'Evaluar posible graduado',
+        router: { name: 'posibles-graduados-familiarizados-page', params: { id: get_current_id() } },
+        is_accesible: is_jefe_area(),
+      },
+    ],
+  },
+
+  {
     name: 'Importar',
     is_accesible: is_jefe_area() || is_director_recursos_humanos(),
     childrens: [
@@ -154,4 +188,5 @@ const navBarLinks: Link[] = [
   },
 ]
 
-export default navBarLinks
+const links = computed(() => navBarLinks)
+export default links

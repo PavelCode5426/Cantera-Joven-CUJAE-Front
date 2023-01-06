@@ -63,33 +63,27 @@ async function submitForm() {
     }
   }
 }
-watch(showModal, (newValue) => {
-  if (!newValue)
-    clearForm()
-})
 </script>
 
 <template>
-  <el-dialog v-model="showModal" title="Revisar Preubicación Laboral">
-    <el-form>
-      <el-form-item label="Aprobar asignación:">
-        <el-select v-model="form.aceptada">
-          <el-option :value="true" label="Aceptar preubicación" />
-          <el-option :value="false" label="Rechazar preubicación" />
-        </el-select>
-        <input-error-message :items="$v.aceptada.$errors"/>
-      </el-form-item>>
-      <el-form-item label="Comentarios:">
-        <el-input v-model="form.mensaje" type="textarea" />
-      </el-form-item>
-    </el-form>
-    <el-row justify="end">
-      <el-button @click="submitForm">
-        Aceptar
-      </el-button>
-      <el-button @click="showModal = false">
-        Cancelar
-      </el-button>
-    </el-row>
-  </el-dialog>
+  <el-form>
+    <el-form-item label="Aprobar asignación:">
+      <el-select v-model="form.aceptada">
+        <el-option :value="true" label="Aceptar preubicación" />
+        <el-option :value="false" label="Rechazar preubicación" />
+      </el-select>
+      <input-error-message :items="$v.aceptada.$errors" />
+    </el-form-item>
+    <el-form-item label="Comentarios:">
+      <el-input v-model="form.mensaje" type="textarea" />
+    </el-form-item>
+  </el-form>
+  <el-row justify="end">
+    <el-button @click="submitForm">
+      Aceptar
+    </el-button>
+    <el-button @click="showModal = false">
+      Cancelar
+    </el-button>
+  </el-row>
 </template>

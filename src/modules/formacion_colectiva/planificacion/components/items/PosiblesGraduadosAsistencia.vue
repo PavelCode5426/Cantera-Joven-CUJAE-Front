@@ -11,9 +11,14 @@ import gestionarAreaServices from '../../../../../backed_services/gestionar_area
 import type { ActividadFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model'
 import { ServerError } from '../../../../../globals/config/axios'
 import PosiblesGraduadosList from '../lists/PosiblesGraduadosList.vue'
-import { Filter } from "../../../../../backed_services/service";
-import {checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect} from "../../../../../helpers/utils";
-import UserModel from "../../../../../backed_services/models/user.model";
+import { Filter } from '../../../../../backed_services/service'
+import {
+  checkIsAuthenticateAndRedirect,
+  checkServerErrorAndRedirect,
+  get_current_area_id,
+} from '../../../../../helpers/utils'
+import UserModel from '../../../../../backed_services/models/user.model'
+import AuthStore from '../../../../authentication/store/auth.store'
 
 interface Prop {
   actividad: ActividadFormacionColectivaModel
@@ -25,7 +30,7 @@ const asistencia = ref([])
 const data = usePaginateResponse<PosibleGraduadoModel>()
 const filter = ref<Filter>(new Filter())
 const route = useRoute()
-const current_area = route.params.id
+const current_area = get_current_area_id()
 
 async function loadData(id_area: number, filter: Filter) {
   try {
@@ -60,7 +65,7 @@ async function Asistencia(actividad_id: Number, val: PosibleGraduadoModel[]) {
   }
 }
 
-handleCurrentPageChange(1)
+onMounted(handleCurrentPageChange)
 </script>
 
 <template>
