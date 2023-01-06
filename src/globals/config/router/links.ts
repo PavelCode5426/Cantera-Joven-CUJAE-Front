@@ -1,4 +1,3 @@
-import type { RouteRecordRaw } from 'vue-router'
 import {
   is_authenticated,
   is_director_recursos_humanos, is_estudiante,

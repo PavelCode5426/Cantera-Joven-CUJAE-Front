@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import paginateResponse from '../../../../globals/composables/usePaginateResponse'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '../../../../helpers/utils'
 import type { JovenModel } from '../../../../backed_services/models/joven.model'
@@ -24,13 +25,13 @@ async function handleCurrentPageChange(page: number) {
   await loadJovenes(area.value.id, filters.value)
 }
 
-loadJovenes(area.value.id, filters.value)
+onMounted(handleCurrentPageChange)
 </script>
 
 <template>
   <h3>Gestion de Tuturia en {{ area.nombre }}</h3>
 
-  <joven-filter-form v-model:filter="filters" @submit="loadJovenes(area.id, filters)" />
+  <joven-filter-form v-model:filter="filters" @submit="handleCurrentPageChange" />
 
   <jovenes-area-list :data="jovenes.results" />
 

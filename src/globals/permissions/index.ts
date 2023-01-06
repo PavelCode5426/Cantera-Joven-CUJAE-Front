@@ -19,7 +19,7 @@ export function is_vicerrector(): boolean {
 export function is_director_recursos_humanos(): boolean {
   if (!is_authenticated())
     return false
-  return AuthStore().user?.groups.find(item => item.name == 'DIRECTOR RECURSOS HUMANOS') || is_superuser()
+  return AuthStore().user?.groups.find(item => item.name == 'DIRECTOR DE RECURSOS HUMANOS') || is_superuser()
 }
 
 export function is_jefe_area(): boolean {
