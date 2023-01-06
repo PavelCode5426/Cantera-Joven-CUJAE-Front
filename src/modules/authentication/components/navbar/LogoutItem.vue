@@ -8,10 +8,8 @@ const authStore = AuthStore()
 const router = useRouter()
 
 async function logout() {
-  activateLoading(isLoading)
   const response = await AuthServices.logout()
   authStore.$patch({ isAuthenticated: false, token: undefined, user: undefined })
-  desactivateLoading(isLoading)
   router.push({ name: 'login-page' })
 }
 </script>
