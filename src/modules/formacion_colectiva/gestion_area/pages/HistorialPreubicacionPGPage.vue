@@ -22,7 +22,7 @@ async function loadData(filter: PreubicacionFilter) {
   }
   catch (error: ExceptionResponse) {
     if (error.httpCode === 404)
-      ElNotification.error('Ha seleccionado un area incorrecto')
+      ElNotification.error('Ha seleccionado un posible graduado uncorrecto')
     else ElNotification.error(error.detail)
   }
 }

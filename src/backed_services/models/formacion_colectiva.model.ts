@@ -18,7 +18,7 @@ export enum EstadoPlanFormacionColectiva {
 
 export class PlanFormacionColectivaModel {
     id: number
-    aprobadoPor: UserModel | null
+    aprobadoPor: UserModel
     documento: string | null
     fechaCreado: string
     estado: EstadoPlanFormacionColectiva
@@ -41,11 +41,13 @@ export class ActividadFormacionColectivaModel {
     fechaInicio: string
     fechaFin: string
     documentos?: ArchivoModel[]
-    area: AreaModel
+    hasEspecificas: boolean
     esEspecifica: boolean
+    area: AreaModel
     actividades_especificas?: ActividadFormacionColectivaModel[] = []
     asistencias: PosibleGraduadoModel[]
 }
+
 
 export abstract class EvaluacionColectivaModel {
     id: number
@@ -53,6 +55,5 @@ export abstract class EvaluacionColectivaModel {
     esSatisfactorio: boolean
     aprobadoPor: UserModel
     fechaCreado: string
-
     joven?: JovenModel
 }

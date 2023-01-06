@@ -11,9 +11,6 @@ const props = defineProps<Props>()
 
 <template>
   <el-descriptions>
-    <el-descriptions-item label="Objetivo">
-      {{ etapa.objetivo }}
-    </el-descriptions-item>
     <el-descriptions-item label="Fecha de Inicio">
       {{ etapa.fechaInicio }}
     </el-descriptions-item>

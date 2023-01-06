@@ -5,13 +5,12 @@ import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { genFileId } from 'element-plus'
 import useVuelidate from '@vuelidate/core'
 import { storeToRefs } from 'pinia'
+import gestionarAreaServices, { AprobarPreubicacionArea } from '../../../../../backed_services/gestionar_area.services'
 import { ExceptionResponse } from '~/globals/config/axios'
 import defaulDialogFormProps from '@/globals/composables/useDialogForm'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '@/helpers/utils'
 import loading, { activateLoading, desactivateLoading } from '@/globals/composables/useLoading'
-import UbicacionLaboralModel from '../../../../../backed_services/models/ubicacion_laboral.model'
-import gestionarAreaServices, { AprobarPreubicacionArea } from '../../../../../backed_services/gestionar_area.services'
-
+import type UbicacionLaboralModel from '../../../../../backed_services/models/ubicacion_laboral.model'
 
 interface Props {
   preubicacion: UbicacionLaboralModel
@@ -33,7 +32,6 @@ const upload = ref<UploadInstance>()
 
 const $v = useVuelidate(validationsRules, form)
 const v = $v.value
-
 
 function clearForm() {
   form.value = {

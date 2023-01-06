@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import {computed, ref, watch} from 'vue'
 
 import { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
@@ -24,26 +24,27 @@ import {helpers, required} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import AreaService from "../../../../backed_services/area.services";
 import {TutorAsignadoModel} from "../../../../backed_services/models/tutorial.model";
+import gestionar_areaServices from "~/backed_services/gestionar_area.services";
 
 interface Preubicacion {
-  area: AreaModel
-  ubicados: PosibleGraduadoModel[]
+  area: number
+  ubicados: number[]
 }
 
-const posibles_graduados_init = usePaginateResponse<PosibleGraduadoModel>()
-const posibles_graduados = ref<usePaginateResponse<PosibleGraduadoModel>>()
-const selectedPosiblesGraduados = ref([])
+const posibles_graduados_init = ref([])
 const areas = ref<AreaModel[]>([])
-const selectedArea = ref([])
+const selectedArea = ref<number>()
 const route = useRoute()
+
+const ubicaciones = ref<Preubicacion[]>([])
 
 
 const preubicados = ref<UbicadosAreaModel[]>([])
 
-async function loadDataPG(filter: PreubicacionFilter) {
+async function loadDataPG() {
   try {
-    const response: PaginateResponse<UserModel> = await gestionarAreaServices.get_pgraduados(filter)
-    posibles_graduados_init.value = response.results
+    const response = await gestionarAreaServices.all_pgraduados()
+    posibles_graduados_init.value = response
   }
   catch (error: ExceptionResponse) {
     if (error.httpCode === 404)
@@ -51,61 +52,95 @@ async function loadDataPG(filter: PreubicacionFilter) {
     else ElNotification.error(error.detail)
   }
 }
-
 async function loadAreas() {
   try {
     const response = await AreaService.all_areas()
     areas.value = response.results
+    if (areas.value.length)
+    selectedArea.value = areas.value[0].id
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
   }
 }
-async function loadAsignados(area_id: number) {
-  const preubicados: UbicadosAreaModel[] = []
+async function loadAsignados() {
+  let preubicados: UbicadosAreaModel[] = []
   try {
-    const filter = new PreubicacionFilter(1, 500)
-    filter.is_preubicado = false
-    let response = await gestionarAreaServices.get_pgraduados(filter)
-    preubicados.ubicados.push(...response.results)
 
-    while (response.next !== null) {
-      preubicados.ubicados.push(...response.results)
-      filter.page++
-      response = await gestionarAreaServices.get_pgraduados(filter)
-    }
+    preubicados = await gestionarAreaServices.get_ubicacion_laboral()
+    ubicaciones.value = []
 
-    posibles_graduados.value = posibles_graduados_init
-    preubicados.forEach((i) => {
-      if (!posibles_graduados_init.find(item => item.id === i.ubicados.id))
-        posibles_graduados.value.push(i.ubicados)
+    preubicados.forEach(item=>{
+      const ubicacion:Preubicacion = {
+        area: item.area.id,
+        ubicados: item.ubicados.map((value)=>{
+          return value.id
+        })
+      }
+      ubicaciones.value.push(ubicacion)
     })
-
-    selectedPosiblesGraduados.value = []
-    preubicados.forEach(item => selectedPosiblesGraduados.value.push(item.ubicados.id))
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
     checkIsAuthenticateAndRedirect(error)
   }
 }
-loadDataPG(filter)
+const noUbicados = ref([])
+
+watch(ubicaciones,(newValue)=>{
+
+  let noubic = [...posibles_graduados_init.value]
+
+  newValue.forEach((item)=>{
+    item.ubicados.forEach(id=>{
+      noubic = noubic.filter((item2)=>item2.id!== id)
+    })
+  })
+
+  noUbicados.value = noubic
+
+})
+
+const ubicadosArea = computed(()=>{
+  return ubicaciones.value.find(ubi=>ubi.area === selectedArea.value)?.ubicados
+})
+const data = computed(()=>{
+  const list = []
+
+  noUbicados.value.forEach(item=>list.push({
+    label: item.first_name,
+    value:item.id
+  }))
+
+  return list
+})
+
+function onChange(values){
+  ubicaciones.value.find(ubi=>ubi.area === selectedArea.value).ubicados = values
+}
+
+loadDataPG()
 loadAreas()
-loadAsignados(Preubicacion.area.id)
+loadAsignados()
 </script>
 
 <template>
   <h3>Aignación de posibles graduados a áreas</h3>
-    <el-select v-model="area.id" placeholder="Filtrar por area">
-      <el-option v-for="item in areas" :key="item.id" :value="item.id" :label="item.nombre" />
-    </el-select>
+  <el-select v-model="selectedArea" placeholder="Filtrar por area">
+    <el-option v-for="item in areas" :key="item.id" :value="item.id" :label="item.nombre" />
+  </el-select>
+
   <el-transfer
-      :v-model="posibles_graduados.results"
+      v-model="ubicadosArea"
       filterable
+      @change="onChange"
       :filter-method="filterMethod"
       filter-placeholder="Posible graduado"
-      users-list :data="posibles_graduados_init.results"
-  />
+      :data="data"
+  >
+
+
+  </el-transfer>
 </template>>
 

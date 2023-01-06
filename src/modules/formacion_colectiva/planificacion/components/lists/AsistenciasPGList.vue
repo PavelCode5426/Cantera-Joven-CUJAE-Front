@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
 import { ActividadFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model'
-
+const slots = useSlots()
 </script>
 
 <template>

@@ -5,7 +5,6 @@ import { useRoute } from 'vue-router'
 import usePaginateResponse from '../../../../globals/composables/usePaginateResponse'
 import type { PaginateResponse } from '../../../../globals/config/axios'
 import { ExceptionResponse, ServerError } from '../../../../globals/config/axios'
-import type { TutorAsignadoModel } from '../../../../backed_services/models/tutorial.model'
 import { Filter } from '../../../../backed_services/service'
 import type UserModel from '../../../../backed_services/models/user.model'
 import type { PosibleGraduadoModel } from '../../../../backed_services/models/posible_graduado.model'
@@ -16,9 +15,9 @@ const filter = ref<Filter>(new Filter())
 const route = useRoute()
 const current_area = route.params.id
 
-async function loadData(id: number, filter: Filter) {
+async function loadData(id_area: number, filter: Filter) {
   try {
-    const response: PaginateResponse<PosibleGraduadoModel> = await gestionarAreaServices.preubicados_area(id, filter)
+    const response: PaginateResponse<UserModel> = await gestionarAreaServices.preubicados_area(id_area, filter)
     data.value = response
   }
 
@@ -39,21 +38,19 @@ handleCurrentPageChange(1)
 
 <template>
   <h3>Posibles Graduados en el Área</h3>
-  <filter-form v-model:filter="filters" @submit="loadData(filter)" />
-
+  <filter-form v-model:filter="filter" @submit="loadData(current_area, filter)"/>
   <users-list :data="data.results">
-    <template #default>
-      <el-table-column>
-        <template #default="scope">
-          <router-link :to="{ name: 'asistencia-posibles-graduados-familiarizados-page', params: { id: scope.row.id } }">
-            <el-button>
-              Asistencias
-            </el-button>
-          </router-link>
-        </template>
-      </el-table-column>
-    </template>
+    <el-table-column>
+      <template #default="{ row }">
+        <router-link :to="{ name: 'asistencia-posibles-graduados-familiarizados-page', params: { id: row?.id } }">
+          <el-button>
+            Asistencias
+          </el-button>
+        </router-link>
+      </template>
+    </el-table-column>
   </users-list>
 
-  <paginator :model="data" @current-change="handleCurrentPageChange" @reload="loadData(filter)" />
+  <paginator :model="data" @current-change="handleCurrentPageChange" @reload="loadData(current_area, filter)" />
 </template>
+

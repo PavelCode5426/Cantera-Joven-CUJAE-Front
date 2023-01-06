@@ -67,6 +67,7 @@ async function createActividad() {
     ElNotification.error(error.httpCode)
   }
 }
+
 async function editActividad() {
   const actividad: ActividadFormacionColectivaModel = { ...form.value, fechaInicio: form.value.fechas[0], fechaFin: form.value.fechas[1] }
   try {
@@ -113,6 +114,9 @@ watch(props, () => {
     <el-form-item label="Observacion">
       <el-input v-model="form.observacion" type="textarea" />
     </el-form-item>
+    <el-form-item label="Observacion">
+      <gestor-archivos-formacion v-if="actividad" :actividad="actividad" />
+    </el-form-item>
     <el-row justify="end">
       <el-button @click="submitForm">
         Aceptar
@@ -123,3 +127,4 @@ watch(props, () => {
     </el-row>
   </el-form>
 </template>
+

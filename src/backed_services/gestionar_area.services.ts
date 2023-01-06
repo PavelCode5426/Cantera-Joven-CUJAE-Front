@@ -28,10 +28,23 @@ export interface IGestionarAreaServices {
 }
 
 export class GestionarAreaServices extends AbstractService implements IGestionarAreaServices {
-    async get_pgraduados(filter: PreubicacionFilter | undefined): PaginateResponse<PosibleGraduadoModel> {
+    async get_pgraduados(filter: PreubicacionFilter): PaginateResponse<PosibleGraduadoModel> {
         const call = this.callWithToken().get(`posible-graduado`, { params: filter })
         const response = await this.parseResponse(call)
         return response.data
+    }
+
+    async all_pgraduados(): PosibleGraduadoModel[] {
+        const filter = new Filter(1,100)
+       let response = await this.get_pgraduados(filter)
+        const list = [...response.results]
+
+        while (response.next){
+            filter.page++
+            response = await this.get_pgraduados(filter)
+            list.push(response.results)
+        }
+        return list
     }
 
     async all_preubicacionespg(id: number, filter: Filter): PaginateResponse<UbicacionLaboralModel> {

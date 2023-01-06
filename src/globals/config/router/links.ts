@@ -120,7 +120,7 @@ const navBarLinks: Link[] = [
 
     childrens: [
       {
-        name: 'Gestíonar Área al Posibel Graduado',
+        name: 'Gestíonar Área al Posible Graduado',
         router: { name: 'asignar-area-page' },
         is_accesible: is_director_recursos_humanos(),
       },
@@ -146,7 +146,7 @@ const navBarLinks: Link[] = [
       },
       {
         name: 'Evaluar posible graduado',
-        router: { name: 'posibles-graduados-familiarizados-page' },
+        router: { name: 'posibles-graduados-familiarizados-page',params:{ id:get_current_id()} },
         is_accesible: is_jefe_area(),
       },
     ],

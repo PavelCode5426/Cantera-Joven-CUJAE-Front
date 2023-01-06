@@ -86,7 +86,7 @@ onMounted(() => loadPlanFormacionColetiva(route?.params?.id))
     </el-row>
 
     <el-tabs v-if="etapas.length" v-model="activeTab">
-      <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :label="`Etapa #${etapa.numero}`" :name="`${etapa.numero}`">
+      <el-tab-pane v-for="etapa in etapas" :key="etapa.id" :label="`Etapa #${etapa.id}`" :name="`${etapa.id}`">
         <etapa-formacion-colectiva-item :etapa="etapa" />
         <el-divider />
         <actividad-formacion-colectiva-list :etapa="etapa" />

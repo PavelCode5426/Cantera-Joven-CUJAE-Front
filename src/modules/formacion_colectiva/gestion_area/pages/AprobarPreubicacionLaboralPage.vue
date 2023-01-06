@@ -11,18 +11,13 @@ import type UserModel from '../../../../backed_services/models/user.model'
 import {PosibleGraduadoModel} from "../../../../backed_services/models/posible_graduado.model";
 import gestionarAreaServices, {PreubicacionFilter} from "../../../../backed_services/gestionar_area.services";
 import UbicacionLaboralModel from "../../../../backed_services/models/ubicacion_laboral.model";
-import tutoriaServices, {
-  SolicitudTutorExterno,
-  SolicitudTutoriaFilter
-} from "../../../../backed_services/tutoria.services";
-import AuthStore from "../../../authentication/store/auth.store";
 import {checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect} from "../../../../helpers/utils";
-import {UbicadosAreaModel} from "../../../../backed_services/models/ubicacion_laboral.model";
+import type { UbicadosAreaModel } from "../../../../backed_services/models/ubicacion_laboral.model";
 import AreaModel from "../../../../backed_services/models/area.model";
 import AreaService from "../../../../backed_services/area.services";
 
 const ubicaciones = ref<UbicadosAreaModel[]>([])
-const showCreateForm = ref<boolean>(false)
+const showModal = ref(false)
 
 async function loadUbicaciones() {
   try {
@@ -37,10 +32,14 @@ async function loadUbicaciones() {
   }
 }
 
-provide('closeCreateDialog', () => {
-  showCreateForm.value = false
-})
+async function onSuccessAprobarAsignacion() {
+  ElNotification.success('Áreas revisadas')
+  showModal.value = false
+}
 
+provide('closeCreateDialog', () => {
+  showModal.value = false
+})
 loadUbicaciones()
 </script>
 
@@ -55,11 +54,10 @@ loadUbicaciones()
   <el-divider />
   <el-row justify="end">
     <el-col :span="6">
-      <button type="button" class="btn btn-primary uk-text-bold" @click="showCreateForm = !showCreateForm">
+      <button type="button" class="btn btn-primary uk-text-bold" @click="showModal = true">
         <i class="entypo:new-message" data-test="aprobar-preubicacion-form" /> Aprobar asignación
       </button>
     </el-col>
   </el-row>
-  <aprobar-preubicacion-form :dialog-visible="showCreateForm"/>
+  <aprobar-preubicacion-form :dialog-visible="showModal" @success="onSuccessAprobarAsignacion()" />
 </template>
-

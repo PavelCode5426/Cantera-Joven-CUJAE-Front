@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import {PlanFormacionColectivaModel} from '../../../../../backed_services/models/formacion_colectiva.model'
+import type { PlanFormacionColectivaModel } from '../../../../../backed_services/models/formacion_colectiva.model'
 
 interface Prop {
   plan: PlanFormacionColectivaModel
@@ -18,7 +18,7 @@ const props = defineProps<Prop>()
       <estado-elemento :estado="props.plan?.estado" />
     </el-descriptions-item>
     <el-descriptions-item v-if="props.plan?.aprobadoPor" label="Aprobado por:">
-      {{ props.plan?.aprobadoPor.first_name }} {{ props.plan?.aprobadoPor.last_name }}
+      {{ props.plan?.aprobadoPor.first_name  }} {{ props.plan?.aprobadoPor.last_name }}
     </el-descriptions-item>
   </el-descriptions>
 </template>

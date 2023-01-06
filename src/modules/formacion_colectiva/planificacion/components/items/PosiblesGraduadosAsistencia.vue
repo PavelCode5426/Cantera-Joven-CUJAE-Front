@@ -13,24 +13,24 @@ import { ServerError } from '../../../../../globals/config/axios'
 import PosiblesGraduadosList from '../lists/PosiblesGraduadosList.vue'
 import { Filter } from "../../../../../backed_services/service";
 import {checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect} from "../../../../../helpers/utils";
+import UserModel from "../../../../../backed_services/models/user.model";
 
 interface Prop {
   actividad: ActividadFormacionColectivaModel
 }
 
 const props = defineProps<Prop>()
+const multipleSelection = ref<PosibleGraduadoModel[]>([])
+const asistencia = ref([])
 const data = usePaginateResponse<PosibleGraduadoModel>()
 const filter = ref<Filter>(new Filter())
-const multipleSelection = ref<PosibleGraduadoModel[]>([])
 const route = useRoute()
 const current_area = route.params.id
-const asistencia = ref([])
 
-
-async function loadPGraduados(area_id, filter: Filter) {
+async function loadData(id_area: number, filter: Filter) {
   try {
-    const multipleSelection: PaginateResponse<PosibleGraduadoModel> = await gestionarAreaServices.preubicados_area(area_id, filter)
-    data.value = multipleSelection
+    const response: PaginateResponse<PosibleGraduadoModel> = await gestionarAreaServices.preubicados_area(id_area, filter)
+    data.value = response
   }
 
   catch (error: ExceptionResponse) {
@@ -39,20 +39,20 @@ async function loadPGraduados(area_id, filter: Filter) {
     else ElNotification.error(error.detail)
   }
 }
+
+async function handleCurrentPageChange(page = 1) {
+  filter.value.page = page
+  await loadData(current_area, filter.value)
+}
+
 function handleSelectionChange(val: PosibleGraduadoModel[]) {
   multipleSelection.value = val
 }
 
-async function handleCurrentPageChange(page = 1) {
-  filter.value.page = page
-  await loadPGraduados(current_area, filter.value)
-}
-
-async function Asistencia(actividad_id: Number) {
+async function Asistencia(actividad_id: Number, val: PosibleGraduadoModel[]) {
   try {
-    await FColectivaServices.pasar_asistencia_actividad(actividad_id)
-    multipleSelection.value = []
-    ElNotification.success('Posibles graduados importados correctamente')
+    await FColectivaServices.pasar_asistencia_actividad(actividad_id, val)
+    ElNotification.success('Asitencia correctamente pasada')
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
@@ -67,11 +67,12 @@ handleCurrentPageChange(1)
   <h3>Asistencia a la actividad</h3>
   <el-row>
     <el-col justify="end">
-      <button type="button" class="btn btn-primary uk-text-bold" :disabled="!multipleSelection.length" @click="Asistencia(multipleSelection)">
+      <button type="button" class="btn btn-primary uk-text-bold" :disabled="!multipleSelection.length" @click="Asistencia(props.actividad.id, multipleSelection)">
         Asistieron a la actividad
       </button>
     </el-col>
   </el-row>
 
-  <posibles-graduados-list max-height="500" :data="data.result" @selection-change="handleSelectionChange" />
+  <posibles-graduados-list max-height="500" :data="data.results" @selection-change="handleSelectionChange" />
+  <paginator :model="data" @current-change="handleCurrentPageChange" @reload="loadData(current_area, filter)" />
 </template>

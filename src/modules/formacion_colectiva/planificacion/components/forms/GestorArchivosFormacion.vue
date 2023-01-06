@@ -24,7 +24,7 @@ const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
 }
 
 const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
-  return ElMessageBox.confirm(`¿Esta seguro que desea eliminar el archivo ${uploadFile.name}?`).then(() => FColectivaServices.delete_archivo(uploadFile.uid)).catch(() => false
+  return ElMessageBox.confirm(`¿Esta seguro que desea eliminar el archivo ${uploadFile.name}?`).then(() => FColectivaServices.delete_archivo(uploadFile.uid)).catch(() => false )
 }
 
 const onSuccess: UploadProps['onSuccess'] = (response, uploadFile, uploadFiles) => {

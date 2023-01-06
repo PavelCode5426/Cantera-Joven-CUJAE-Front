@@ -7,6 +7,8 @@ import {
     EtapaFormacionColectivaModel,
     EvaluacionColectivaModel
 } from "~/backed_services/models/formacion_colectiva.model";
+import {EstudianteLDAPModel} from "~/backed_services/models/ldap.model";
+import {PosibleGraduadoModel} from "~/backed_services/models/posible_graduado.model";
 
 export interface IFormacionColectivaServices {}
 
@@ -187,20 +189,20 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         const response = await this.parseResponse(call)
     }
     //ASISTENCIAS
-    async all_asistencias_actividad(actividad_id: number) {
+    async all_asistencias_actividad(actividad_id: number): PaginateResponse<ActividadFormacionColectivaModel> {
         const call = this.callWithToken().get(`actividad/${actividad_id}/asistencia`)
         const response = await this.parseResponse(call)
         return response.data
     }
 
-    async asistencia_joven(joven_id: number) {
-        const call = this.callWithToken().get(`joven/${joven_id}/asistencias`)
+    async asistencia_joven(joven_id: number, filter: Filter): PaginateResponse<ActividadFormacionColectivaModel> {
+        const call = this.callWithToken().get(`joven/${joven_id}/asistencias`, { params: filter })
         const response = await this.parseResponse(call)
         return response.data
     }
 
-    async pasar_asistencia_actividad(actividad_id: number) {
-        const call = this.callWithToken().post(`actividad/${actividad_id}/asistencia`)
+    async pasar_asistencia_actividad(actividad_id: number, posibles_graduados: PosibleGraduadoModel[]) {
+        const call = this.callWithToken().post(`actividad/${actividad_id}/asistencia`, posibles_graduados)
         const response = await this.parseResponse(call)
         return response.data
     }
@@ -211,7 +213,7 @@ export class FormacionColectivaServices extends AbstractService implements IForm
         return response.data
     }
 
-    async evaluar_joven(joven_id: number, evaluacion: EvaluacionColectivaModel) EvaluacionColectivaModel {
+    async evaluar_joven(joven_id: number, evaluacion: EvaluacionColectivaModel): EvaluacionColectivaModel {
         const call = this.callWithToken().post(`joven/${joven_id}/evaluacion`, evaluacion)
         const response = await this.parseResponse(call)
         return response.data

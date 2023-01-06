@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
 import { ElNotification } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
@@ -52,7 +52,6 @@ async function showDetailsActividadFormacion(actividad: ActividadFormacionColect
   selectedActividad.value = actividad
   showDetallesDialog.value = true
 }
-
 async function deleteActividadFormacion(actividad: ActividadFormacionColectivaModel, act_general: ActividadFormacionColectivaModel = undefined) {
   try {
     await FColectivaServices.delete_actividad_general(actividad.id)
@@ -67,7 +66,6 @@ async function deleteActividadFormacion(actividad: ActividadFormacionColectivaMo
     alert(error)
   }
 }
-
 async function manageActividadSuccessHandler(actividad: ActividadFormacionColectivaModel) {
   if (!selectedActividad.value)
     ElNotification.success('Actividad creada correctamente')
@@ -80,11 +78,18 @@ async function manageActividadSuccessHandler(actividad: ActividadFormacionColect
   else if (selectedActividadGeneral.value) {
     if (!selectedActividadGeneral.value.actividades_especificas)
       selectedActividadGeneral.value.actividades_especificas = []
-    selectedActividadGeneral.value.esEspecifica = true
+    selectedActividadGeneral.value.hasEspecificas = true
     selectedActividadGeneral.value.actividades_especificas.push(actividad)
   }
 
   showDialog.value = false
+}
+function updateActividadProvide(response: ActividadFormacionColectivaModel) {
+  actividadesFormacion.value = actividadesFormacion.value.map((item) => {
+    if (item.id !== response.id)
+      return item
+    return response
+  })
 }
 /*Acts EspecificasS*/
 async function loadActividadesEspecificas(row: ActividadFormacionColectivaModel, treeNode: unknown, resolve) {
@@ -101,7 +106,7 @@ async function loadActividadesEspecificas(row: ActividadFormacionColectivaModel,
 
 function recursiveDelete(items: ActividadFormacionColectivaModel[], actividad: ActividadFormacionColectivaModel) {
   const result = items.filter((item) => {
-    if (item.esEspecifica && item.id !== actividad.id && item.actividades_especificas)
+    if (item.hasEspecificas && item.id !== actividad.id && item.actividades_especificas)
       item.actividades_especificas = recursiveDelete(item.actividades_especificas, actividad)
     return item.id !== actividad.id
   })
@@ -126,11 +131,23 @@ watch(showDialog, async (newValue) => {
     await loadData(props.etapa.id)
   }
 })
+
+watch(showDetallesDialog, async (newValue) => {
+  if (newValue === false)
+    await loadData(props.etapa.id)
+})
+
+provide('updateActividad', updateActividadProvide)
 </script>
 
 <template>
   <el-table v-model:data="actividadesFormacion" max-height="300px" row-key="id" lazy :load="loadActividadesEspecificas">
     <el-table-column label="Nombre" prop="nombre" />
+    <el-table-column label="¿Es específica?">
+      <template #default="{ row }">
+        <estado-elemento :estado="row.esEspecifica" />
+      </template>
+    </el-table-column>
     <el-table-column label="Fecha de Incio" prop="fechaInicio" />
     <el-table-column label="Fecha de Fin" prop="fechaFin" />
     <el-table-column v-if="can_edit_plan">

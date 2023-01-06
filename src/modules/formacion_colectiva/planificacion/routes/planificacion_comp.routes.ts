@@ -29,7 +29,7 @@ const routes: LayoutRouteRecordRaw[] = [
         props: true,
     },
     {
-        path: 'posibles-graduados-evaluacion',
+        path: 'area/:id/posibles-graduados',
         name: 'posibles-graduados-familiarizados-page',
         component: () => import('../pages/PosiblesGraduadosFamiliarizadosPage.vue'),
         meta: {
@@ -38,6 +38,17 @@ const routes: LayoutRouteRecordRaw[] = [
         },
         layout: ['Admin'],
     },
+    {
+        path: 'area/:id/posibles-graduados/:id/asistencia',
+        name: 'asistencia-posible-graduado-familiarizado',
+        component: () => import('../pages/AsistenciaPosiblesGraduadosFamiliarizadosPage.vue'),
+        meta: {
+            title: 'Asistencias del posible graduado',
+            accesible: () => is_jefe_area(),
+        },
+        layout: ['Admin'],
+    },
+
 
 ]
 export default routes
