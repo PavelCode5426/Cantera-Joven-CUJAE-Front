@@ -112,26 +112,20 @@ loadAval(props.joven)
     </el-col>
   </el-row>
   <el-row>
-    <el-col>
-      <el-form>
-        <el-form-item v-if="!joven?.aval" label-position="top" label="Seleccione una plantilla de aval">
-          <el-select v-model="plantillaSelected">
-            <el-option v-for="plantilla in plantillas_aval" :label="plantilla.nombre" :value="plantilla.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item required error="$v.texto.$error">
-          <editor v-model="form.texto" @update:content="form.texto = $event" @blur="$v.texto.$touch()" />
-          <template #error>
-            <input-error-message :items="$v.texto.$errors" />
-          </template>
-        </el-form-item>
-        <el-button @click="submitForm">
-          Aplicar
-        </el-button>
-        <el-button @click="emit('cancel')">
-          Cancelar
-        </el-button>
-      </el-form>
-    </el-col>
+    <el-form label-position="top">
+      <el-form-item v-if="!joven?.aval" label-position="top" label="Seleccione una plantilla de aval">
+        <el-select v-model="plantillaSelected">
+          <el-option v-for="plantilla in plantillas_aval" :label="plantilla.nombre" :value="plantilla.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Contenido del aval">
+        <editor v-model="form.texto" @update:content="form.texto = $event" @blur="$v.texto.$touch()" />
+        <input-error-message :items="$v.texto.$errors" />
+      </el-form-item>
+    </el-form>
+  </el-row>
+  <el-row justify="end">
+    <p-button :loading="isLoading" button-type="primary" button-title="Aceptar" @click="submitForm" />
+    <p-button button-title="Cancelar" @click="emit('cancel')" />
   </el-row>
 </template>
