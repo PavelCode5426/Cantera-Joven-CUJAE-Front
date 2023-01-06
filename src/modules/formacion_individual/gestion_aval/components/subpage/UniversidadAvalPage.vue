@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import type AreaModel from '../../../../../backed_services/models/area.model'
 import { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
@@ -28,19 +28,19 @@ async function loadJovenes(area_id: number, filter: JovenFilter) {
   }
   desactivateLoading(isLoading)
 }
-async function handleCurrentPageChange(page: number) {
+async function handleCurrentPageChange(page = 1) {
   filters.value.page = page
-  loadJovenes(areaSelected.value.id, filters.value)
+  await loadJovenes(areaSelected.value.id, filters.value)
 }
 
-loadJovenes(areaSelected.value.id, filters.value)
+onMounted(handleCurrentPageChange)
 </script>
 
 <template>
   <h3>Gestion de Avales en la Universidad</h3>
 
-  <joven-area-filter-form v-model:area="areaSelected" v-model:filter="filters" @submit="loadJovenes(areaSelected.id, filters)" />
+  <joven-area-filter-form v-model:area="areaSelected" v-model:filter="filters" @submit="handleCurrentPageChange" />
 
-  <aval-list :data="jovenes.results" />
+  <aval-list :data="jovenes.results" @reload="handleCurrentPageChange" />
   <paginator :model="jovenes" @current-change="handleCurrentPageChange" />
 </template>
