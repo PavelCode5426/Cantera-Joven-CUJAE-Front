@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref, watch } from 'vue'
-import { required } from '@vuelidate/validators'
+import { maxLength, required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { ExceptionResponse, ServerError } from '../../../../../globals/config/axios'
 import FIndivServices from '../../../../../backed_services/formacion_individual.services'
@@ -24,7 +24,7 @@ const form = ref({
   fechas: [props.actividad?.fechaInicio, props.actividad?.fechaFin],
 })
 const formValidation = {
-  nombre: { required },
+  nombre: { required, maxLength: maxLength(100) },
   descripcion: { required },
   responsable: { required },
   fechas: [{ required }, { required }],
