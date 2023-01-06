@@ -6,7 +6,7 @@ const props = defineProps()
 
 <template>
   <el-table>
-    <el-table-column prop="fechaCreado" />
+    <el-table-column prop="fecha" />
     <el-table-column>
       <template #default="{ row }">
         <a :href="row?.archivo" target="_blank"><el-button>Descargar</el-button></a>

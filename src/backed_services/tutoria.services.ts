@@ -4,9 +4,9 @@ import type UserModel from '~/backed_services/models/user.model'
 import type { SolicitudTutorModel, TutorAsignadoModel, TutoradoAsignadoModel } from '~/backed_services/models/tutorial.model'
 
 export class TutoriaFilter extends Filter {
-  revocation: boolean | undefined
-  has_aval:boolean|undefined
-  has_plan:boolean|undefined
+  revocado: boolean | undefined
+  has_aval: boolean | undefined
+  has_plan: boolean | undefined
 }
 
 export class SolicitudTutoriaFilter extends Filter {

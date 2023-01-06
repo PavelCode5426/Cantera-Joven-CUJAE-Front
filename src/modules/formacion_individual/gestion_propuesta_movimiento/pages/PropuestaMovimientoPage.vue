@@ -51,7 +51,7 @@ onMounted(changePageHandler)
 
   <paginator :model="propuestas" @current-change="changePageHandler" @reload="loadData(paginate)" />
 
-  <el-dialog v-model="showModal" title="Crear propuesta de movimiento" @close="loadData">
+  <el-dialog v-model="showModal" title="Crear propuesta de movimiento" destroy-on-close @close="loadData">
     <propuesta-movimiento-form @cancel="showModal = false" @success="propuestaCreated" />
   </el-dialog>
 </template>

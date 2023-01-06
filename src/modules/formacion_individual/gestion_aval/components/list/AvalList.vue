@@ -57,7 +57,7 @@ function updateOrCreateAval(update: boolean) {
     </el-table-column>
   </el-table>
 
-  <el-dialog v-model="showModal" :title="modalTitle">
+  <el-dialog v-model="showModal" :title="modalTitle" :destroy-on-close="true">
     <aval-form
       :joven="selectedUser"
       @updated="updateOrCreateAval(true)"

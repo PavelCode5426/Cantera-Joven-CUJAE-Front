@@ -12,27 +12,21 @@ const showDialog = ref(false)
 
 <template>
   <el-descriptions>
-    <el-descriptions-item label="Objetivo">
+    <el-descriptions-item label="Objetivo:">
       {{ etapa.objetivo }}
     </el-descriptions-item>
-    <el-descriptions-item label="Dimension">
+    <el-descriptions-item label="Dimension:">
       {{ etapa.dimension?.nombre }}
     </el-descriptions-item>
-    <el-descriptions-item label="Fecha de Inicio">
+    <el-descriptions-item label="Fecha de Inicio:">
       {{ etapa.fechaInicio }}
     </el-descriptions-item>
-    <el-descriptions-item label="Fecha de Fin">
+    <el-descriptions-item label="Fecha de Fin:">
       {{ etapa.fechaFin }}
     </el-descriptions-item>
+    <el-descriptions-item label="Evaluacion:">
+      <evaluacion-tag :value="etapa.evaluacion.esSatisfactorio" />
+      <button-evaluacion-detail :evaluacion="etapa.evaluacion" />
+    </el-descriptions-item>
   </el-descriptions>
-
-  <el-row v-if="etapa.evaluacion">
-    <el-button @click="showDialog = true">
-      Mostrar Evaluacion
-    </el-button>
-  </el-row>
-
-  <el-dialog v-model="showDialog">
-    <evaluacion-detail :evaluacion="etapa.evaluacion" />
-  </el-dialog>
 </template>

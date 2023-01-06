@@ -34,7 +34,7 @@ onMounted(() => {
 </script>
 
 <template>
-<!--  <version-list :data="versiones.results" /> -->
+  <version-list :data="versiones.results" />
 </template>
 
 <style scoped>

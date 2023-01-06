@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineProps, ref, watch } from 'vue'
+import { computed, defineProps, onMounted, ref, watch } from 'vue'
 import { helpers, required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { ElNotification } from 'element-plus'
@@ -87,7 +87,7 @@ async function loadJovenTutores(joven_id: number) {
   const all_tutors: TutorAsignadoModel[] = []
   try {
     const filter = new TutoriaFilter(1, 500)
-    filter.revocation = false
+    filter.revocado = false
     let response = await tutoriaServices.all_tutores_from_joven(joven_id, filter)
     all_tutors.push(...response.results)
 
@@ -97,7 +97,7 @@ async function loadJovenTutores(joven_id: number) {
       response = await tutoriaServices.all_tutores_from_joven(joven_id, filter)
     }
 
-    tutoresArea.value = tutoresArea_int
+    await loadTutores()
     all_tutors.forEach((i) => {
       if (!tutoresArea_int.find(item => item.id === i.tutor.id))
         tutoresArea.value.push(i.tutor)
@@ -154,14 +154,15 @@ async function clearForm() {
   v.$reset()
 }
 
-watch(props, async (newValue) => {
-  clearForm()
-  await loadJovenTutores(newValue.joven.id)
+watch(props, async (newValue, oldValue) => {
+  if (oldValue.joven.id !== newValue.joven.id) {
+    clearForm()
+    await loadJovenTutores(newValue.joven.id)
+  }
 })
 
 loadAreas()
-loadTutores()
-loadJovenTutores(props.joven.id)
+onMounted(loadJovenTutores(props.joven.id))
 </script>
 
 <template>
