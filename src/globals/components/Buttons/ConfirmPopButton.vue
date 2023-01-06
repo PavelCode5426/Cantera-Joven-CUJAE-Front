@@ -1,19 +1,30 @@
 <script setup lang="ts">
-import { toogleLoadingDecorator } from '~/globals/composables/useLoading'
+import { inject } from 'vue'
+
 interface Props {
   title: string
-  buttonType: string
   confirmButtonType: string
+  buttonType: string
   buttonTitle: string
   buttonIcon: string
+  loading: boolean
+  keepLoading: boolean
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   confirmButtonType: 'primary',
-  buttonType: 'btn-info',
-  buttonIcon: '',
+  buttonType: 'default',
+  loading: false,
+  keepLoading: false,
 })
 const emit = defineEmits(['on-confirm', 'on-cancel'])
 const loadingConfirm = ref(false)
+
+function onConfirm() {
+  loadingConfirm.value = true
+  emit('on-confirm')
+  if (!props.keepLoading)
+    loadingConfirm.value = false
+}
 </script>
 
 <template>
@@ -21,12 +32,12 @@ const loadingConfirm = ref(false)
     :title="title"
     :confirm-button-type="confirmButtonType"
     :hide-icon="true"
-    @confirm="emit('on-confirm')"
+    @confirm="onConfirm"
     @cancel="emit('on-cancel')"
   >
     <template #reference>
       <p-button
-        :loading="loadingConfirm"
+        :loading="loadingConfirm || loading"
         :button-type="buttonType"
         :button-title="buttonTitle"
         :button-icon="buttonIcon"

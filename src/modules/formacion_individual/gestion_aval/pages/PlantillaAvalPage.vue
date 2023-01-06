@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import loading, { activateLoading, desactivateLoading } from '~/globals/composables/useLoading'
 import { ExceptionResponse, ServerError } from '~/globals/config/axios'
@@ -32,7 +32,7 @@ async function plantillaCreated() {
   await loadPlantillas()
 }
 
-loadPlantillas()
+onMounted(loadPlantillas)
 </script>
 
 <template>

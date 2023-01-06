@@ -73,19 +73,15 @@ watch(props, clearForm)
 </script>
 
 <template>
-  <el-form>
-    <el-form-item>
-      <el-input v-model="form.nombre" placeholder="Nombre de la Plantilla" @blur="$v.nombre.$touch()" />
-      <template #error>
-        <input-error-message :items="$v.nombre.$errors" />
-      </template>
+  <el-form label-position="top">
+    <el-form-item label="Nombre de la plantilla">
+      <el-input v-model="form.nombre" @blur="$v.nombre.$touch()" />
+      <input-error-message :items="$v.nombre.$errors" />
     </el-form-item>
 
-    <el-form-item>
+    <el-form-item label="Contenido de la Plantilla">
       <editor v-model="form.texto" @update:content="form.texto = $event" @blur="$v.texto.$touch()" />
-      <template #error>
-        <input-error-message :items="$v.texto.$errors" />
-      </template>
+      <input-error-message :items="$v.texto.$errors" />
     </el-form-item>
   </el-form>
   <el-row justify="end">
