@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue'
-import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
+import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { ElNotification } from 'element-plus'
+import type AreaModel from '../../../../backed_services/models/area.model'
+import type { UbicadosAreaModel } from '../../../../backed_services/models/ubicacion_laboral.model'
+import UbicacionLaboralModel from '../../../../backed_services/models/ubicacion_laboral.model'
+import AreaService from '../../../../backed_services/area.services'
+import { PosibleGraduadoModel } from '../../../../backed_services/models/posible_graduado.model'
+import FColectivaServices from '../../../../backed_services/formacion_colectiva.services'
+import { ExceptionResponse, ServerError } from '~/globals/config/axios'
 import gestionarAreaServices from '~/backed_services/gestionar_area.services'
-import {ExceptionResponse, ServerError} from '~/globals/config/axios'
-import AreaModel from "../../../../backed_services/models/area.model";
-import {useRoute} from "vue-router";
-import {ElNotification} from "element-plus";
-import UbicacionLaboralModel, {UbicadosAreaModel} from "../../../../backed_services/models/ubicacion_laboral.model";
-import AreaService from "../../../../backed_services/area.services";
-import {PosibleGraduadoModel} from "../../../../backed_services/models/posible_graduado.model";
-import FColectivaServices from "../../../../backed_services/formacion_colectiva.services";
+import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
 
 interface Preubicacion {
   area: number
@@ -41,7 +42,7 @@ async function loadAreas() {
     const response = await AreaService.all_areas()
     areas.value = response.results
     if (areas.value.length)
-    selectedArea.value = areas.value[0].id
+      selectedArea.value = areas.value[0].id
   }
   catch (error: ServerError | ExceptionResponse) {
     checkServerErrorAndRedirect(error)
@@ -51,16 +52,15 @@ async function loadAreas() {
 async function loadAsignados() {
   let preubicados: UbicadosAreaModel[] = []
   try {
-
-    preubicados = await gestionarAreaServices.
+    preubicados = await gestionarAreaServices.get_ubicacion_laboral()
     ubicaciones.value = []
 
-    preubicados.forEach(item=>{
-      const ubicacion:Preubicacion = {
+    preubicados.forEach((item) => {
+      const ubicacion: Preubicacion = {
         area: item.area.id,
-        ubicados: item.ubicados.map((value)=>{
+        ubicados: item.ubicados.map((value) => {
           return value.id
-        })
+        }),
       }
       ubicaciones.value.push(ubicacion)
     })
@@ -72,36 +72,34 @@ async function loadAsignados() {
 }
 const noUbicados = ref([])
 
-watch(ubicaciones,(newValue)=>{
-
+watch(ubicaciones, (newValue) => {
   let noubic = [...posibles_graduados_init.value]
 
-  newValue.forEach((item)=>{
-    item.ubicados.forEach(id=>{
-      noubic = noubic.filter((item2)=>item2.id!== id)
+  newValue.forEach((item) => {
+    item.ubicados.forEach((id) => {
+      noubic = noubic.filter(item2 => item2.id !== id)
     })
   })
 
   noUbicados.value = noubic
-
 })
 
-const ubicadosArea = computed(()=>{
-  return ubicaciones.value.find(ubi=>ubi.area === selectedArea.value)?.ubicados
+const ubicadosArea = computed(() => {
+  return ubicaciones.value.find(ubi => ubi.area === selectedArea.value)?.ubicados
 })
-const data = computed(()=>{
+const data = computed(() => {
   const list = []
 
-  noUbicados.value.forEach(item=>list.push({
+  noUbicados.value.forEach(item => list.push({
     label: item.first_name,
-    value:item.id
+    value: item.id,
   }))
 
   return list
 })
 
-function onChange(values){
-  ubicaciones.value.find(ubi=>ubi.area === selectedArea.value).ubicados = values
+function onChange(values) {
+  ubicaciones.value.find(ubi => ubi.area === selectedArea.value).ubicados = values
 }
 
 async function create_ubicacion_laboral(ubicaciones: Preubicacion) {
@@ -127,14 +125,13 @@ loadAsignados()
   </el-select>
 
   <el-transfer
-      v-model="ubicadosArea"
-      filterable
-      @change="onChange"
-      :filter-method="filterMethod"
-      filter-placeholder="Posible graduado"
-      :data="data"
-  >
-  </el-transfer>
+    v-model="ubicadosArea"
+    filterable
+    :filter-method="filterMethod"
+    filter-placeholder="Posible graduado"
+    :data="data"
+    @change="onChange"
+  />
   <el-table-column>
     <el-button @click="create_ubicacion_laboral(ubicaciones)">
       Guardar Asignacion

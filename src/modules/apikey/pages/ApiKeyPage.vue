@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref } from 'vue'
+import { onMounted, provide, ref } from 'vue'
 import { ElMessage, ElNotification } from 'element-plus'
 import usePaginateResponse from '../../../globals/composables/usePaginateResponse'
 import { Filter } from '../../../backed_services/service'
@@ -17,7 +17,7 @@ const isLoading = loadingTable()
 async function loadApiKeys(page = 1) {
   activateLoading(isLoading)
   try {
-    const response = await AKeyService.list_apikey(new Filter(page))
+    const response = await AKeyService.list_apikey(new Filter(page, 100))
     response.results.forEach(i => i.expired_at = i.expired_at ? getRealativeTime(i.expired_at) : 'Nunca')
     apiKeys.value = response
   }
@@ -52,7 +52,7 @@ async function onSuccessCreateApiKey() {
   await loadApiKeys()
 }
 
-loadApiKeys()
+onMounted(loadApiKeys)
 </script>
 
 <template>

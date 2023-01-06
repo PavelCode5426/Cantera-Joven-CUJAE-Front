@@ -135,13 +135,13 @@ export class FormacionIndividualServices extends AbstractService implements IFor
   async all_dimensiones(): DimensionModel[] {
     const list: DimensionModel[] = []
     const paginate = new Paginate(1, 100)
-    const response = await this.list_dimensiones(paginate)
-    list.push(...response.data.results)
+    let response = await this.list_dimensiones(paginate)
+    list.push(...response.results)
 
     while (response.next) {
       filter.page++
-      response = await this.this.list_dimensiones(filter)
-      list.push(...response.data.results)
+      response = await this.list_dimensiones(filter)
+      list.push(...response.results)
     }
 
     return list

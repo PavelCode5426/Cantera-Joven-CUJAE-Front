@@ -51,7 +51,7 @@ onMounted(changePageHandler)
   <dimension-list :data="dimensiones.results" @item-deleted="changePageHandler" @item-updated="changePageHandler" />
   <paginator :model="dimensiones" @current-change="changePageHandler" @reload="changePageHandler" />
 
-  <el-dialog v-model="showModal" title="Crear dimension" @close="changePageHandler">
+  <el-dialog v-model="showModal" title="Crear dimension" destroy-on-close @close="changePageHandler">
     <dimension-form @cancel="showModal = false" @success="dimensionCreated" />
   </el-dialog>
 </template>
