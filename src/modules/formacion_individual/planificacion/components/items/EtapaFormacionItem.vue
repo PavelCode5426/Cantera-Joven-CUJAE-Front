@@ -4,6 +4,7 @@ import { EstadoPlanFormacion } from '../../../../../backed_services/models/forma
 import type { EtapaFormacionModel } from '../../../../../backed_services/models/formacion_individual.model'
 import EtapaFormacionDetail from '../details/EtapaFormacionDetail.vue'
 import formacionIndividualStore from '../../store/planificacion_individual.store'
+import { is_tutor } from '../../../../../globals/permissions'
 
 interface Props {
   etapa: EtapaFormacionModel
@@ -13,7 +14,7 @@ const props = defineProps<Props>()
 const formacionStore = formacionIndividualStore()
 
 const can_edit = computed(() => {
-  const can = props.etapa.evaluacion === null && formacionStore?.plan?.estado === EstadoPlanFormacion.desarrollo
+  const can = (props.etapa.evaluacion === null && formacionStore?.plan?.estado === EstadoPlanFormacion.desarrollo) && is_tutor()
   return can
 })
 </script>
