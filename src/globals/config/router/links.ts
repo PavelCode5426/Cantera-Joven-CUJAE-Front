@@ -1,9 +1,8 @@
-import type { RouteRecordRaw } from 'vue-router'
 import {
   is_authenticated,
-  is_director_recursos_humanos,
+  is_director_recursos_humanos, is_estudiante,
   is_jefe_area,
-  is_joven,
+  is_joven, is_posible_graduado,
   is_tutor,
   is_vicerrector,
 } from '~/globals/permissions'
@@ -26,7 +25,7 @@ export class Link {
 const navBarLinks: Link[] = [
   {
     name: 'Ajustes',
-    is_accesible: is_authenticated(),
+    is_accesible: !(is_joven() || is_posible_graduado()),
     childrens: [
       {
         name: 'Configuracion',
@@ -36,7 +35,7 @@ const navBarLinks: Link[] = [
       {
         name: 'Solicitar Acceso',
         router: { name: 'api-key-page' },
-        is_accesible: is_director_recursos_humanos() || is_vicerrector() || is_jefe_area() || is_tutor(),
+        is_accesible: !(is_joven() || is_posible_graduado()),
 
       },
       {
@@ -49,7 +48,7 @@ const navBarLinks: Link[] = [
 
   {
     name: 'Formacion Individual',
-    is_accesible: is_authenticated(),
+    is_accesible: is_joven() || is_tutor() || is_jefe_area() || is_director_recursos_humanos(),
     childrens: [
       {
         name: 'Gestion de Plantillas',
@@ -77,6 +76,11 @@ const navBarLinks: Link[] = [
         is_accesible: is_jefe_area(),
       },
       {
+        name: 'Gestion de Solicitudes de Tutoria',
+        router: { name: 'solicitud-tutor-page' },
+        is_accesible: is_jefe_area(),
+      },
+      {
         name: 'Tutores del Area',
         router: { name: 'tutores-area-page', params: { id: get_current_area_id() } },
         is_accesible: is_jefe_area(),
@@ -84,7 +88,7 @@ const navBarLinks: Link[] = [
       {
         name: 'Tutorados asignados',
         router: { name: 'tutorados-asignados-page', params: { id: get_current_id () } },
-        is_accesible: is_jefe_area() || is_tutor(),
+        is_accesible: is_tutor(),
       },
       {
         name: 'Tutores asignados',
@@ -92,27 +96,22 @@ const navBarLinks: Link[] = [
         is_accesible: is_joven(),
       },
       {
-        name: 'Gestion de Solicitudes de Tutoria',
-        router: { name: 'solicitud-tutor-page' },
-        is_accesible: is_jefe_area(),
-      },
-      {
         name: 'Planificar Formacion',
         router: { name: 'planes-tutor-page', params: { id: get_current_id() } },
         is_accesible: is_tutor(),
       },
       {
-        name: 'Planes de Formacion (JOVEN)',
+        name: 'Planes de Formacion',
         router: { name: 'planes-formacion-joven-page', params: { id: get_current_id() } },
         is_accesible: is_joven(),
       },
       {
-        name: 'Planes de Formacion (TUTOR)',
+        name: 'Planes de Formacion de Tutorados',
         router: { name: 'planes-formacion-tutor-page', params: { id: get_current_id() } },
         is_accesible: is_tutor(),
       },
       {
-        name: 'Planes de Formacion del Area (JEFE AREA)',
+        name: 'Planes de Formacion del Area',
         router: { name: 'planes-formacion-area-page', params: { id: get_current_id() } },
         is_accesible: is_jefe_area(),
       },
@@ -125,46 +124,8 @@ const navBarLinks: Link[] = [
   },
 
   {
-    name: 'Formacion Colectiva',
-    is_accesible: is_authenticated(),
-
-    childrens: [
-      {
-        name: 'Gestíonar Área al Posible Graduado',
-        router: { name: 'asignar-area-page' },
-        is_accesible: is_director_recursos_humanos(),
-      },
-      {
-        name: 'Aprobar Preubicación Laboral',
-        router: { name: 'aprobar-preubicacion-page' },
-        is_accesible: is_vicerrector(),
-      },
-      {
-        name: 'Ver Historial Preubicación Laboral',
-        router: { name: 'historial-preubicacion-page' },
-        is_accesible: is_director_recursos_humanos() || is_vicerrector() || is_jefe_area(),
-      },
-      {
-        name: 'Ver Posibles Graduados Preubicados',
-        router: { name: 'preubicados-area-page',params:{id:get_current_area_id()} },
-        is_accesible: is_jefe_area(),
-      },
-      {
-        name: 'Planificar Formación',
-        router: { name: 'planes-formacion-colectiva' },
-        is_accesible: is_jefe_area() || is_director_recursos_humanos() || is_vicerrector(),
-      },
-      {
-        name: 'Evaluar posible graduado',
-        router: { name: 'posibles-graduados-familiarizados-page',params:{ id:get_current_id()} },
-        is_accesible: is_jefe_area(),
-      },
-    ],
-  },
-
-  {
-    name: 'Conformar',
-    is_accesible: is_authenticated(),
+    name: 'Importar',
+    is_accesible: is_jefe_area() || is_director_recursos_humanos(),
     childrens: [
       {
         name: 'Importar Estudiantes',

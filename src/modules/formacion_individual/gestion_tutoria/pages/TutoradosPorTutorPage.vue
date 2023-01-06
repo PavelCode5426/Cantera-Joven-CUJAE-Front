@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { defineProps, onMounted, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import { useRoute } from 'vue-router'
 import type { JovenModel } from '../../../../backed_services/models/joven.model'
@@ -31,14 +31,14 @@ async function handleCurrentPageChange(page = 1) {
   await loadData(current_user, filters.value)
 }
 
-handleCurrentPageChange(1)
+onMounted(handleCurrentPageChange)
 </script>
 
 <template>
   <h3>Tutorados Asignados</h3>
-  <tutoria-filter-form v-model:filter="filters" @submit="loadData(current_user, filters)" />
+  <tutoria-filter-form v-model:filter="filters" @submit="handleCurrentPageChange" />
 
   <tutorados-list :data="data.results" />
 
-  <paginator :model="data" @current-change="handleCurrentPageChange" @reload="loadData(current_user, filters)" />
+  <paginator :model="data" @current-change="handleCurrentPageChange" @reload="handleCurrentPageChange" />
 </template>

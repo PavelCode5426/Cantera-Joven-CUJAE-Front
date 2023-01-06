@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import { useRoute } from 'vue-router'
 import usePaginateResponse from '../../../../globals/composables/usePaginateResponse'
@@ -32,7 +32,7 @@ async function handleCurrentPageChange(page = 1) {
   await loadData(current_area, filters.value)
 }
 
-handleCurrentPageChange(1)
+onMounted(handleCurrentPageChange)
 </script>
 
 <template>

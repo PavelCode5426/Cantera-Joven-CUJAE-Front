@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElNotification } from 'element-plus'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import type { ConfigurationModel } from '~/backed_services/models/configuration.model'
 import { checkIsAuthenticateAndRedirect, checkServerErrorAndRedirect } from '~/helpers/utils'
 import { ConfigHelper } from '~/modules/configuracion/helpers/config.helpers'
@@ -71,7 +71,7 @@ watch(isLoading, (newValue, oldValue) => {
   clearArrayRefs(configurationValueRefs)
 })
 
-loadConfigurations()
+onMounted(loadConfigurations)
 </script>
 
 <template>

@@ -21,7 +21,7 @@ async function updateNotification() {
     const response = await NotiService.notReadNotifications()
     const hasNewNotifications = notReadAmount.value < response.cantidad_sin_leer
     notReadAmount.value = response.cantidad_sin_leer
-    notifications.value = response.lista
+    notifications.value = response.lista.slice(0, 10)
 
     if (hasNewNotifications)
       ElNotification.info('Nueva notificacion recibida')
