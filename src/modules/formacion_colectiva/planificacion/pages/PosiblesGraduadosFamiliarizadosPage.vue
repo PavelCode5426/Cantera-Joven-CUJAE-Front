@@ -38,7 +38,7 @@ handleCurrentPageChange(1)
 
 <template>
   <h3>Posibles Graduados en el Área</h3>
-  <filter-form v-model:filter="filter" @submit="loadData(current_area, filter)"/>
+  <filter-form v-model:filter="filter" @submit="handleCurrentPageChange" />
   <users-list :data="data.results">
     <el-table-column>
       <template #default="{ row }">
